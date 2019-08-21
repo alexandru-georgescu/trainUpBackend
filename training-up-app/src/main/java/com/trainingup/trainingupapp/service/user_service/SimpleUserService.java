@@ -46,6 +46,7 @@ public class SimpleUserService implements UserService {
         if (!validate(email, password)) {
             return null;
         }
+
         User checkUser = userRepository
                 .findAll()
                 .stream()
@@ -130,6 +131,6 @@ public class SimpleUserService implements UserService {
             return false;
         }
 
-        return false;
+        return true;
     }
 }
