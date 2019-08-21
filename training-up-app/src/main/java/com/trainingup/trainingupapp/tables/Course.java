@@ -1,7 +1,7 @@
 package com.trainingup.trainingupapp.tables;
 
+import com.trainingup.trainingupapp.models.CourseModel;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -73,5 +73,19 @@ public class Course {
 
     public void setProjectManager(String projectManager) {
         this.projectManager = projectManager;
+    }
+
+    @Transient
+    public CourseModel convertToCourseModel() {
+        CourseModel newCourse = new CourseModel();
+        newCourse.setProjectManager(projectManager);
+        newCourse.setEndDate(endDate);
+        newCourse.setStartDate(startDate);
+        newCourse.setId(id);
+        newCourse.setCapacity(capacity);
+        newCourse.setActualCapacity(actualCapacity);
+        newCourse.setCourseName(courseName);
+
+        return newCourse;
     }
 }

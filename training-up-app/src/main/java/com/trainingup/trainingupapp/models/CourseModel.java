@@ -1,5 +1,7 @@
 package com.trainingup.trainingupapp.models;
 
+import com.trainingup.trainingupapp.tables.Course;
+import javax.persistence.Transient;
 import java.time.LocalDate;
 
 public class CourseModel {
@@ -78,5 +80,19 @@ public class CourseModel {
 
     public void setProjectManager(String projectManager) {
         this.projectManager = projectManager;
+    }
+
+    @Transient
+    public Course convertToCourse() {
+        Course newCourse = new Course();
+        newCourse.setProjectManager(projectManager);
+        newCourse.setEndDate(endDate);
+        newCourse.setStartDate(startDate);
+        newCourse.setId(id);
+        newCourse.setCapacity(capacity);
+        newCourse.setActualCapacity(actualCapacity);
+        newCourse.setCourseName(courseName);
+
+        return newCourse;
     }
 }

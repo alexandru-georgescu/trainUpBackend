@@ -1,9 +1,7 @@
 package com.trainingup.trainingupapp.tables;
 
-import org.hibernate.validator.constraints.UniqueElements;
+import com.trainingup.trainingupapp.models.UserModel;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.cglib.beans.BeanMap;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,5 +80,19 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    @Transient
+    public UserModel convertToUserModel() {
+        UserModel userModel = new UserModel();
+
+        userModel.setId(id);
+        userModel.setType(type);
+        userModel.setPassword(password);
+        userModel.setLastName(lastName);
+        userModel.setFirstName(firstName);
+        userModel.setCourses(courses);
+        userModel.setEmail(email);
+        return userModel;
     }
 }

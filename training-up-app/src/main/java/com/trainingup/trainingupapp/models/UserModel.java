@@ -1,7 +1,9 @@
 package com.trainingup.trainingupapp.models;
 
 import com.trainingup.trainingupapp.tables.Course;
+import com.trainingup.trainingupapp.tables.User;
 
+import javax.persistence.Transient;
 import java.util.List;
 
 public class UserModel {
@@ -80,5 +82,18 @@ public class UserModel {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Transient
+    public User convertToUser() {
+        User userModel = new User();
+        userModel.setId(id);
+        userModel.setType(type);
+        userModel.setPassword(password);
+        userModel.setLastName(lastName);
+        userModel.setFirstName(firstName);
+        userModel.setCourses(courses);
+        userModel.setEmail(email);
+        return userModel;
     }
 }

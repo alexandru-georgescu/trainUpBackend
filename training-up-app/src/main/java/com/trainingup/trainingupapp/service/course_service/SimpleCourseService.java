@@ -1,6 +1,5 @@
 package com.trainingup.trainingupapp.service.course_service;
 
-import com.trainingup.trainingupapp.TrainingUpAppApplication;
 import com.trainingup.trainingupapp.models.CourseModel;
 import com.trainingup.trainingupapp.repository.CourseRepository;
 import com.trainingup.trainingupapp.tables.Course;
@@ -24,14 +23,13 @@ public class SimpleCourseService implements CourseService {
     }
 
     @Override
-    public List<Course> findAll() {
-        return this.courseRepository.findAll();
+    public List<CourseModel> findAll() {
+        return this.backendCourses;
     }
 
     @Override
-    public Course findById(long id) {
-        return this.courseRepository
-                .findAll()
+    public CourseModel findById(long id) {
+        return this.backendCourses
                 .stream()
                 .filter(c -> c.getId() == id)
                 .findFirst()
@@ -39,7 +37,7 @@ public class SimpleCourseService implements CourseService {
     }
 
     @Override
-    public Course addCourse(String courseName, int capacity, int actualCapacity, LocalDate startDate,
+    public CourseModel addCourse(String courseName, int capacity, int actualCapacity, LocalDate startDate,
                           LocalDate endDate, String projectManager) {
         Course newCourse = new Course();
 
@@ -50,18 +48,11 @@ public class SimpleCourseService implements CourseService {
         newCourse.setEndDate(endDate);
         newCourse.setProjectManager(projectManager);
 
-        CourseModel newBackendCourse = new CourseModel();
-        newBackendCourse.setCourseName(courseName);
-        newBackendCourse.setCapacity(capacity);
-        newBackendCourse.setActualCapacity(actualCapacity);
-        newBackendCourse.setStartDate(startDate);
-        newBackendCourse.setEndDate(endDate);
-        newBackendCourse.setProjectManager(projectManager);
-        newBackendCourse.setId(newCourse.getId());
+        CourseModel newBackendCourse = newCourse.convertToCourseModel();
 
         this.courseRepository.saveAndFlush(newCourse);
         this.backendCourses.add(newBackendCourse);
-        return newCourse;
+        return newBackendCourse;
     }
 
     @Override
