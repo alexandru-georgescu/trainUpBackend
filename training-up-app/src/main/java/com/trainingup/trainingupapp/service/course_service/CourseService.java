@@ -10,5 +10,5 @@ public interface CourseService {
     Course findById(long id);
     Course addCourse(String courseName, int capacity, int actualCapacity, LocalDate startDate,
                    LocalDate endDate, String projectManager);
-    void removeTask(long id);
+    void removeCourse(long id);
 }

@@ -65,7 +65,7 @@ public class SimpleCourseService implements CourseService {
     }
 
     @Override
-    public void removeTask(long id) {
+    public void removeCourse(long id) {
         this.courseRepository.deleteById(id);
         CourseModel dummy = this.backendCourses
                 .stream()

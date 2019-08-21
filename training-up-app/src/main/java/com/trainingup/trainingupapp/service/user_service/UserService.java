@@ -9,5 +9,5 @@ public interface UserService {
     List<User> findAll();
     User findById(long id);
     User addUser(String email, String firstName, String lastName, String password, String type);
-    void removeTask(long id);
+    void removeUser(long id);
 }

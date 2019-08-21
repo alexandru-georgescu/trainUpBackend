@@ -59,7 +59,7 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public void removeTask(long id) {
+    public void removeUser(long id) {
         this.userRepository.deleteById(id);
         UserModel dummy = this.userBackend
                 .stream()
