@@ -87,7 +87,6 @@ public class TrainingController {
         if (!beforeAt.matches(".*[a-zA-Z.]+."))
             return null;
 
-
         return userService.addUser(email, firstName, lastName, password, "user");
     }
 

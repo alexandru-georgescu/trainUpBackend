@@ -37,7 +37,20 @@ public class SimpleUserService implements UserService {
 
     @Override
     public User addUser(String email, String firstName, String lastName, String password, String type) {
+
+        User checkUser = userRepository
+                .findAll()
+                .stream()
+                .filter(e -> e.getEmail().equals(email))
+                .findFirst()
+                .orElse(null);
+
+        if (checkUser != null) {
+            return null;
+        }
+
         User newUser = new User();
+
         newUser.setEmail(email);
         newUser.setFirstName(firstName);
         newUser.setLastName(lastName);
