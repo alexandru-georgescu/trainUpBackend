@@ -1,14 +1,14 @@
-package com.trainingup.trainingupapp.tables;
+package com.trainingup.trainingupapp.dto;
 
-import com.trainingup.trainingupapp.dto.UserDTO;
+import com.trainingup.trainingupapp.tables.Course;
+import com.trainingup.trainingupapp.tables.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import javax.persistence.*;
-import java.util.ArrayList;
+
+import javax.persistence.Transient;
 import java.util.List;
 
 @Setter
@@ -16,27 +16,18 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @Accessors(chain = true)
-@Entity
-@EnableAutoConfiguration
-@Table(name="USER")
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class UserDTO {
     private long id;
     private String email;
     private String type;
     private String firstName;
     private String lastName;
     private String password;
-
-    @OneToMany
-    private List<Course> courses = new ArrayList<>();
+    private List<Course> courses;
 
     @Transient
-    public UserDTO convertToUserModel() {
-        UserDTO userModel = new UserDTO();
-
+    public User convertToUser() {
+        User userModel = new User();
         userModel.setId(id);
         userModel.setType(type);
         userModel.setPassword(password);

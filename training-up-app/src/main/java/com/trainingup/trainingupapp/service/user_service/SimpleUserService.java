@@ -1,5 +1,5 @@
 package com.trainingup.trainingupapp.service.user_service;
-import com.trainingup.trainingupapp.models.UserModel;
+import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.repository.UserRepository;
 import com.trainingup.trainingupapp.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,19 +15,19 @@ public class SimpleUserService implements UserService {
     @Autowired
     UserRepository userRepository;
 
-    List<UserModel> userBackend = new ArrayList<>();;
+    List<UserDTO> userBackend = new ArrayList<>();;
 
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
-    public List<UserModel> findAll() {
+    public List<UserDTO> findAll() {
         return this.userBackend;
     }
 
     @Override
-    public UserModel findById(long id) {
+    public UserDTO findById(long id) {
         return this.userBackend
                 .stream()
                 .filter(e -> e.getId() == id)
@@ -36,8 +36,8 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public UserModel addUser(String email, String firstName, String lastName,
-                             String password, String type, String confPassword) {
+    public UserDTO addUser(String email, String firstName, String lastName,
+                           String password, String type, String confPassword) {
 
         if (firstName.equals("") || lastName.equals("") || password.equals("")) {
             return null;
@@ -68,7 +68,7 @@ public class SimpleUserService implements UserService {
 
         userRepository.saveAndFlush(newUser);
 
-        UserModel newBackendUser = newUser.convertToUserModel();
+        UserDTO newBackendUser = newUser.convertToUserModel();
 
         userBackend.add(newBackendUser);
         return newBackendUser;
@@ -77,7 +77,7 @@ public class SimpleUserService implements UserService {
     @Override
     public void removeUser(long id) {
         this.userRepository.deleteById(id);
-        UserModel dummy = this.userBackend
+        UserDTO dummy = this.userBackend
                 .stream()
                 .filter(el -> el.getId() == id)
                 .findFirst()
@@ -89,13 +89,13 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public UserModel loginService(String email, String password) {
+    public UserDTO loginService(String email, String password) {
 
         if (!validate(email, password)) {
             return null;
         }
 
-        Optional<UserModel> user = userBackend.stream().filter(u -> {
+        Optional<UserDTO> user = userBackend.stream().filter(u -> {
             if (u.getEmail().toLowerCase().equals(email.toLowerCase()) &&
                     u.getPassword().equals(password)) {
                 return true;

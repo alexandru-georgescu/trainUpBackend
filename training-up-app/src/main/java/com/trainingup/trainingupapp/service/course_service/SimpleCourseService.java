@@ -1,6 +1,6 @@
 package com.trainingup.trainingupapp.service.course_service;
 
-import com.trainingup.trainingupapp.models.CourseModel;
+import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.repository.CourseRepository;
 import com.trainingup.trainingupapp.tables.Course;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,19 +16,19 @@ public class SimpleCourseService implements CourseService {
     @Autowired
     CourseRepository courseRepository;
 
-    List<CourseModel> backendCourses = new ArrayList<>();
+    List<CourseDTO> backendCourses = new ArrayList<>();
 
     public void setCourseRepository(CourseRepository courseRepository) {
         this.courseRepository = courseRepository;
     }
 
     @Override
-    public List<CourseModel> findAll() {
+    public List<CourseDTO> findAll() {
         return this.backendCourses;
     }
 
     @Override
-    public CourseModel findById(long id) {
+    public CourseDTO findById(long id) {
         return this.backendCourses
                 .stream()
                 .filter(c -> c.getId() == id)
@@ -37,8 +37,8 @@ public class SimpleCourseService implements CourseService {
     }
 
     @Override
-    public CourseModel addCourse(String courseName, int capacity, int actualCapacity, LocalDate startDate,
-                          LocalDate endDate, String projectManager) {
+    public CourseDTO addCourse(String courseName, int capacity, int actualCapacity, LocalDate startDate,
+                               LocalDate endDate, String projectManager) {
         Course newCourse = new Course();
 
         newCourse.setCourseName(courseName);
@@ -48,7 +48,7 @@ public class SimpleCourseService implements CourseService {
         newCourse.setEndDate(endDate);
         newCourse.setProjectManager(projectManager);
 
-        CourseModel newBackendCourse = newCourse.convertToCourseModel();
+        CourseDTO newBackendCourse = newCourse.convertToCourseModel();
 
         this.courseRepository.saveAndFlush(newCourse);
         this.backendCourses.add(newBackendCourse);
@@ -58,7 +58,7 @@ public class SimpleCourseService implements CourseService {
     @Override
     public void removeCourse(long id) {
         this.courseRepository.deleteById(id);
-        CourseModel dummy = this.backendCourses
+        CourseDTO dummy = this.backendCourses
                 .stream()
                 .filter(el -> el.getId() == id)
                 .findFirst()

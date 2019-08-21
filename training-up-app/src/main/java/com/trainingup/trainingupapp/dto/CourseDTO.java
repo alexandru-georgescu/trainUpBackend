@@ -1,13 +1,13 @@
-package com.trainingup.trainingupapp.tables;
+package com.trainingup.trainingupapp.dto;
 
-import com.trainingup.trainingupapp.dto.CourseDTO;
+import com.trainingup.trainingupapp.tables.Course;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import javax.persistence.*;
+
+import javax.persistence.Transient;
 import java.time.LocalDate;
 
 @Setter
@@ -15,12 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @ToString
 @Accessors(chain = true)
-@Entity
-@Table(name="COURSES")
-@EnableAutoConfiguration
-public class Course {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class CourseDTO {
     private long id;
     private String courseName;
     private int capacity;
@@ -30,8 +25,8 @@ public class Course {
     private String projectManager;
 
     @Transient
-    public CourseDTO convertToCourseModel() {
-        CourseDTO newCourse = new CourseDTO();
+    public Course convertToCourse() {
+        Course newCourse = new Course();
         newCourse.setProjectManager(projectManager);
         newCourse.setEndDate(endDate);
         newCourse.setStartDate(startDate);
