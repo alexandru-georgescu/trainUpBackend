@@ -16,8 +16,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         httpSecurity.addFilterBefore(new CustomFilter(), ChannelProcessingFilter.class);
         httpSecurity
                 .authorizeRequests()
-                //.antMatchers("/")
-                //.permitAll()
                 .anyRequest()
                 .fullyAuthenticated()
                 .and().httpBasic().and().csrf().disable();
