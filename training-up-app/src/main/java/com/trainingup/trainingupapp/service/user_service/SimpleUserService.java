@@ -36,21 +36,12 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public UserDTO addUser(String email, String firstName, String lastName,
-                           String password, String type, String confPassword) {
-
-        if (firstName.equals("") || lastName.equals("") || password.equals("")) {
-            return null;
-        }
-
-        if (!validate(email, password)) {
-            return null;
-        }
+    public UserDTO addUser(UserDTO user) {
 
         User checkUser = userRepository
                 .findAll()
                 .stream()
-                .filter(e -> e.getEmail().equals(email))
+                .filter(e -> e.getEmail().equals(user.getEmail()))
                 .findFirst()
                 .orElse(null);
 
@@ -58,16 +49,8 @@ public class SimpleUserService implements UserService {
             return null;
         }
 
-        User newUser = new User();
-
-        newUser.setEmail(email);
-        newUser.setFirstName(firstName);
-        newUser.setLastName(lastName);
-        newUser.setPassword(password);
-        newUser.setType(type);
-
+        User newUser = user.convertToUser();
         userRepository.saveAndFlush(newUser);
-
         UserDTO newBackendUser = newUser.convertToUserModel();
 
         userBackend.add(newBackendUser);

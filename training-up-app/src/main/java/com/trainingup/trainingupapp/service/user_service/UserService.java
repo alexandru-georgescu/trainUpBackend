@@ -7,8 +7,7 @@ import java.util.List;
 public interface UserService {
     List<UserDTO> findAll();
     UserDTO findById(long id);
-    UserDTO addUser(String email, String firstName, String lastName, String password,
-                    String type, String confPassword);
+    UserDTO addUser(UserDTO user);
     void removeUser(long id);
 
     UserDTO loginService(String username, String password);

@@ -5,6 +5,8 @@ import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 @CrossOrigin(origins = "http://localhost:4200")
 public class TrainingController {
 
@@ -23,8 +25,10 @@ public class TrainingController {
     private UserService userService;
 
     @GetMapping("/")
-    public List<UserDTO> introProject(ModelAndView model) {
-        return userService.findAll();
+    public String introProject(Model model) {
+        List<UserDTO> users = userService.findAll();
+        model.addAttribute("users", users);
+        return "findAll";
     }
 
     @GetMapping("/login")
@@ -37,14 +41,8 @@ public class TrainingController {
 
 
     @GetMapping("/register")
-    public UserDTO registerPage(@RequestParam("email") String email,
-                                @RequestParam("firstName") String firstName,
-                                @RequestParam("lastName") String lastName,
-                                @RequestParam("password") String password,
-                                @RequestParam("confPassword") String confPassword,
-                                ModelAndView model) {
-
-        return userService.addUser(email, firstName, lastName, password, "user", confPassword);
+    public UserDTO registerPage(@RequestBody UserDTO user) {
+        return userService.addUser(user);
     }
 
 }
