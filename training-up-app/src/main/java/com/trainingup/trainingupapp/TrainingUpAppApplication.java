@@ -4,10 +4,16 @@ import com.trainingup.trainingupapp.tables.Course;
 import com.trainingup.trainingupapp.tables.User;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.time.LocalDate;
 
 @SpringBootApplication
+@ComponentScan(basePackages = "com.trainingup.trainingupapp.controller")
+@ComponentScan(basePackages = "com.trainingup.trainingupapp.configuration")
+@ComponentScan(basePackages = "com.trainingup.trainingupapp.fiter")
 public class TrainingUpAppApplication {
 
 	public static void main(String[] args) {

@@ -31,6 +31,7 @@ public class TrainingController {
         return "findAll";
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/login")
     public UserDTO loginPage(@RequestParam("username") String email,
                              @RequestParam("password") String password,
@@ -40,6 +41,7 @@ public class TrainingController {
     }
 
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/register")
     public UserDTO registerPage(@RequestBody UserDTO user) {
         return userService.addUser(user);
