@@ -15,13 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-<<<<<<< HEAD
-@RestController
-@CrossOrigin(origins = "http://localhost:4200")
-=======
 @Controller
 @CrossOrigin
->>>>>>> 7152cde20835eb2abb3b75bf94310ba5dd04c7e7
 public class TrainingController {
 
     @Autowired
@@ -46,13 +41,8 @@ public class TrainingController {
         return userService.loginService(email, password);
     }
 
-<<<<<<< HEAD
-
-    @PostMapping("/register")
-=======
     @ResponseBody
     @PostMapping("/user/register")
->>>>>>> 7152cde20835eb2abb3b75bf94310ba5dd04c7e7
     public UserDTO registerPage(@RequestBody UserDTO user) {
         return userService.addUser(user);
     }
