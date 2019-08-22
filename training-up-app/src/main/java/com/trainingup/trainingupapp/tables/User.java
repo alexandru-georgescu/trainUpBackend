@@ -36,7 +36,9 @@ public class User {
     @Transient
     public UserDTO convertToUserModel() {
         UserDTO userModel = new UserDTO();
-
+        if (userModel.getCourses() == null) {
+            userModel.setCourses(new ArrayList<Course>());
+        }
         userModel.setId(id);
         userModel.setType(type);
         userModel.setPassword(password);

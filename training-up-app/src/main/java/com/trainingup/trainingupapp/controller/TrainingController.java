@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@CrossOrigin
+@CrossOrigin(origins = "*")
 public class TrainingController {
 
     @Autowired
@@ -40,9 +40,11 @@ public class TrainingController {
         return userService.loginService(email, password);
     }
 
+    @CrossOrigin(origins = "*")
     @ResponseBody
     @PostMapping("/user/register")
     public UserDTO registerPage(@RequestBody UserDTO user) {
+
         return userService.addUser(user);
     }
 
