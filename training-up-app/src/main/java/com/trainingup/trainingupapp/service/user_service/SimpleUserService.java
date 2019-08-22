@@ -38,8 +38,7 @@ public class SimpleUserService implements UserService {
     @Override
     public UserDTO addUser(UserDTO user) {
 
-        User checkUser = userRepository
-                .findAll()
+        UserDTO checkUser = userBackend
                 .stream()
                 .filter(e -> e.getEmail().equals(user.getEmail()))
                 .findFirst()
@@ -51,10 +50,9 @@ public class SimpleUserService implements UserService {
 
         User newUser = user.convertToUser();
         userRepository.saveAndFlush(newUser);
-        UserDTO newBackendUser = newUser.convertToUserModel();
 
-        userBackend.add(newBackendUser);
-        return newBackendUser;
+        userBackend.add(user);
+        return user;
     }
 
     @Override
