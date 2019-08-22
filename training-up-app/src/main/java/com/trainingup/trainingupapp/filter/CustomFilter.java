@@ -17,7 +17,7 @@ public class CustomFilter extends OncePerRequestFilter {
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
         response.setHeader("Access-Control-Allow-Headers",
-                "authorization, content-type, xsrf-token, Cache-Control, remember-me, WWW-Authenticate");
+                "authorization, content-type, xsrf-toke Cache-Control, remember-me, WWW-Authenticate");
         response.addHeader("Access-Control-Expose-Headers", "xsrf-token");
         chain.doFilter(request, response);
 

@@ -15,8 +15,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+<<<<<<< HEAD
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
+=======
+@Controller
+@CrossOrigin
+>>>>>>> 7152cde20835eb2abb3b75bf94310ba5dd04c7e7
 public class TrainingController {
 
     @Autowired
@@ -25,14 +30,15 @@ public class TrainingController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/")
+    @GetMapping("/user")
     public String introProject(Model model) {
-        List<UserDTO> users = userService.findAll();
+        List<UserDTO> users  = userService.findAll();
         model.addAttribute("users", users);
         return "findAll";
     }
 
-    @GetMapping("/login")
+    @ResponseBody
+    @GetMapping("/user/login")
     public UserDTO loginPage(@RequestParam("username") String email,
                              @RequestParam("password") String password,
                              ModelAndView model) {
@@ -40,8 +46,13 @@ public class TrainingController {
         return userService.loginService(email, password);
     }
 
+<<<<<<< HEAD
 
     @PostMapping("/register")
+=======
+    @ResponseBody
+    @PostMapping("/user/register")
+>>>>>>> 7152cde20835eb2abb3b75bf94310ba5dd04c7e7
     public UserDTO registerPage(@RequestBody UserDTO user) {
         return userService.addUser(user);
     }
