@@ -40,12 +40,9 @@ public class TrainingController {
     }
 
 
-    @GetMapping("/register")
-    public boolean registerPage(@RequestParam UserDTO user) {
-        if (userService.addUser(user) != null) {
-            return true;
-        }
-        return false;
+    @PostMapping("/register")
+    public UserDTO registerPage(@RequestParam UserDTO user) {
+        return userService.addUser(user);
     }
 
 }
