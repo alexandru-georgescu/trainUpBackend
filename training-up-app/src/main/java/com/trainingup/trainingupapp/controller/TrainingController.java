@@ -45,6 +45,7 @@ public class TrainingController {
     @PostMapping("/user/register")
     public UserDTO registerPage(@RequestBody UserDTO user) {
         return userService.addUser(user);
+        //Something
     }
 
 
