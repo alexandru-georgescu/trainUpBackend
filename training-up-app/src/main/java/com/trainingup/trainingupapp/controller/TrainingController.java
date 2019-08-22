@@ -49,4 +49,34 @@ public class TrainingController {
     }
 
 
+    @ResponseBody
+    @GetMapping("/user/removeById")
+    public void removeUserByIdPage(@RequestParam("id") long id)
+    {
+        userService.removeUser(id);
+    }
+
+    @ResponseBody
+    @GetMapping("/user/findById")
+    public UserDTO findUserByIdPage(@RequestParam("id") long id)
+    {
+        return userService.findById(id);
+    }
+
+    @ResponseBody
+    @GetMapping("/course/removeById")
+    public void removeCourseByIdPage(@RequestParam("id") long id)
+    {
+        courseService.removeCourse(id);
+    }
+
+    @ResponseBody
+    @GetMapping("/course/findById")
+    public CourseDTO findCourseByIdPage(@RequestParam("id") long id)
+    {
+        return courseService.findById(id);
+    }
+
+
+
 }
