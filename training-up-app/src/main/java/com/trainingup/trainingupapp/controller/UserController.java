@@ -29,11 +29,8 @@ public class UserController {
 
     @ResponseBody
     @GetMapping("/user/login")
-    public UserDTO loginPage(@RequestParam("username") String email,
-                             @RequestParam("password") String password,
-                             ModelAndView model) {
-
-        return userService.loginService(email, password);
+    public UserDTO loginPage(@RequestParam UserDTO user) {
+        return userService.loginService(user.getEmail(), user.getPassword());
     }
 
     @CrossOrigin(origins = "*")
