@@ -28,8 +28,8 @@ public class UserController {
     }
 
     @ResponseBody
-    @GetMapping("/user/login")
-    public UserDTO loginPage(@RequestParam UserDTO user) {
+    @PostMapping("/user/login")
+    public UserDTO loginPage(@RequestBody UserDTO user) {
         return userService.loginService(user.getEmail(), user.getPassword());
     }
 
