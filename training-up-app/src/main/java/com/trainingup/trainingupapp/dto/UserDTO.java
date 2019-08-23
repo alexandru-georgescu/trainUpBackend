@@ -9,6 +9,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.persistence.Transient;
+import java.util.ArrayList;
 import java.util.List;
 
 @Setter
@@ -28,6 +29,10 @@ public class UserDTO {
     @Transient
     public User convertToUser() {
         User userModel = new User();
+        if (userModel.getCourses() == null) {
+            userModel.setCourses(new ArrayList<Course>());
+        }
+
         userModel.setId(id);
         userModel.setType(type);
         userModel.setPassword(password);

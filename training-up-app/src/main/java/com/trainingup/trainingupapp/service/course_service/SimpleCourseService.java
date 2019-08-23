@@ -37,22 +37,12 @@ public class SimpleCourseService implements CourseService {
     }
 
     @Override
-    public CourseDTO addCourse(String courseName, int capacity, int actualCapacity, LocalDate startDate,
-                               LocalDate endDate, String projectManager) {
-        Course newCourse = new Course();
-
-        newCourse.setCourseName(courseName);
-        newCourse.setCapacity(capacity);
-        newCourse.setActualCapacity(actualCapacity);
-        newCourse.setStartDate(startDate);
-        newCourse.setEndDate(endDate);
-        newCourse.setProjectManager(projectManager);
-
-        CourseDTO newBackendCourse = newCourse.convertToCourseModel();
+    public CourseDTO addCourse(CourseDTO course) {
+        Course newCourse = course.convertToCourse();
 
         this.courseRepository.saveAndFlush(newCourse);
-        this.backendCourses.add(newBackendCourse);
-        return newBackendCourse;
+        this.backendCourses.add(course);
+        return course;
     }
 
     @Override

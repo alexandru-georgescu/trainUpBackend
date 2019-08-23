@@ -38,6 +38,7 @@ public class SimpleUserService implements UserService {
     @Override
     public UserDTO addUser(UserDTO user) {
 
+        user.setType("user");
         UserDTO checkUser = userBackend
                 .stream()
                 .filter(e -> e.getEmail().equals(user.getEmail()))

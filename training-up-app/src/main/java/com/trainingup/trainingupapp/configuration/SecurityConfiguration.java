@@ -13,11 +13,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.cors();
         httpSecurity.addFilterBefore(new CustomFilter(), ChannelProcessingFilter.class);
         httpSecurity
                 .authorizeRequests().antMatchers("/").permitAll()
                 .anyRequest()
-                .fullyAuthenticated()
+                .authenticated()
                 .and().httpBasic().and().csrf().disable();
 
     }
