@@ -2,7 +2,6 @@
 package com.trainingup.trainingupapp.controller;
 
 import com.trainingup.trainingupapp.dto.UserDTO;
-import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,10 +15,7 @@ import java.util.List;
 
 @Controller
 @CrossOrigin(origins = "*")
-public class TrainingController {
-
-    @Autowired
-    private CourseService courseService;
+public class UserController {
 
     @Autowired
     private UserService userService;
@@ -48,4 +44,15 @@ public class TrainingController {
         return userService.addUser(user);
     }
 
+    @ResponseBody
+    @GetMapping("/user/remove")
+    public void removeUserByIdPage(@RequestParam("id") long id) {
+        userService.removeUser(id);
+    }
+
+    @ResponseBody
+    @GetMapping("/user/find")
+    public UserDTO findUserByIdPage(@RequestParam("id") long id) {
+        return userService.findById(id);
+    }
 }
