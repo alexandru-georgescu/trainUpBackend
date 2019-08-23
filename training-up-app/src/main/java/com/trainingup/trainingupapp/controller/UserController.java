@@ -40,7 +40,6 @@ public class UserController {
     @ResponseBody
     @PostMapping("/user/register")
     public UserDTO registerPage(@RequestBody UserDTO user) {
-
         return userService.addUser(user);
     }
 
