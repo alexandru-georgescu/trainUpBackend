@@ -15,7 +15,8 @@ public class SimpleUserService implements UserService {
     @Autowired
     UserRepository userRepository;
 
-    List<UserDTO> userBackend = new ArrayList<>();;
+    List<UserDTO> userBackend = new ArrayList<>();
+    int index = 0;
 
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -37,7 +38,7 @@ public class SimpleUserService implements UserService {
 
     @Override
     public UserDTO addUser(UserDTO user) {
-
+        user.setId(index++);
         user.setType("user");
         UserDTO checkUser = userBackend
                 .stream()
