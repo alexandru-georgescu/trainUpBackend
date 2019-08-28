@@ -16,6 +16,7 @@
             <th>FIRST NAME</th>
             <th>LAST NAME</th>
             <th>EMAIL</th>
+            <th>WISH</th>
 
         </tr>
         </thead>
@@ -25,7 +26,9 @@
             <td  th:text="${user.firstName}"></td>
             <td  th:text="${user.lastName}"></td>
             <td  th:text="${user.email}"></td>
-
+            <tr th:each="course :${wishToEnroll}">
+                <td th:text="${course.courseName}"></td>
+            </tr>
         </tr>
         </tbody>
     </table>
