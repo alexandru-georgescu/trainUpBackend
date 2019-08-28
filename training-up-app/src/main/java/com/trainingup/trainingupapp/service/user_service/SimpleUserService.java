@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SimpleUserService implements UserService {
@@ -145,5 +146,12 @@ public class SimpleUserService implements UserService {
         List<CourseDTO> w2 = wish2.getWishToEnroll();
         w2.add(course);
         wish2.setWishToEnroll(w2);
+    }
+
+    @Override
+    public List<UserDTO> findAllWithLeader(String leader) {
+        return userBackend.stream()
+                .filter(user -> user.getLeader().toLowerCase().equals(leader.toLowerCase()))
+                .collect(Collectors.toList());
     }
 }

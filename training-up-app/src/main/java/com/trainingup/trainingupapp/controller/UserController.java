@@ -64,6 +64,11 @@ public class UserController {
     }
 
 
+    @ResponseBody
+    @GetMapping("/user/findByLeader")
+    public List<UserDTO> findByLeader(@RequestParam("leader") String leader) {
+        return userService.findAllWithLeader(leader);
+    }
     /**
      *  From smtp controller
      */
