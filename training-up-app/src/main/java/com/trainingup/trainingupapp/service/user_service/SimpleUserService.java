@@ -109,7 +109,7 @@ public class SimpleUserService implements UserService {
             return false;
         }
 
-        if (!beforeAt.matches(".*[a-zA-Z.]+.")) {
+        if (!beforeAt.matches("[a-zA-Z]"+"."+"[a-zA-Z]")) {
             return false;
         }
 
