@@ -1,6 +1,10 @@
 package com.trainingup.trainingupapp.service.user_service;
+import com.trainingup.trainingupapp.convertor.CourseConvertor;
+import com.trainingup.trainingupapp.convertor.UserConvertor;
+import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.repository.UserRepository;
+import com.trainingup.trainingupapp.tables.Course;
 import com.trainingup.trainingupapp.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +41,12 @@ public class SimpleUserService implements UserService {
 
     @Override
     public UserDTO addUser(UserDTO user) {
+        if (!validate(user.getEmail(), user.getPassword())) {
+            return null;
+        }
+
         user.setType("user");
+        user.setLeader("TM");
         UserDTO checkUser = userBackend
                 .stream()
                 .filter(e -> e.getEmail().equals(user.getEmail()))
@@ -48,7 +57,7 @@ public class SimpleUserService implements UserService {
             return null;
         }
 
-        User newUser = user.convertToUser();
+        User newUser = UserConvertor.convertToUser(user);
         userRepository.saveAndFlush(newUser);
         user.setId(newUser.getId());
 
@@ -109,10 +118,32 @@ public class SimpleUserService implements UserService {
             return false;
         }
 
-        if (!beforeAt.matches(".*[a-zA-Z.]+.")) {
+        if (!beforeAt.matches("[a-zA-Z.]"+ "." + "[a-zA-Z.]")) {
             return false;
         }
 
         return true;
+    }
+
+    @Override
+    public void wishToEnroll(UserDTO user, CourseDTO course) {
+        User wish = userRepository.findAll().stream()
+                .filter(user1 -> user1.getEmail().equals(user.getEmail())).findFirst().orElse(null);
+
+        UserDTO wish2 =  userBackend.stream()
+                .filter(user1 -> user1.getEmail().equals(user.getEmail())).findFirst().orElse(null);
+
+        if (wish == null || wish2 == null) {
+            return;
+        }
+
+        Course DTO_conv = CourseConvertor.convertToCourse(course);
+        List<Course> w1 = wish.getWishToEnroll();
+        w1.add(DTO_conv);
+        wish.setWishToEnroll(w1);
+
+        List<CourseDTO> w2 = wish2.getWishToEnroll();
+        w2.add(course);
+        wish2.setWishToEnroll(w2);
     }
 }

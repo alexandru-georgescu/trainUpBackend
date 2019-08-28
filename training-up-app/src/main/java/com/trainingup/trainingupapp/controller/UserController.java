@@ -1,13 +1,14 @@
 
 package com.trainingup.trainingupapp.controller;
 
+import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
+import com.trainingup.trainingupapp.service.smtp_service.SmtpService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private SmtpService smtpService;
+
     @GetMapping("/user")
     public String introProject(Model model) {
         List<UserDTO> users  = userService.findAll();
@@ -31,6 +35,13 @@ public class UserController {
     @PostMapping("/user/login")
     public UserDTO loginPage(@RequestBody UserDTO user) {
         return userService.loginService(user.getEmail(), user.getPassword());
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/user/wish")
+    public void wishToEnroll(@RequestBody UserDTO user, CourseDTO course) {
+        userService.wishToEnroll(user, course);
+        return;
     }
 
     @CrossOrigin(origins = "*")
@@ -51,4 +62,15 @@ public class UserController {
     public UserDTO findUserByIdPage(@RequestParam("id") long id) {
         return userService.findById(id);
     }
+
+
+    /**
+     *  From smtp controller
+     */
+    @ResponseBody
+    @GetMapping("/smtp/emails")
+    public List<String> getAllEmails() {
+        return smtpService.getEmail();
+    }
+
 }

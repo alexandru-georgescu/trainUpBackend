@@ -28,18 +28,4 @@ public class Course {
     private LocalDate startDate;
     private LocalDate endDate;
     private String projectManager;
-
-    @Transient
-    public CourseDTO convertToCourseModel() {
-        CourseDTO newCourse = new CourseDTO();
-        newCourse.setProjectManager(projectManager);
-        newCourse.setEndDate(endDate);
-        newCourse.setStartDate(startDate);
-        newCourse.setId(id);
-        newCourse.setCapacity(capacity);
-        newCourse.setActualCapacity(actualCapacity);
-        newCourse.setCourseName(courseName);
-
-        return newCourse;
-    }
 }

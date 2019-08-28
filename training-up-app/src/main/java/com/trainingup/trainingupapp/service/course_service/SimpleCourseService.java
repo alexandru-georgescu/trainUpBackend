@@ -1,5 +1,6 @@
 package com.trainingup.trainingupapp.service.course_service;
 
+import com.trainingup.trainingupapp.convertor.CourseConvertor;
 import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.repository.CourseRepository;
 import com.trainingup.trainingupapp.tables.Course;
@@ -38,9 +39,10 @@ public class SimpleCourseService implements CourseService {
 
     @Override
     public CourseDTO addCourse(CourseDTO course) {
-        Course newCourse = course.convertToCourse();
+        Course newCourse = CourseConvertor.convertToCourse(course);
 
         this.courseRepository.saveAndFlush(newCourse);
+        course.setId(newCourse.getId());
         this.backendCourses.add(course);
         return course;
     }

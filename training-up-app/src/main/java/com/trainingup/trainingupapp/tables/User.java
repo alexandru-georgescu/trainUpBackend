@@ -32,20 +32,8 @@ public class User {
 
     @OneToMany
     private List<Course> courses = new ArrayList<>();
+    private String leader;
 
-    @Transient
-    public UserDTO convertToUserModel() {
-        UserDTO userModel = new UserDTO();
-        if (userModel.getCourses() == null) {
-            userModel.setCourses(new ArrayList<Course>());
-        }
-        userModel.setId(id);
-        userModel.setType(type);
-        userModel.setPassword(password);
-        userModel.setLastName(lastName);
-        userModel.setFirstName(firstName);
-        userModel.setCourses(courses);
-        userModel.setEmail(email);
-        return userModel;
-    }
+    @OneToMany
+    private List<Course> wishToEnroll = new ArrayList<>();
 }
