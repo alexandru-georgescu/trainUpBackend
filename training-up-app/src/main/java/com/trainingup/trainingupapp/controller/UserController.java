@@ -30,7 +30,6 @@ public class UserController {
         model.addAttribute("users", users);
         return "findAll";
     }
-    
 
     @ResponseBody
     @PostMapping("/user/login")
