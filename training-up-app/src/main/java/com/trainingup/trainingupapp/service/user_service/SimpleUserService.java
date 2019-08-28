@@ -42,11 +42,10 @@ public class SimpleUserService implements UserService {
 
     @Override
     public UserDTO addUser(UserDTO user) {
+
         if (!validate(user.getEmail(), user.getPassword())) {
             return null;
         }
-
-        user.setType("user");
         user.setLeader("TM");
         UserDTO checkUser = userBackend
                 .stream()

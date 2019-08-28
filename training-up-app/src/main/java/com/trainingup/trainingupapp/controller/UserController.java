@@ -32,6 +32,40 @@ public class UserController {
     }
 
     @ResponseBody
+    @GetMapping("/in")
+    public List<UserDTO> in() {
+        UserDTO pm = new UserDTO();
+        pm.setType("PM");
+        pm.setLeader("ADMIN");
+        pm.setEmail("p.m@trainup.com");
+        pm.setFirstName("p");
+        pm.setLastName("m");
+        pm.setPassword("Pm123456");
+
+        UserDTO tm = new UserDTO();
+        tm.setType("TM");
+        tm.setLeader("ADMIN");
+        tm.setEmail("t.m@trainup.com");
+        tm.setFirstName("t");
+        tm.setLastName("m");
+        tm.setPassword("Tm123456");
+
+        UserDTO user = new UserDTO();
+        user.setType("USER");
+        user.setLeader("ADMIN");
+        user.setEmail("u.s@trainup.com");
+        user.setFirstName("u");
+        user.setLastName("s");
+        user.setPassword("User123456");
+
+        userService.addUser(user);
+        userService.addUser(pm);
+        userService.addUser(tm);
+
+        return userService.findAll();
+    }
+
+    @ResponseBody
     @PostMapping("/user/login")
     public UserDTO loginPage(@RequestBody UserDTO user) {
         return userService.loginService(user.getEmail(), user.getPassword());
