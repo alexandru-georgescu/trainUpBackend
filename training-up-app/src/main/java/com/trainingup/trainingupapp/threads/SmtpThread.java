@@ -4,10 +4,15 @@ import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.MailDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
+import com.trainingup.trainingupapp.service.course_service.SimpleCourseService;
+import com.trainingup.trainingupapp.service.user_service.SimpleUserService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+
 import javax.mail.*;
 import javax.mail.internet.MimeMultipart;
 import java.io.IOException;
@@ -28,8 +33,10 @@ public class SmtpThread extends Thread {
     private Session session;
     private Folder folder;
 
-
+    @Autowired
     private UserService userService;
+
+    @Autowired
     private CourseService courseService;
 
     @Autowired
@@ -42,7 +49,68 @@ public class SmtpThread extends Thread {
         this.courseService = courseService;
     }
 
-    public void sendEmail() {
+    public void initPop3() {
+        if (properties == null) {
+            properties = new Properties();
+            properties.put("mail.pop3.host", host);
+            properties.put("mail.pop3.port", port);
+            properties.put("mail.pop3.starttls.enable", "true");
+        }
+
+        try {
+            session = Session.getDefaultInstance(properties);
+            store = session.getStore("pop3s");
+            store.connect(host, username, password);
+            folder = store.getFolder("INBOX");
+            folder.open(Folder.READ_ONLY);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public void run() {
+        while (true) {
+            try {
+                synchronized (this) {
+                    List<MailDTO> emails = getEmail();
+                    if (emails == null) {
+                        Thread.sleep(15000);
+                        continue;
+                    }
+
+                    System.out.println(emails.toString());
+
+                    String[] subject = emails.get(0)
+                            .getSubject()
+                            .replace("[", "")
+                            .replace("]", " ")
+                            .split(" ");
+
+                    String courseName = subject[0];
+                    for (int i = 0; i < subject.length; i++) {
+                        System.out.println(subject[i]);
+                    }
+
+                    String body = emails.get(0).getBody();
+
+                    String[] pars = body.split("\n");
+
+                    System.out.println(courseName);
+                    for (int i = 0; i < pars.length; i++) {
+                        System.out.println(pars[i]);
+                    }
+
+                    getUsersFromEmail(pars, courseName);
+                }
+
+                Thread.sleep(15000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public List<MailDTO> getEmail() {
@@ -99,34 +167,14 @@ public class SmtpThread extends Thread {
         return null;
     }
 
-    public void initPop3() {
-        if (properties == null) {
-            properties = new Properties();
-            properties.put("mail.pop3.host", host);
-            properties.put("mail.pop3.port", port);
-            properties.put("mail.pop3.starttls.enable", "true");
-        }
-
-        try {
-            session = Session.getDefaultInstance(properties);
-            store = session.getStore("pop3s");
-            store.connect(host, username, password);
-            folder = store.getFolder("INBOX");
-            folder.open(Folder.READ_ONLY);
-
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
     public void getUsersFromEmail(String[] body, String courseName) {
 
         System.out.println(userService);
         List<UserDTO> emailUsers = new ArrayList<>();
-
         List<UserDTO> serviceUsers = userService.findAll();
+
+        System.out.println(userService.findAll());
+        System.out.println(courseService.findAll());
 
         CourseDTO course = courseService
                 .findAll().stream().filter(c -> c.getCourseName().toLowerCase().equals(courseName.toLowerCase()))
@@ -149,39 +197,5 @@ public class SmtpThread extends Thread {
         });
 
     }
-    public void run() {
-        while (true) {
-            try {
-                synchronized (this) {
-                    List<MailDTO> emails = getEmail();
-                    if (emails == null) {
-                        Thread.sleep(15000);
-                        continue;
-                    }
 
-                    String subjectUncut = emails.get(0).getSubject();
-
-                    subjectUncut = subjectUncut.replace("[", "");
-                    subjectUncut = subjectUncut.replace("]", " ");
-
-                    String[] subject = subjectUncut
-                            .split(" ");
-
-                    String courseName = subject[0];
-                    for (int i = 0; i < subject.length ; i++) {
-                        System.out.println(subject[i]);
-                    }
-
-                    String body = emails.get(0).getBody();
-                    String[] pars = body.split("\n");
-                    System.out.println(pars.toString() + " " + courseName);
-                    getUsersFromEmail(pars, courseName);
-                }
-
-                Thread.sleep(15000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }
