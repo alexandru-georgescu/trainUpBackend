@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -24,11 +25,46 @@ public class UserController {
     @Autowired
     private SmtpService smtpService;
 
+    @ResponseBody
     @GetMapping("/user")
-    public String introProject(Model model) {
-        List<UserDTO> users  = userService.findAll();
-        model.addAttribute("users", users);
-        return "findAll";
+    public List<UserDTO> introProject() {
+        return userService.findAll();
+    }
+
+    @ResponseBody
+    @GetMapping("/in")
+    public List<UserDTO> in() {
+        UserDTO pm = new UserDTO();
+        pm.setType("PM");
+        pm.setLeader("ADMIN");
+        pm.setEmail("p.m@trainup.com");
+        pm.setFirstName("p");
+        pm.setLastName("m");
+        pm.setPassword("Pm123456");
+
+        UserDTO tm = new UserDTO();
+        tm.setType("TM");
+        tm.setLeader("ADMIN");
+        tm.setEmail("t.m@trainup.com");
+        tm.setFirstName("t");
+        tm.setLastName("m");
+        tm.setPassword("Tm123456");
+        List<CourseDTO> c = new ArrayList<>();
+        c.add(new CourseDTO());
+        tm.setCourses(c);
+        UserDTO user = new UserDTO();
+        user.setType("USER");
+        user.setLeader("ADMIN");
+        user.setEmail("u.s@trainup.com");
+        user.setFirstName("u");
+        user.setLastName("s");
+        user.setPassword("User123456");
+
+        userService.addUser(user);
+        userService.addUser(pm);
+        userService.addUser(tm);
+
+        return userService.findAll();
     }
 
     @ResponseBody

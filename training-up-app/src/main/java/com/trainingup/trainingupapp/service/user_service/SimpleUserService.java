@@ -42,11 +42,14 @@ public class SimpleUserService implements UserService {
 
     @Override
     public UserDTO addUser(UserDTO user) {
+
+        if (user.getType() == null) {
+            user.setType("USER");
+        }
+
         if (!validate(user.getEmail(), user.getPassword())) {
             return null;
         }
-
-        user.setType("user");
         user.setLeader("TM");
         UserDTO checkUser = userBackend
                 .stream()
@@ -119,7 +122,7 @@ public class SimpleUserService implements UserService {
             return false;
         }
 
-        if (!beforeAt.matches("[a-zA-Z.]"+ "." + "[a-zA-Z.]")) {
+        if (!beforeAt.matches("[a-zA-Z]*"+ "." + "[a-zA-Z]*")) {
             return false;
         }
 
