@@ -4,13 +4,9 @@ import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.MailDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
-import com.trainingup.trainingupapp.service.course_service.SimpleCourseService;
-import com.trainingup.trainingupapp.service.user_service.SimpleUserService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.mail.*;
@@ -81,7 +77,12 @@ public class SmtpThread extends Thread {
                         continue;
                     }
 
-                    System.out.println(emails.toString());
+                   // System.out.println(emails.toString());
+
+                    if (emails.get(0).getSubject().split("]").length != 4) {
+                        Thread.sleep(15000);
+                        continue;
+                    }
 
                     String[] subject = emails.get(0)
                             .getSubject()
@@ -90,16 +91,34 @@ public class SmtpThread extends Thread {
                             .split(" ");
 
                     String courseName = subject[0];
+
                     for (int i = 0; i < subject.length; i++) {
-                        System.out.println(subject[i]);
+                    //    System.out.println(subject[i]);
                     }
 
                     String body = emails.get(0).getBody();
 
                     String[] pars = body.split("\n");
 
+                    /**
+                     * TODO: REGEX PENTRU MAIL, VERIFICARE MAIL VALID
+                     * VLAD FA ASTA DACA NU AI CE FACE!
+                     * PS: ASTA SPER SA MEARGA
+                     * + = CEL PUTIN O DATA
+                     * * = DE 0 SAU MAI MULTE ORI
+                     * ESCAPEZI CU / ORICE CARACTER GALBEN DACA VREI CA EL SA FIE INTERPRETAT CA SI TEXT
+                     * NU DA PUSH PE MASTER
+                     * DAI PULL INAINTE SA TE APUCI DE LUCRU
+                     * DACA AVEM CONFLITE ITI RUP CAPU
+                     * HAVE FUN!
+                     */
                     System.out.println(courseName);
                     for (int i = 0; i < pars.length; i++) {
+                        if (!pars[i].matches("[a-zA-Z]+" + "." + "[a-zA-Z]+" + "[@trainup.com]+")) {
+                            System.out.println(pars[i].matches("[a-zA-Z]*" + "." + "[a-zA-Z]*" + "@trainup" + "." + "com"));
+                            System.out.println(pars[i].matches("[a-zA-Z]*" + "." + "[a-zA-Z]*"));
+                            continue;
+                        }
                         System.out.println(pars[i]);
                     }
 

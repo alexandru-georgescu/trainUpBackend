@@ -57,7 +57,7 @@ public class SimpleUserService implements UserService {
         if (!validate(user.getEmail(), user.getPassword())) {
             return null;
         }
-        user.setLeader("t.m@trainup.com");
+
         UserDTO checkUser = userBackend
                 .stream()
                 .filter(e -> e.getEmail().equals(user.getEmail()))
@@ -129,7 +129,7 @@ public class SimpleUserService implements UserService {
             return false;
         }
 
-        if (!beforeAt.matches("[a-zA-Z]*"+ "." + "[a-zA-Z]*")) {
+        if (!beforeAt.matches("[a-zA-Z]+"+ "." + "[a-zA-Z]+")) {
             return false;
         }
 
