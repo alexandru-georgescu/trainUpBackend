@@ -1,15 +1,10 @@
 package com.trainingup.trainingupapp.threads;
 
-import com.trainingup.trainingupapp.controller.CourseController;
-import com.trainingup.trainingupapp.controller.UserController;
-import com.trainingup.trainingupapp.convertor.CourseConvertor;
 import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.MailDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
-import com.trainingup.trainingupapp.tables.Course;
-import org.apache.catalina.User;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -23,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-//@Component
+@Component
 public class SmtpThread extends Thread {
 
     private String username = "trainupapply@gmail.com";
@@ -31,27 +26,20 @@ public class SmtpThread extends Thread {
     private String host = "pop.gmail.com";
     private String prot = "pop3";
     private String port = "995";
-
-
     private Store store;
     private Properties properties;
     private Session session;
     private Folder folder;
 
 
+    @Autowired
     private UserService userService;
-    private CourseService courseService;
 
-//    @PostConstruct
-//    public void set(@Lazy UserService userService, @Lazy CourseService courseService) {
-//        System.out.println("abasdasada " + userService);
-//        this.userService = userService;
-//        this.courseService = courseService;
-//    }
+    @Autowired
+    private CourseService courseService;
 
     public void sendEmail() {
     }
-
 
     public List<MailDTO> getEmail() {
         try {
@@ -131,8 +119,6 @@ public class SmtpThread extends Thread {
 
     public void getUsersFromEmail(String[] body, String courseName) {
 
-
-        System.out.println( "aiciii e :" + userService);
         List<UserDTO> emailUsers = new ArrayList<>();
 
         List<UserDTO> serviceUsers = userService.findAll();
@@ -184,7 +170,7 @@ public class SmtpThread extends Thread {
                     String body = emails.get(0).getBody();
                     String[] pars = body.split("\n");
                     System.out.println(pars.toString() + " " + courseName);
-                //    getUsersFromEmail(pars, courseName);
+                    getUsersFromEmail(pars, courseName);
                 }
 
                 Thread.sleep(15000);

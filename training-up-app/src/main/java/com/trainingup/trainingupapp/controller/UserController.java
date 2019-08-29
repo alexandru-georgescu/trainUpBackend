@@ -73,7 +73,7 @@ public class UserController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/user/wish")
-    public UserDTO wishToEnroll(@RequestParam CourseUserDTO array) {
+    public UserDTO wishToEnroll(@RequestBody CourseUserDTO array) {
         return userService.wishToEnroll(array.getUser(), array.getCourse());
     }
 

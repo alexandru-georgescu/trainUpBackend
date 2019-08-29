@@ -4,7 +4,6 @@ import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -52,7 +51,6 @@ public class CourseController {
     public void removeCourseByIdPage(@RequestParam("id") long id) {
         courseService.removeCourse(id);
     }
-
 
     @GetMapping("/course/find")
     public CourseDTO findCourseByIdPage(@RequestParam("id") long id) {
