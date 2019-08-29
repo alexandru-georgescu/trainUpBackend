@@ -144,7 +144,7 @@ public class SimpleUserService implements UserService {
         Course DTO_conv = CourseConvertor.convertToCourse(course);
         List<Course> w1 = wish.getWishToEnroll();
 
-        Course findCourse = w1.stream()
+        Course findCourse = wish.getWishToEnroll().stream()
                 .filter(c -> c.getCourseName().toLowerCase().equals(course.getCourseName().toLowerCase()))
                 .findFirst().orElse(null);
 
