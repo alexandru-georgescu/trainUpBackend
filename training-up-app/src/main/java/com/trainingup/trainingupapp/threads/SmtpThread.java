@@ -120,37 +120,37 @@ public class SmtpThread extends Thread {
 
     public void getUsersFromEmail(String[] body, String courseName) {
 
-        try {
-            URL userServices = new URL("http://localhost:8080/user");
-            URL courseService = new URL("http://localhost:8080/course")
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        List<UserDTO> emailUsers = new ArrayList<>();
-
-        List<UserDTO> serviceUsers = UserController.userService.findAll();
-
-        CourseDTO course = CourseController.courseService
-                .findAll().stream().filter(c -> c.getCourseName().toLowerCase().equals(courseName.toLowerCase()))
-                .findFirst().orElse(null);
-
-        if (course == null) {
-            return;
-        }
-
-        for (int i = 0; i < body.length; i++) {
-            String dummy = body[i];
-            emailUsers.add(serviceUsers.stream().filter(user -> user.getEmail().equals(dummy)).findFirst().orElse(null));
-
-        }
-
-        emailUsers.forEach(us -> {
-            List<CourseDTO> allCourses = us.getCourses();
-            allCourses.add(course);
-            us.setCourses(allCourses);
-        });
+//        try {
+//            URL userServices = new URL("http://localhost:8080/user");
+//            URL courseService = new URL("http://localhost:8080/course")
+//
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        List<UserDTO> emailUsers = new ArrayList<>();
+//
+//        List<UserDTO> serviceUsers = UserController.userService.findAll();
+//
+//        CourseDTO course = CourseController.courseService
+//                .findAll().stream().filter(c -> c.getCourseName().toLowerCase().equals(courseName.toLowerCase()))
+//                .findFirst().orElse(null);
+//
+//        if (course == null) {
+//            return;
+//        }
+//
+//        for (int i = 0; i < body.length; i++) {
+//            String dummy = body[i];
+//            emailUsers.add(serviceUsers.stream().filter(user -> user.getEmail().equals(dummy)).findFirst().orElse(null));
+//
+//        }
+//
+//        emailUsers.forEach(us -> {
+//            List<CourseDTO> allCourses = us.getCourses();
+//            allCourses.add(course);
+//            us.setCourses(allCourses);
+//        });
 
     }
     public void run() {
