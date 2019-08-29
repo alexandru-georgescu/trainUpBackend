@@ -11,13 +11,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Controller
+@RestController
 @CrossOrigin(origins = "*")
 public class CourseController {
     @Autowired
     private CourseService courseService;
 
-    @ResponseBody
     @GetMapping("/course")
     public List<CourseDTO> introProject() {
         return courseService.findAll();
@@ -25,7 +24,6 @@ public class CourseController {
 
 
     @GetMapping("/coruse/isCurrent")
-    @ResponseBody
     public List<CourseDTO> findCurrent(@RequestBody UserDTO userDTO) {
         LocalDate now = LocalDate.now();
 
@@ -37,7 +35,6 @@ public class CourseController {
 
 
     @GetMapping("/coruse/isBefore")
-    @ResponseBody
     public List<CourseDTO> findBefore(@RequestBody UserDTO userDTO) {
         LocalDate now = LocalDate.now();
 
@@ -46,19 +43,17 @@ public class CourseController {
                 .collect(Collectors.toList());
     }
 
-    @ResponseBody
     @PostMapping("/course/add")
     public CourseDTO addCoursePage(@RequestBody CourseDTO course) {
         return courseService.addCourse(course);
     }
 
-    @ResponseBody
     @GetMapping("/course/remove")
     public void removeCourseByIdPage(@RequestParam("id") long id) {
         courseService.removeCourse(id);
     }
 
-    @ResponseBody
+
     @GetMapping("/course/find")
     public CourseDTO findCourseByIdPage(@RequestParam("id") long id) {
         return courseService.findById(id);
