@@ -10,6 +10,10 @@ import com.trainingup.trainingupapp.service.user_service.UserService;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -39,6 +43,9 @@ public class SmtpThread extends Thread {
     @Autowired
     private CourseService courseService;
 
+
+    JavaMailSender emailSender = getJavaMailSender();
+
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
@@ -47,6 +54,24 @@ public class SmtpThread extends Thread {
     @Autowired
     public void setCourseService(CourseService courseService) {
         this.courseService = courseService;
+    }
+
+
+    public JavaMailSender getJavaMailSender() {
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost("smtp.gmail.com");
+        mailSender.setPort(587);
+
+        mailSender.setUsername("trainupapply@gmail.com");
+        mailSender.setPassword("trainUp112");
+
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.debug", "true");
+
+        return mailSender;
     }
 
     public void initPop3() {
@@ -102,8 +127,8 @@ public class SmtpThread extends Thread {
                     for (int i = 0; i < pars.length; i++) {
                         System.out.println(pars[i]);
                     }
-
-                    getUsersFromEmail(pars, courseName);
+                    sendEmail(emails.get(0).getFrom(), "Alex", "Love you bobita");
+                    //getUsersFromEmail(pars, courseName);
                 }
 
                 Thread.sleep(15000);
@@ -111,6 +136,14 @@ public class SmtpThread extends Thread {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void sendEmail(String To, String Subject, String Text){
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(To);
+        message.setSubject(Subject);
+        message.setText(Text);
+        emailSender.send(message);
     }
 
     public List<MailDTO> getEmail() {
