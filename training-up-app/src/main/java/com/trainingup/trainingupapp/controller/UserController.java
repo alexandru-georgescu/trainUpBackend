@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController
+@Controller
 @CrossOrigin(origins = "*")
 public class UserController {
 
@@ -26,11 +26,13 @@ public class UserController {
     @Autowired
     private SmtpService smtpService;
 
+    @ResponseBody
     @GetMapping("/user")
     public List<UserDTO> introProject() {
         return userService.findAll();
     }
 
+    @ResponseBody
     @GetMapping("/in")
     public List<UserDTO> in() {
         UserDTO pm = new UserDTO();
@@ -66,11 +68,13 @@ public class UserController {
         return userService.findAll();
     }
 
+    @ResponseBody
     @PostMapping("/user/login")
     public UserDTO loginPage(@RequestBody UserDTO user) {
         return userService.loginService(user.getEmail(), user.getPassword());
     }
 
+    @ResponseBody
     @CrossOrigin(origins = "*")
     @PostMapping("/user/wish")
     public UserDTO wishToEnroll(@RequestParam CourseUserDTO array) {
@@ -78,21 +82,26 @@ public class UserController {
     }
 
     @CrossOrigin(origins = "*")
+    @ResponseBody
     @PostMapping("/user/register")
     public UserDTO registerPage(@RequestBody UserDTO user) {
         return userService.addUser(user);
     }
 
+    @ResponseBody
     @GetMapping("/user/remove")
     public void removeUserByIdPage(@RequestParam("id") long id) {
         userService.removeUser(id);
     }
 
+    @ResponseBody
     @GetMapping("/user/find")
     public UserDTO findUserByIdPage(@RequestParam("id") long id) {
         return userService.findById(id);
     }
 
+
+    @ResponseBody
     @GetMapping("/user/findByLeader")
     public List<UserDTO> findByLeader(@RequestParam("leader") String leader) {
         return userService.findAllWithLeader(leader);
@@ -100,6 +109,7 @@ public class UserController {
     /**
      *  From smtp controller
      */
+    @ResponseBody
     @GetMapping("/smtp/emails")
     public List<String> getAllEmails() {
         return smtpService.getEmail();
