@@ -130,7 +130,7 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public void wishToEnroll(UserDTO user, CourseDTO course) {
+    public UserDTO wishToEnroll(UserDTO user, CourseDTO course) {
         User wish = userRepository.findAll().stream()
                 .filter(user1 -> user1.getEmail().equals(user.getEmail())).findFirst().orElse(null);
 
@@ -138,7 +138,7 @@ public class SimpleUserService implements UserService {
                 .filter(user1 -> user1.getEmail().equals(user.getEmail())).findFirst().orElse(null);
 
         if (wish == null || wish2 == null) {
-            return;
+            return null;
         }
 
         Course DTO_conv = CourseConvertor.convertToCourse(course);
@@ -149,6 +149,8 @@ public class SimpleUserService implements UserService {
         List<CourseDTO> w2 = wish2.getWishToEnroll();
         w2.add(course);
         wish2.setWishToEnroll(w2);
+
+        return wish2;
     }
 
     @Override

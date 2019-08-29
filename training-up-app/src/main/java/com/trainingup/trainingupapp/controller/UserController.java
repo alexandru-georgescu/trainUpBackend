@@ -2,6 +2,7 @@
 package com.trainingup.trainingupapp.controller;
 
 import com.trainingup.trainingupapp.dto.CourseDTO;
+import com.trainingup.trainingupapp.dto.CourseUserDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.service.smtp_service.SmtpService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
@@ -75,9 +76,8 @@ public class UserController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/user/wish")
-    public void wishToEnroll(@RequestBody UserDTO user, @RequestBody CourseDTO course) {
-        userService.wishToEnroll(user, course);
-        return;
+    public UserDTO wishToEnroll(@RequestBody CourseUserDTO array) {
+        return userService.wishToEnroll(array.getUser(), array.getCourse());
     }
 
     @CrossOrigin(origins = "*")
