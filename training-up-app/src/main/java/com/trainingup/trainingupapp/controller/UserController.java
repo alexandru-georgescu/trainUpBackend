@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -24,11 +25,10 @@ public class UserController {
     @Autowired
     private SmtpService smtpService;
 
+    @ResponseBody
     @GetMapping("/user")
-    public String introProject(Model model) {
-        List<UserDTO> users  = userService.findAll();
-        model.addAttribute("users", users);
-        return "findAll";
+    public List<UserDTO> introProject() {
+        return userService.findAll();
     }
 
     @ResponseBody
@@ -49,7 +49,9 @@ public class UserController {
         tm.setFirstName("t");
         tm.setLastName("m");
         tm.setPassword("Tm123456");
-
+        List<CourseDTO> c = new ArrayList<>();
+        c.add(new CourseDTO());
+        tm.setCourses(c);
         UserDTO user = new UserDTO();
         user.setType("USER");
         user.setLeader("ADMIN");

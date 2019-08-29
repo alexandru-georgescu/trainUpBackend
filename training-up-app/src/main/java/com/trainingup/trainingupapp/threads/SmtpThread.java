@@ -1,16 +1,29 @@
 package com.trainingup.trainingupapp.threads;
 
+import com.trainingup.trainingupapp.controller.CourseController;
+import com.trainingup.trainingupapp.controller.UserController;
+import com.trainingup.trainingupapp.convertor.CourseConvertor;
+import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.MailDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
+import com.trainingup.trainingupapp.service.course_service.CourseService;
+import com.trainingup.trainingupapp.service.user_service.UserService;
+import com.trainingup.trainingupapp.tables.Course;
+import org.apache.catalina.User;
 import org.jsoup.Jsoup;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.mail.*;
 import javax.mail.internet.MimeMultipart;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+@Service
 public class SmtpThread extends Thread {
 
     private String username = "trainupapply@gmail.com";
@@ -104,6 +117,42 @@ public class SmtpThread extends Thread {
 
 
     }
+
+    public void getUsersFromEmail(String[] body, String courseName) {
+
+        try {
+            URL userServices = new URL("http://localhost:8080/user");
+            URL courseService = new URL("http://localhost:8080/course")
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        List<UserDTO> emailUsers = new ArrayList<>();
+
+        List<UserDTO> serviceUsers = UserController.userService.findAll();
+
+        CourseDTO course = CourseController.courseService
+                .findAll().stream().filter(c -> c.getCourseName().toLowerCase().equals(courseName.toLowerCase()))
+                .findFirst().orElse(null);
+
+        if (course == null) {
+            return;
+        }
+
+        for (int i = 0; i < body.length; i++) {
+            String dummy = body[i];
+            emailUsers.add(serviceUsers.stream().filter(user -> user.getEmail().equals(dummy)).findFirst().orElse(null));
+
+        }
+
+        emailUsers.forEach(us -> {
+            List<CourseDTO> allCourses = us.getCourses();
+            allCourses.add(course);
+            us.setCourses(allCourses);
+        });
+
+    }
     public void run() {
         while (true) {
             try {
@@ -113,14 +162,26 @@ public class SmtpThread extends Thread {
                         Thread.sleep(15000);
                         continue;
                     }
-                    String[] subject = emails.get(0)
-                            .getSubject()
-                            .split("[[a-zA-Z]]", 0);
+
+                    String subjectUncut = emails.get(0).getSubject();
+
+                    subjectUncut = subjectUncut.replace("[", "");
+                    subjectUncut = subjectUncut.replace("]", " ");
+
+                    String[] subject = subjectUncut
+                            .split(" ");
 
                     String courseName = subject[0];
-                    System.out.println(subject.toString());
-                    System.out.println(courseName);
+                    for (int i = 0; i < subject.length ; i++) {
+                        System.out.println(subject[i]);
+                    }
+
+                    String body = emails.get(0).getBody();
+                    String[] pars = body.split("\n");
+                    System.out.println(pars.toString() + " " + courseName);
+                    getUsersFromEmail(pars, courseName);
                 }
+
                 Thread.sleep(15000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
