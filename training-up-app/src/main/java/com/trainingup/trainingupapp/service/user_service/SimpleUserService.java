@@ -50,7 +50,7 @@ public class SimpleUserService implements UserService {
         if (!validate(user.getEmail(), user.getPassword())) {
             return null;
         }
-        user.setLeader("TM");
+        user.setLeader("t.m@trainup.com");
         UserDTO checkUser = userBackend
                 .stream()
                 .filter(e -> e.getEmail().equals(user.getEmail()))
@@ -130,7 +130,7 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public void wishToEnroll(UserDTO user, CourseDTO course) {
+    public UserDTO wishToEnroll(UserDTO user, CourseDTO course) {
         User wish = userRepository.findAll().stream()
                 .filter(user1 -> user1.getEmail().equals(user.getEmail())).findFirst().orElse(null);
 
@@ -138,17 +138,27 @@ public class SimpleUserService implements UserService {
                 .filter(user1 -> user1.getEmail().equals(user.getEmail())).findFirst().orElse(null);
 
         if (wish == null || wish2 == null) {
-            return;
+            return null;
         }
 
         Course DTO_conv = CourseConvertor.convertToCourse(course);
         List<Course> w1 = wish.getWishToEnroll();
+
+        Course findCourse = w1.stream()
+                .filter(c -> c.getCourseName().toLowerCase().equals(course.getCourseName().toLowerCase()))
+                .findFirst().orElse(null);
+
+        if (findCourse != null) {
+            return wish2;
+        }
+
         w1.add(DTO_conv);
         wish.setWishToEnroll(w1);
 
         List<CourseDTO> w2 = wish2.getWishToEnroll();
         w2.add(course);
         wish2.setWishToEnroll(w2);
+        return wish2;
     }
 
     @Override

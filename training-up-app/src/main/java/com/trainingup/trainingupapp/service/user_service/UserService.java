@@ -10,9 +10,8 @@ public interface UserService {
     UserDTO findById(long id);
     UserDTO addUser(UserDTO user);
     void removeUser(long id);
-
     UserDTO loginService(String username, String password);
     boolean validate(String email, String password);
-    void wishToEnroll(UserDTO user, CourseDTO course);
+    UserDTO wishToEnroll(UserDTO user, CourseDTO course);
     List<UserDTO> findAllWithLeader(String leader);
 }
