@@ -1,19 +1,16 @@
 
 package com.trainingup.trainingupapp.controller;
 
-import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.CourseUserDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.service.smtp_service.SmtpService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
+import com.trainingup.trainingupapp.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -29,6 +26,11 @@ public class UserController {
     @GetMapping("/user")
     public List<UserDTO> introProject() {
         return userService.findAll();
+    }
+
+    @GetMapping("/userDB")
+    public List<User> introProject1() {
+        return userService.findAllDB();
     }
 
     @GetMapping("/in")
@@ -48,9 +50,7 @@ public class UserController {
         tm.setFirstName("t");
         tm.setLastName("m");
         tm.setPassword("Tm123456");
-        List<CourseDTO> c = new ArrayList<>();
-        c.add(new CourseDTO());
-        tm.setCourses(c);
+
         UserDTO user = new UserDTO();
         user.setType("USER");
         user.setLeader("ADMIN");

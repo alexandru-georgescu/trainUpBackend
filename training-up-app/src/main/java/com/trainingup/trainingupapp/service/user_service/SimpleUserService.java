@@ -32,6 +32,13 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
+    public List<User> findAllDB() {
+        return this.userRepository.findAll();
+    }
+
+
+
+    @Override
     public UserDTO findById(long id) {
         return this.userBackend
                 .stream()
@@ -130,35 +137,42 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public UserDTO wishToEnroll(UserDTO user, CourseDTO course) {
-        User wish = userRepository.findAll().stream()
-                .filter(user1 -> user1.getEmail().equals(user.getEmail())).findFirst().orElse(null);
+    public UserDTO wishToEnroll(UserDTO userDTO, CourseDTO courseDTO) {
+        User userDB = userRepository.findAll()
+                .stream().filter(us -> us.getId() == userDTO.getId())
+                .findFirst().orElse(null);
 
-        UserDTO wish2 =  userBackend.stream()
-                .filter(user1 -> user1.getEmail().equals(user.getEmail())).findFirst().orElse(null);
+        Course courseDB = CourseConvertor.convertToCourse(courseDTO);
 
-        if (wish == null || wish2 == null) {
+        UserDTO userDTO1 = userBackend
+                .stream().filter(us -> us.getId() == userDTO.getId())
+                .findFirst().orElse(null);
+
+        if (userDB == null || userDTO1 == null) {
             return null;
         }
 
-        Course DTO_conv = CourseConvertor.convertToCourse(course);
-        List<Course> w1 = wish.getWishToEnroll();
+        List<Course> courseList = userDB.getWishToEnroll();
 
-        Course findCourse = wish.getWishToEnroll().stream()
-                .filter(c -> c.getCourseName().toLowerCase().equals(course.getCourseName().toLowerCase()))
+        Course find = courseList.stream().filter(course -> course.getId() == courseDB.getId())
                 .findFirst().orElse(null);
 
-        if (findCourse != null) {
-            return wish2;
+
+        if (find != null) {
+            return userDTO;
         }
 
-        w1.add(DTO_conv);
-        wish.setWishToEnroll(w1);
+        List<Course> userCourse = userDB.getWishToEnroll();
+        userCourse.add(courseDB);
+        userDB.setWishToEnroll(userCourse);
 
-        List<CourseDTO> w2 = wish2.getWishToEnroll();
-        w2.add(course);
-        wish2.setWishToEnroll(w2);
-        return wish2;
+
+        List<CourseDTO> userCourseDTO = userDTO1.getWishToEnroll();
+        userCourseDTO.add(courseDTO);
+        userDTO1.setWishToEnroll(userCourseDTO);
+
+        userRepository.saveAndFlush(userDB);
+        return userDTO1;
     }
 
     @Override
@@ -167,4 +181,5 @@ public class SimpleUserService implements UserService {
                 .filter(user -> user.getLeader().toLowerCase().equals(leader.toLowerCase()))
                 .collect(Collectors.toList());
     }
+
 }

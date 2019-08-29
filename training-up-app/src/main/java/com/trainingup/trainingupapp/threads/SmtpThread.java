@@ -7,10 +7,7 @@ import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 import javax.mail.*;
 import javax.mail.internet.MimeMultipart;
 import java.io.IOException;
@@ -32,11 +29,18 @@ public class SmtpThread extends Thread {
     private Folder folder;
 
 
-    @Autowired
     private UserService userService;
+    private CourseService courseService;
 
     @Autowired
-    private CourseService courseService;
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Autowired
+    public void setCourseService(CourseService courseService) {
+        this.courseService = courseService;
+    }
 
     public void sendEmail() {
     }
@@ -119,6 +123,7 @@ public class SmtpThread extends Thread {
 
     public void getUsersFromEmail(String[] body, String courseName) {
 
+        System.out.println(userService);
         List<UserDTO> emailUsers = new ArrayList<>();
 
         List<UserDTO> serviceUsers = userService.findAll();
