@@ -88,6 +88,8 @@ public class SimpleUserService implements UserService {
         //TO: TODO, CAND O SA AVEM ADRESE
         smtpService.sendValidateEmail("trainupapply@gmail.com", newUser.getToken());
 
+
+
         userRepository.saveAndFlush(newUser);
         user.setId(newUser.getId());
 
