@@ -7,6 +7,8 @@ import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 import javax.mail.*;
@@ -36,6 +38,9 @@ public class SmtpThread extends Thread {
     private CourseService courseService;
 
     @Autowired
+    JavaMailSender javaMailSender;
+
+    @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
@@ -45,6 +50,15 @@ public class SmtpThread extends Thread {
         this.courseService = courseService;
     }
 
+    public void sendEmail(String to) {
+        SimpleMailMessage message = new SimpleMailMessage();
+
+        message.setTo(to);
+        message.setSubject("Message Received!");
+        message.setText("Hi, \n \n Your request has been received!s");
+
+        javaMailSender.send(message);
+    }
     public void initPop3() {
         if (properties == null) {
             properties = new Properties();
@@ -77,8 +91,10 @@ public class SmtpThread extends Thread {
                         continue;
                     }
 
-                    // System.out.println(emails.toString());
-
+                    if (emails.size() == 0) {
+                        Thread.sleep(15000);
+                        continue;
+                    }
                     if (emails.get(0).getSubject().split("]").length != 4) {
                         Thread.sleep(15000);
                         continue;
@@ -123,6 +139,7 @@ public class SmtpThread extends Thread {
                     }
 
                     getUsersFromEmail(pars, courseName);
+                    sendEmail(emails.get(0).getFrom());
                 }
 
                 Thread.sleep(15000);
@@ -151,6 +168,12 @@ public class SmtpThread extends Thread {
 
                 try {
                     String result = "";
+                    Object content = dummy.getContent();
+                    if (content instanceof String) {
+                        mail.setBody((String)content);
+                        System.out.println((String) content);
+                        continue;
+                    }
 
                     MimeMultipart mimeMultipart = (MimeMultipart) dummy.getContent();
                     int count = mimeMultipart.getCount();

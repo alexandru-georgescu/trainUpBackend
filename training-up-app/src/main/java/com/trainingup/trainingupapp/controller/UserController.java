@@ -94,8 +94,14 @@ public class UserController {
         return userService.findById(id);
     }
 
-    @PostMapping("/user/findByLeader")
+    @GetMapping("/user/findByLeader")
     public List<UserDTO> findByLeader(@RequestParam("leader") String leader) {
         return userService.findAllWithLeader(leader);
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/user/addCourseToUser")
+    public UserDTO addCourseToUser(@RequestBody CourseUserDTO array) {
+        return userService.addCourseToUser(array.getUser(), array.getCourse());
     }
 }
