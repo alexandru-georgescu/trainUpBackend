@@ -3,7 +3,6 @@ package com.trainingup.trainingupapp.controller;
 
 import com.trainingup.trainingupapp.dto.CourseUserDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
-import com.trainingup.trainingupapp.service.smtp_service.SmtpService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import com.trainingup.trainingupapp.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,10 +61,18 @@ public class UserController {
         user.setLeader("t.m@trainup.com");
         user.setEnable(true);
 
-        userService.addUser(user);
-        userService.addUser(pm);
-        userService.addUser(tm);
+        synchronized (user) {
+            userService.addUser(user);
+        }
 
+        synchronized (pm) {
+            userService.addUser(pm);
+        }
+
+        synchronized (tm) {
+            userService.addUser(tm);
+
+        }
         return userService.findAll();
     }
 

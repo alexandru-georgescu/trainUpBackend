@@ -80,7 +80,9 @@ public class SimpleUserService implements UserService {
         }
 
         User newUser = UserConvertor.convertToUser(user);
-        newUser.setEnable(false);
+        newUser.setCourses(new ArrayList<>());
+        newUser.setWishToEnroll(new ArrayList<>());
+
         newUser.setToken(String.valueOf(1231121312 + random.nextInt(10)));
 
         //TO: TODO, CAND O SA AVEM ADRESE
@@ -163,6 +165,7 @@ public class SimpleUserService implements UserService {
 
     @Override
     public UserDTO wishToEnroll(UserDTO userDTO, CourseDTO courseDTO) {
+        System.out.println(userDTO + " " + courseDTO);
         User userDB = userRepository.findAll()
                 .stream().filter(us -> us.getId() == userDTO.getId())
                 .findFirst().orElse(null);
