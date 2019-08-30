@@ -91,7 +91,10 @@ public class SmtpThread extends Thread {
                         continue;
                     }
 
-
+                    if (emails.size() == 0) {
+                        Thread.sleep(15000);
+                        continue;
+                    }
                     if (emails.get(0).getSubject().split("]").length != 4) {
                         Thread.sleep(15000);
                         continue;
