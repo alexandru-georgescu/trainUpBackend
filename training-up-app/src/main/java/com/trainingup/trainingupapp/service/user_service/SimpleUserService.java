@@ -83,7 +83,7 @@ public class SimpleUserService implements UserService {
         newUser.setCourses(new ArrayList<>());
         newUser.setWishToEnroll(new ArrayList<>());
 
-        newUser.setToken(String.valueOf(1231121312 + random.nextInt(10)));
+        newUser.setToken(String.valueOf(1231121312 + random.nextInt(10000000)));
 
         //TO: TODO, CAND O SA AVEM ADRESE
         smtpService.sendValidateEmail("trainupapply@gmail.com", newUser.getToken());
@@ -199,6 +199,7 @@ public class SimpleUserService implements UserService {
         userCourseDTO.add(courseDTO);
         userDTO1.setWishToEnroll(userCourseDTO);
 
+        System.out.println(userDB);
         userRepository.saveAndFlush(userDB);
         return userDTO1;
     }

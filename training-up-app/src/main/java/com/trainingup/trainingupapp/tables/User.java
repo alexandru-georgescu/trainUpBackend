@@ -31,11 +31,11 @@ public class User {
     private String password;
     private String token;
     private boolean enable;
-
-    @OneToMany
-    private List<Course> courses = new ArrayList<>();
     private String leader;
 
-    @OneToMany
+    @ManyToMany
+    private List<Course> courses = new ArrayList<>();
+
+    @ManyToMany
     private List<Course> wishToEnroll = new ArrayList<>();
 }
