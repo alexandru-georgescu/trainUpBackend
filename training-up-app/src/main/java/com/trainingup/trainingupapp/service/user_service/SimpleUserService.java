@@ -46,7 +46,7 @@ public class SimpleUserService implements UserService {
 
     @Override
     public void saveAndFlush(User user) {
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
     }
 
     @Override
