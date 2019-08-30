@@ -20,9 +20,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private SmtpService smtpService;
-
     @GetMapping("/user")
     public List<UserDTO> introProject() {
         return userService.findAll();
@@ -42,6 +39,7 @@ public class UserController {
         pm.setFirstName("p");
         pm.setLastName("m");
         pm.setPassword("Pm123456");
+        pm.setLeader("admin.admin@trainup.com");
 
         UserDTO tm = new UserDTO();
         tm.setType("TM");
@@ -50,6 +48,7 @@ public class UserController {
         tm.setFirstName("t");
         tm.setLastName("m");
         tm.setPassword("Tm123456");
+        tm.setLeader("p.m@trainup.com");
 
         UserDTO user = new UserDTO();
         user.setType("USER");
@@ -58,6 +57,7 @@ public class UserController {
         user.setFirstName("u");
         user.setLastName("s");
         user.setPassword("User123456");
+        user.setLeader("t.m@trainup.com");
 
         userService.addUser(user);
         userService.addUser(pm);
@@ -66,6 +66,7 @@ public class UserController {
         return userService.findAll();
     }
 
+    @CrossOrigin(origins = "*")
     @PostMapping("/user/login")
     public UserDTO loginPage(@RequestBody UserDTO user) {
         return userService.loginService(user.getEmail(), user.getPassword());
@@ -93,16 +94,8 @@ public class UserController {
         return userService.findById(id);
     }
 
-    @GetMapping("/user/findByLeader")
+    @PostMapping("/user/findByLeader")
     public List<UserDTO> findByLeader(@RequestParam("leader") String leader) {
         return userService.findAllWithLeader(leader);
     }
-    /**
-     *  From smtp controller
-     */
-    @GetMapping("/smtp/emails")
-    public List<String> getAllEmails() {
-        return smtpService.getEmail();
-    }
-
 }

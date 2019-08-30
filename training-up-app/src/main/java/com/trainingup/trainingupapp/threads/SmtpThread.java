@@ -4,17 +4,9 @@ import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.MailDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
-import com.trainingup.trainingupapp.service.course_service.SimpleCourseService;
-import com.trainingup.trainingupapp.service.user_service.SimpleUserService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.mail.*;
@@ -43,9 +35,6 @@ public class SmtpThread extends Thread {
     @Autowired
     private CourseService courseService;
 
-
-    JavaMailSender emailSender = getJavaMailSender();
-
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
@@ -54,24 +43,6 @@ public class SmtpThread extends Thread {
     @Autowired
     public void setCourseService(CourseService courseService) {
         this.courseService = courseService;
-    }
-
-
-    public JavaMailSender getJavaMailSender() {
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtp.gmail.com");
-        mailSender.setPort(587);
-
-        mailSender.setUsername("trainupapply@gmail.com");
-        mailSender.setPassword("trainUp112");
-
-        Properties props = mailSender.getJavaMailProperties();
-        props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.debug", "true");
-
-        return mailSender;
     }
 
     public void initPop3() {
@@ -106,7 +77,12 @@ public class SmtpThread extends Thread {
                         continue;
                     }
 
-                    System.out.println(emails.toString());
+                    // System.out.println(emails.toString());
+
+                    if (emails.get(0).getSubject().split("]").length != 4) {
+                        Thread.sleep(15000);
+                        continue;
+                    }
 
                     String[] subject = emails.get(0)
                             .getSubject()
@@ -115,20 +91,38 @@ public class SmtpThread extends Thread {
                             .split(" ");
 
                     String courseName = subject[0];
+
                     for (int i = 0; i < subject.length; i++) {
-                        System.out.println(subject[i]);
+                        //    System.out.println(subject[i]);
                     }
 
                     String body = emails.get(0).getBody();
 
                     String[] pars = body.split("\n");
 
+                    /**
+                     * TODO: REGEX PENTRU MAIL, VERIFICARE MAIL VALID
+                     * VLAD FA ASTA DACA NU AI CE FACE!
+                     * PS: ASTA SPER SA MEARGA
+                     * + = CEL PUTIN O DATA
+                     * * = DE 0 SAU MAI MULTE ORI
+                     * ESCAPEZI CU / ORICE CARACTER GALBEN DACA VREI CA EL SA FIE INTERPRETAT CA SI TEXT
+                     * NU DA PUSH PE MASTER
+                     * DAI PULL INAINTE SA TE APUCI DE LUCRU
+                     * DACA AVEM CONFLITE ITI RUP CAPU
+                     * HAVE FUN!
+                     */
                     System.out.println(courseName);
                     for (int i = 0; i < pars.length; i++) {
+                        if (!pars[i].matches("[a-zA-Z]+" + "." + "[a-zA-Z]+" + "[@trainup.com]+")) {
+                            System.out.println(pars[i].matches("[a-zA-Z]*" + "." + "[a-zA-Z]*" + "@trainup" + "." + "com"));
+                            System.out.println(pars[i].matches("[a-zA-Z]*" + "." + "[a-zA-Z]*"));
+                            continue;
+                        }
                         System.out.println(pars[i]);
                     }
-                    sendEmail(emails.get(0).getFrom(), "Alex", "Love you bobita");
-                    //getUsersFromEmail(pars, courseName);
+
+                    getUsersFromEmail(pars, courseName);
                 }
 
                 Thread.sleep(15000);
@@ -136,14 +130,6 @@ public class SmtpThread extends Thread {
                 e.printStackTrace();
             }
         }
-    }
-
-    public void sendEmail(String To, String Subject, String Text){
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(To);
-        message.setSubject(Subject);
-        message.setText(Text);
-        emailSender.send(message);
     }
 
     public List<MailDTO> getEmail() {
