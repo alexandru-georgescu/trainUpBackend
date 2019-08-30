@@ -21,6 +21,7 @@ public class UserConvertor {
         List<Course> array = new ArrayList<>();
         user.getWishToEnroll().forEach(e -> array.add(CourseConvertor.convertToCourse(e)));
         convertedUser.setWishToEnroll(array);
+        convertedUser.setEnable(user.isEnable());
         return convertedUser;
     }
 
@@ -34,6 +35,7 @@ public class UserConvertor {
         convertedUser.setId(user.getId());
         convertedUser.setLeader(user.getLeader());
         List<CourseDTO> array = new ArrayList<>();
+        convertedUser.setEnable(user.isEnable());
         user.getWishToEnroll().forEach(e -> array.add(CourseConvertor.convertToCourseDTO(e)));
         convertedUser.setWishToEnroll(array);
         return convertedUser;

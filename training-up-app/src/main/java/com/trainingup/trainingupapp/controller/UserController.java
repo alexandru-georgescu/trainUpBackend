@@ -40,6 +40,7 @@ public class UserController {
         pm.setLastName("m");
         pm.setPassword("Pm123456");
         pm.setLeader("admin.admin@trainup.com");
+        pm.setEnable(true);
 
         UserDTO tm = new UserDTO();
         tm.setType("TM");
@@ -49,6 +50,7 @@ public class UserController {
         tm.setLastName("m");
         tm.setPassword("Tm123456");
         tm.setLeader("p.m@trainup.com");
+        tm.setEnable(true);
 
         UserDTO user = new UserDTO();
         user.setType("USER");
@@ -58,6 +60,7 @@ public class UserController {
         user.setLastName("s");
         user.setPassword("User123456");
         user.setLeader("t.m@trainup.com");
+        user.setEnable(true);
 
         userService.addUser(user);
         userService.addUser(pm);

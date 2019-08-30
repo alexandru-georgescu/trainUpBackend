@@ -25,4 +25,5 @@ public class UserDTO {
     private List<CourseDTO> courses = new ArrayList<>();
     private String leader;
     private List<CourseDTO> wishToEnroll = new ArrayList<>();
+    private boolean enable;
 }
