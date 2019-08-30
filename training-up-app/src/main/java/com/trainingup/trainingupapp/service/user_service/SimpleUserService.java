@@ -216,7 +216,7 @@ public class SimpleUserService implements UserService {
             return null;
         }
 
-        List<Course> courseList = userDB.getWishToEnroll();
+        List<Course> courseList = userDB.getCourses();
 
         Course find = courseList.stream().filter(course -> course.getId() == courseDB.getId())
                 .findFirst().orElse(null);
