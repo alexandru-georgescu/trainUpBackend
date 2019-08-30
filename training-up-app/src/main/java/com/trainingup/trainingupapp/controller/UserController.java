@@ -20,9 +20,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private SmtpService smtpService;
-
     @GetMapping("/user")
     public List<UserDTO> introProject() {
         return userService.findAll();
@@ -97,16 +94,8 @@ public class UserController {
         return userService.findById(id);
     }
 
-    @GetMapping("/user/findByLeader")
+    @PostMapping("/user/findByLeader")
     public List<UserDTO> findByLeader(@RequestParam("leader") String leader) {
         return userService.findAllWithLeader(leader);
     }
-    /**
-     *  From smtp controller
-     */
-    @GetMapping("/smtp/emails")
-    public List<String> getAllEmails() {
-        return smtpService.getEmail();
-    }
-
 }

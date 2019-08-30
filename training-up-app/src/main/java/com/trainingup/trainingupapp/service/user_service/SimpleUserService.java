@@ -4,6 +4,7 @@ import com.trainingup.trainingupapp.convertor.UserConvertor;
 import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.repository.UserRepository;
+import com.trainingup.trainingupapp.service.smtp_service.SmtpService;
 import com.trainingup.trainingupapp.tables.Course;
 import com.trainingup.trainingupapp.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,7 +22,12 @@ public class SimpleUserService implements UserService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    SmtpService smtpService;
+
     List<UserDTO> userBackend = new ArrayList<>();
+
+    Random random = new Random();
 
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -37,6 +44,10 @@ public class SimpleUserService implements UserService {
     }
 
 
+    @Override
+    public void saveAndFlush(User user) {
+        userRepository.saveAndFlush(user);
+    }
 
     @Override
     public UserDTO findById(long id) {
@@ -69,8 +80,15 @@ public class SimpleUserService implements UserService {
         }
 
         User newUser = UserConvertor.convertToUser(user);
+        newUser.setEnable(false);
+        newUser.setToken(String.valueOf(1231121312 + random.nextInt(10)));
+
+        //TO: TODO, CAND O SA AVEM ADRESE
+        smtpService.sendValidateEmail("trainupapply@gmail.com", newUser.getToken());
+
         userRepository.saveAndFlush(newUser);
         user.setId(newUser.getId());
+
 
         userBackend.add(user);
         return user;
@@ -92,7 +110,6 @@ public class SimpleUserService implements UserService {
 
     @Override
     public UserDTO loginService(String email, String password) {
-
         if (!validate(email, password)) {
             return null;
         }
@@ -104,6 +121,14 @@ public class SimpleUserService implements UserService {
             }
             return false;
         }).findFirst();
+
+        if (user != null) {
+            User userDB = userRepository.findById(user.get().getId()).orElse(null);
+            if (!userDB.isEnable()) {
+                return null;
+            }
+        }
+
         return user.orElse(null);
     }
 

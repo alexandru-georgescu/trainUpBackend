@@ -16,7 +16,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         httpSecurity.cors();
         httpSecurity.addFilterBefore(new CustomFilter(), ChannelProcessingFilter.class);
         httpSecurity
-                .authorizeRequests().antMatchers("/").permitAll()
+                .authorizeRequests().antMatchers("/trainup/validate").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and().httpBasic().and().csrf().disable();

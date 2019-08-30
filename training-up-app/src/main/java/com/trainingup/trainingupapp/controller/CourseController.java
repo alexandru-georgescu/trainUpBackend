@@ -22,7 +22,7 @@ public class CourseController {
     }
 
 
-    @GetMapping("/coruse/isCurrent")
+    @PostMapping("/course/isCurrent")
     public List<CourseDTO> findCurrent(@RequestBody UserDTO userDTO) {
         LocalDate now = LocalDate.now();
 
@@ -33,7 +33,7 @@ public class CourseController {
     }
 
 
-    @GetMapping("/coruse/isBefore")
+    @PostMapping("/course/isBefore")
     public List<CourseDTO> findBefore(@RequestBody UserDTO userDTO) {
         LocalDate now = LocalDate.now();
 

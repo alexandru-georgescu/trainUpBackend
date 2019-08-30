@@ -16,4 +16,5 @@ public interface UserService {
     UserDTO wishToEnroll(UserDTO user, CourseDTO course);
     List<UserDTO> findAllWithLeader(String leader);
     List<User> findAllDB();
+    void saveAndFlush(User user);
 }
