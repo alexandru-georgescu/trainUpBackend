@@ -89,7 +89,6 @@ public class SimpleUserService implements UserService {
         smtpService.sendValidateEmail("trainupapply@gmail.com", newUser.getToken());
 
 
-
         userRepository.saveAndFlush(newUser);
         user.setId(newUser.getId());
 
