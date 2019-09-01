@@ -61,7 +61,5 @@
 
 
 ## HAVE_FUN
-<p align="center">
-![Alt Text](https://media.giphy.com/media/s2qXK8wAvkHTO/giphy.gif)
-</p>
+|:--:| ![Alt Text](https://media.giphy.com/media/s2qXK8wAvkHTO/giphy.gif)
 
