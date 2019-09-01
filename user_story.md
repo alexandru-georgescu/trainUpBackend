@@ -4,12 +4,12 @@
 1. [Reminder](#Reminder)
 2. [Vizion](#Vizion)
 3. [Functionality](#Functionality):
-	1. [Login page](##Login_page)
+	1. [Login page](#Login_page)
 	2. [Register page](#Register_page)
-	3. [User page](##User_page)
-	4. [TM page](##Tm_page)
-	5. [PM page](##Pm_page)
-	6. [Admin page](##Admin_page)
+	3. [User page](#User_page)
+	4. [TM page](#Tm_page)
+	5. [PM page](#Pm_page)
+	6. [Admin page](#Admin_page)
 
 
 ## Reminder
