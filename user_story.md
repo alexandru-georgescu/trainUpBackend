@@ -15,7 +15,9 @@
 ## Reminder
 - Inainte sa incep as vrea sa va multumesc pentru buna colaborare si intelegere. Have fun!
 
-![Alt Text](https://media.giphy.com/media/s2qXK8wAvkHTO/giphy.gif)
+<p align="center">
+![Alt Text](https://media.giphy.com/media/NylYRvfyaIwtW/giphy.gif)
+</p>
 
 ## Vizion
 
@@ -59,5 +61,7 @@
 
 
 ## HAVE_FUN
+<p align="center">
 ![Alt Text](https://media.giphy.com/media/s2qXK8wAvkHTO/giphy.gif)
+</p>
 
