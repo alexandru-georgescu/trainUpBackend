@@ -33,7 +33,7 @@
 
 - When I sign up I want a pop up as a reminder that I have to activate my account.
 
-- This pop has two buttons, "ok" leading to the login page and the "Go to email" button which opens a new window to "https//mail.google.com" to activate the account but at the same time redirects me to login on current page.
+- This pop has two buttons, "ok" leading to the login page and the "Go to email" button which opens a new window to "https://mail.google.com" to activate the account but at the same time redirects me to login on current page.
 
 ### User_page
 
