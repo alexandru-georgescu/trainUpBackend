@@ -15,6 +15,8 @@
 ## Reminder
 - Inainte sa incep as vrea sa va multumesc pentru buna colaborare si intelegere. Have fun!
 
+![Alt Text](https://media.giphy.com/media/s2qXK8wAvkHTO/giphy.gif)
+
 ## Vizion
 
 - The platform needs more **dynamic elements**, easier **accessibility** of functionality for users and more **security**.
@@ -54,4 +56,8 @@
 ### Admin_page
 
 - The admin page must have a way to create users and set the user type, TM, PM or USER.
+
+
+## HAVE_FUN
+![Alt Text](https://media.giphy.com/media/s2qXK8wAvkHTO/giphy.gif)
 
