@@ -56,7 +56,10 @@ public class SimpleUserService implements UserService {
 
         List<Course> courses = userDB.getWishToEnroll();
         courses.removeIf(c -> c.getId() == course.getId());
-        userDB.setWaitToEnroll(courses);
+
+        List<Course> newCourses = new ArrayList<>(courses);
+        userDB.setWishToEnroll(newCourses);
+
         userRepository.save(userDB);
 
         UserDTO userDTO = userBackend.stream()
@@ -67,9 +70,9 @@ public class SimpleUserService implements UserService {
             return null;
         }
 
-        List<CourseDTO> courseDTOS = userDTO.getWaitToEnroll();
+        List<CourseDTO> courseDTOS = userDTO.getWishToEnroll();
         courseDTOS.removeIf(c -> c.getId() == course.getId());
-        userDTO.setWaitToEnroll(courseDTOS);
+        userDTO.setWishToEnroll(courseDTOS);
 
         return userDTO;
     }
@@ -268,12 +271,19 @@ public class SimpleUserService implements UserService {
         userCourse.add(courseDB);
         userDB.setWaitToEnroll(userCourse);
 
-
         List<CourseDTO> userCourseDTO = userDTO1.getWaitToEnroll();
         userCourseDTO.add(courseDTO);
         userDTO1.setWaitToEnroll(userCourseDTO);
 
-        System.out.println(userDB);
+        List<Course> userCourseWish = userDB.getWishToEnroll();
+        userCourseWish.removeIf(c -> c.getId() == courseDB.getId());
+        List<Course> newWish = new ArrayList<>(userCourseWish);
+        userDB.setWishToEnroll(newWish);
+
+        List<CourseDTO> userDTOWish = userDTO1.getWishToEnroll();
+        userCourseWish.removeIf(c -> c.getId() == courseDB.getId());
+        userDTO1.setWishToEnroll(userDTOWish);
+
         userRepository.saveAndFlush(userDB);
         return userDTO1;
     }

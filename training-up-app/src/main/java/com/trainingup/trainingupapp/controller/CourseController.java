@@ -21,7 +21,6 @@ public class CourseController {
         return courseService.findAll();
     }
 
-
     @PostMapping("/course/isCurrent")
     public List<CourseDTO> findCurrent(@RequestBody UserDTO userDTO) {
         LocalDate now = LocalDate.now();
@@ -38,7 +37,16 @@ public class CourseController {
         LocalDate now = LocalDate.now();
 
         return userDTO.getCourses().stream()
-                .filter(courseDTO -> courseDTO.getEndDate().isAfter(now))
+                .filter(courseDTO -> courseDTO.getEndDate().isBefore(now))
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/course/isFuture")
+    public List<CourseDTO> findFuture() {
+        LocalDate now = LocalDate.now();
+
+        return courseService.findAll().stream()
+                .filter(courseDTO -> courseDTO.getStartDate().isAfter(now))
                 .collect(Collectors.toList());
     }
 

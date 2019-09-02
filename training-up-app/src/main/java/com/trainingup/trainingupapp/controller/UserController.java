@@ -58,7 +58,7 @@ public class UserController {
         CourseDTO courseDTO3 = new CourseDTO();
         courseDTO3.setActualCapacity(10);
         courseDTO3.setCapacity(20);
-        courseDTO3.setCourseName("Curs2");
+        courseDTO3.setCourseName("Curs3");
         courseDTO3.setStartDate(LocalDate.now().minusWeeks(10));
         courseDTO3.setEndDate(LocalDate.now().minusWeeks(5));
         courseDTO3.setProjectManager("Liviu Gloriosu3'");

@@ -209,8 +209,10 @@ public class SmtpThread extends Thread {
 
         Arrays.stream(body).forEach(element -> {
             System.out.println("->"+element+"<-");
+            String newElement = element.replaceAll("\r", "");
+
             UserDTO user1 = serviceUsers.stream()
-                    .filter(user -> user.getEmail().toLowerCase().equals(element.toLowerCase()))
+                    .filter(user -> user.getEmail().toLowerCase().equals(newElement.toLowerCase()))
                     .findFirst()
                     .orElse(null);
 
