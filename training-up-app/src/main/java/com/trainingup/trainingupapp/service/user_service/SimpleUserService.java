@@ -43,6 +43,37 @@ public class SimpleUserService implements UserService {
         return this.userRepository.findAll();
     }
 
+    @Override
+    public UserDTO removeFromWish(UserDTO user, CourseDTO course) {
+
+        User userDB = userRepository.findAll().stream()
+                .filter(u -> u.getId() == user.getId())
+                .findFirst().orElse(null);
+
+        if (userDB == null) {
+            return null;
+        }
+
+        List<Course> courses = userDB.getWishToEnroll();
+        courses.removeIf(c -> c.getId() == course.getId());
+        userDB.setWaitToEnroll(courses);
+        userRepository.save(userDB);
+
+        UserDTO userDTO = userBackend.stream()
+                .filter(u -> u.getId() == user.getId())
+                .findFirst().orElse(null);
+
+        if (userDTO == null) {
+            return null;
+        }
+
+        List<CourseDTO> courseDTOS = userDTO.getWaitToEnroll();
+        courseDTOS.removeIf(c -> c.getId() == course.getId());
+        userDTO.setWaitToEnroll(courseDTOS);
+
+        return userDTO;
+    }
+
 
     @Override
     public void saveAndFlush(User user) {
@@ -86,8 +117,9 @@ public class SimpleUserService implements UserService {
         newUser.setToken(String.valueOf(1231121312 + random.nextInt(10000000)));
 
         //TO: TODO, CAND O SA AVEM ADRESE
-        smtpService.sendValidateEmail("trainupapply@gmail.com", newUser.getToken());
-
+        if(!user.isEnable()) {
+            smtpService.sendValidateEmail("trainupapply@gmail.com", newUser.getToken());
+        }
 
         userRepository.saveAndFlush(newUser);
         user.setId(newUser.getId());

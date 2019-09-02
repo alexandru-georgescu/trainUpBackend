@@ -153,4 +153,10 @@ public class UserController {
         return userService.findAllWithLeader(leader);
     }
 
+    @CrossOrigin(origins = "*")
+    @PostMapping("user/refuseToEnroll")
+    public UserDTO refuseToEnroll(@RequestBody CourseUserDTO array) {
+        return userService.removeFromWish(array.getUser(),array.getCourse());
+    }
+
 }

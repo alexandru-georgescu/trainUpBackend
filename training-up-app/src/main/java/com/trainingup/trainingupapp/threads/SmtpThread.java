@@ -15,6 +15,7 @@ import javax.mail.*;
 import javax.mail.internet.MimeMultipart;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -59,6 +60,7 @@ public class SmtpThread extends Thread {
 
         javaMailSender.send(message);
     }
+
     public void initPop3() {
         if (properties == null) {
             properties = new Properties();
@@ -86,55 +88,50 @@ public class SmtpThread extends Thread {
             try {
                 synchronized (this) {
                     List<MailDTO> emails = getEmail();
+
                     if (emails == null) {
                         Thread.sleep(15000);
                         continue;
                     }
 
-                    if (emails.size() == 0) {
-                        Thread.sleep(15000);
-                        continue;
+                    System.out.println("AM PRIMIT MAIL URI BA!");
+                    for (int i = 0; i < emails.size(); i++) {
+                        if (emails.get(i).getSubject().split("]").length != 4) {
+                            //Thread.sleep(15000);
+                            continue;
+                        }
+
+                        String[] subject = emails.get(i)
+                                .getSubject()
+                                .replace("[", "")
+                                .replace("]", " ")
+                                .split(" ");
+
+                        String courseName = subject[0];
+
+
+                        String body = emails.get(i).getBody();
+                        String[] pars = body.split("\n");
+
+                        for (int j = 1; j < pars.length; j++) {
+                            pars[i] = pars[i].replace("\r", "");
+                        }
+
+                        /**
+                         * TODO: REGEX PENTRU MAIL, VERIFICARE MAIL VALID
+                         * VLAD FA ASTA DACA NU AI CE FACE!
+                         * PS: ASTA SPER SA MEARGA
+                         * + = CEL PUTIN O DATA
+                         * * = DE 0 SAU MAI MULTE ORI
+                         * ESCAPEZI CU / ORICE CARACTER GALBEN DACA VREI CA EL SA FIE INTERPRETAT CA SI TEXT
+                         * NU DA PUSH PE MASTER
+                         * DAI PULL INAINTE SA TE APUCI DE LUCRU
+                         * DACA AVEM CONFLITE ITI RUP CAPU
+                         * HAVE FUN!
+                         */
+                        getUsersFromEmail(pars, courseName);
+                        //sendEmail(emails.get(i).getFrom());
                     }
-                    if (emails.get(0).getSubject().split("]").length != 4) {
-                        Thread.sleep(15000);
-                        continue;
-                    }
-
-                    String[] subject = emails.get(0)
-                            .getSubject()
-                            .replace("[", "")
-                            .replace("]", " ")
-                            .split(" ");
-
-                    String courseName = subject[0];
-
-                    for (int i = 0; i < subject.length; i++) {
-                    //    System.out.println(subject[i]);
-                    }
-
-                    String body = emails.get(0).getBody();
-
-                    String[] pars = body.split("\n");
-
-                    /**
-                     * TODO: REGEX PENTRU MAIL, VERIFICARE MAIL VALID
-                     * VLAD FA ASTA DACA NU AI CE FACE!
-                     * PS: ASTA SPER SA MEARGA
-                     * + = CEL PUTIN O DATA
-                     * * = DE 0 SAU MAI MULTE ORI
-                     * ESCAPEZI CU / ORICE CARACTER GALBEN DACA VREI CA EL SA FIE INTERPRETAT CA SI TEXT
-                     * NU DA PUSH PE MASTER
-                     * DAI PULL INAINTE SA TE APUCI DE LUCRU
-                     * DACA AVEM CONFLITE ITI RUP CAPU
-                     * HAVE FUN!
-                     */
-                    System.out.println(courseName);
-                    for (int i = 0; i < pars.length; i++) {
-                        System.out.println(pars[i]);
-                    }
-
-                    getUsersFromEmail(pars, courseName);
-                    sendEmail(emails.get(0).getFrom());
                 }
 
                 Thread.sleep(15000);
@@ -165,7 +162,7 @@ public class SmtpThread extends Thread {
                     String result = "";
                     Object content = dummy.getContent();
                     if (content instanceof String) {
-                        mail.setBody((String)content);
+                        mail.setBody((String) content);
                         System.out.println((String) content);
                         continue;
                     }
@@ -210,6 +207,18 @@ public class SmtpThread extends Thread {
         List<UserDTO> emailUsers = new ArrayList<>();
         List<UserDTO> serviceUsers = userService.findAll();
 
+        Arrays.stream(body).forEach(element -> {
+            System.out.println("->"+element+"<-");
+            UserDTO user1 = serviceUsers.stream()
+                    .filter(user -> user.getEmail().toLowerCase().equals(element.toLowerCase()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (user1 != null) {
+                emailUsers.add(user1);
+            }
+        });
+
         System.out.println(userService.findAll());
         System.out.println(courseService.findAll());
 
@@ -218,20 +227,11 @@ public class SmtpThread extends Thread {
                 .filter(c -> c.getCourseName().toLowerCase().equals(courseName.toLowerCase()))
                 .findFirst().orElse(null);
 
+        System.out.println("am gasit    " + course);
         if (course == null) {
             return;
         }
 
-        for (int i = 0; i < body.length; i++) {
-            String dummy = body[i];
-            UserDTO user1 = serviceUsers.stream()
-                    .filter(user -> user.getEmail().equals(dummy))
-                    .findFirst()
-                    .orElse(null);
-            if (user1 != null) {
-                emailUsers.add(user1);
-            }
-        }
 
         emailUsers.forEach(us -> {
             List<CourseDTO> allCourses = us.getWaitToEnroll();
