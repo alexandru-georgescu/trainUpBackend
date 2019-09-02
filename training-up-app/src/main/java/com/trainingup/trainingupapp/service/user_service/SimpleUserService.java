@@ -125,7 +125,7 @@ public class SimpleUserService implements UserService {
             return false;
         }).findFirst();
 
-        if (user != null) {
+        if (user.isPresent()) {
             User userDB = userRepository.findById(user.get().getId()).orElse(null);
             if (!userDB.isEnable()) {
                 return null;
@@ -199,6 +199,47 @@ public class SimpleUserService implements UserService {
         List<CourseDTO> userCourseDTO = userDTO1.getWishToEnroll();
         userCourseDTO.add(courseDTO);
         userDTO1.setWishToEnroll(userCourseDTO);
+
+        System.out.println(userDB);
+        userRepository.saveAndFlush(userDB);
+        return userDTO1;
+    }
+
+    @Override
+    public UserDTO waitToEnroll(UserDTO userDTO, CourseDTO courseDTO) {
+        System.out.println(userDTO + " " + courseDTO);
+        User userDB = userRepository.findAll()
+                .stream().filter(us -> us.getId() == userDTO.getId())
+                .findFirst().orElse(null);
+
+        Course courseDB = CourseConvertor.convertToCourse(courseDTO);
+
+        UserDTO userDTO1 = userBackend
+                .stream().filter(us -> us.getId() == userDTO.getId())
+                .findFirst().orElse(null);
+
+        if (userDB == null || userDTO1 == null) {
+            return null;
+        }
+
+        List<Course> courseList = userDB.getWaitToEnroll();
+
+        Course find = courseList.stream().filter(course -> course.getId() == courseDB.getId())
+                .findFirst().orElse(null);
+
+
+        if (find != null) {
+            return userDTO;
+        }
+
+        List<Course> userCourse = userDB.getWaitToEnroll();
+        userCourse.add(courseDB);
+        userDB.setWaitToEnroll(userCourse);
+
+
+        List<CourseDTO> userCourseDTO = userDTO1.getWaitToEnroll();
+        userCourseDTO.add(courseDTO);
+        userDTO1.setWaitToEnroll(userCourseDTO);
 
         System.out.println(userDB);
         userRepository.saveAndFlush(userDB);

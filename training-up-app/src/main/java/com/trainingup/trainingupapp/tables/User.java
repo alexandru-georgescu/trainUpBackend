@@ -38,4 +38,9 @@ public class User {
 
     @ManyToMany
     private List<Course> wishToEnroll = new ArrayList<>();
+
+    @ManyToMany
+    private List<Course> waitToEnroll = new ArrayList<>();
+
+
 }

@@ -22,8 +22,10 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private String password;
-    private List<CourseDTO> courses = new ArrayList<>();
-    private String leader;
-    private List<CourseDTO> wishToEnroll = new ArrayList<>();
     private boolean enable;
+    private String leader;
+
+    private List<CourseDTO> courses = new ArrayList<>();
+    private List<CourseDTO> wishToEnroll = new ArrayList<>();
+    private List<CourseDTO> waitToEnroll = new ArrayList<>();
 }

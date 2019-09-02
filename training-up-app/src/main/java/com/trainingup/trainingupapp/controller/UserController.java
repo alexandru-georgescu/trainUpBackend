@@ -1,8 +1,10 @@
 
 package com.trainingup.trainingupapp.controller;
 
+import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.CourseUserDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
+import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import com.trainingup.trainingupapp.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -18,6 +21,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CourseService courseService;
 
     @GetMapping("/user")
     public List<UserDTO> introProject() {
@@ -31,6 +37,32 @@ public class UserController {
 
     @GetMapping("/in")
     public List<UserDTO> in() {
+
+        CourseDTO courseDTO1 = new CourseDTO();
+        courseDTO1.setActualCapacity(10);
+        courseDTO1.setCapacity(20);
+        courseDTO1.setCourseName("Curs1");
+        courseDTO1.setStartDate(LocalDate.now());
+        courseDTO1.setEndDate(LocalDate.now().plusMonths(1));
+        courseDTO1.setProjectManager("Liviu Gloriosu'");
+
+
+        CourseDTO courseDTO2 = new CourseDTO();
+        courseDTO2.setActualCapacity(10);
+        courseDTO2.setCapacity(20);
+        courseDTO2.setCourseName("Curs2");
+        courseDTO2.setStartDate(LocalDate.now().plusMonths(5));
+        courseDTO2.setEndDate(LocalDate.now().plusMonths(10));
+        courseDTO2.setProjectManager("Liviu Gloriosu2'");
+
+        CourseDTO courseDTO3 = new CourseDTO();
+        courseDTO3.setActualCapacity(10);
+        courseDTO3.setCapacity(20);
+        courseDTO3.setCourseName("Curs2");
+        courseDTO3.setStartDate(LocalDate.now().minusWeeks(10));
+        courseDTO3.setEndDate(LocalDate.now().minusWeeks(5));
+        courseDTO3.setProjectManager("Liviu Gloriosu3'");
+
         UserDTO pm = new UserDTO();
         pm.setType("PM");
         pm.setLeader("ADMIN");
@@ -61,18 +93,18 @@ public class UserController {
         user.setLeader("t.m@trainup.com");
         user.setEnable(true);
 
-        synchronized (user) {
+        synchronized (userService) {
             userService.addUser(user);
-        }
-
-        synchronized (pm) {
             userService.addUser(pm);
-        }
-
-        synchronized (tm) {
             userService.addUser(tm);
-
         }
+
+        synchronized (courseService) {
+            courseService.addCourse(courseDTO1);
+            courseService.addCourse(courseDTO2);
+            courseService.addCourse(courseDTO3);
+        }
+
         return userService.findAll();
     }
 
@@ -86,6 +118,18 @@ public class UserController {
     @PostMapping("/user/wish")
     public UserDTO wishToEnroll(@RequestBody CourseUserDTO array) {
         return userService.wishToEnroll(array.getUser(), array.getCourse());
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/user/addCourse")
+    public UserDTO addCourseToUser(@RequestBody CourseUserDTO array) {
+        return userService.addCourseToUser(array.getUser(), array.getCourse());
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/user/waitToEnroll")
+    public UserDTO waitToEnroll(@RequestBody CourseUserDTO array) {
+        return userService.waitToEnroll(array.getUser(), array.getCourse());
     }
 
     @CrossOrigin(origins = "*")
@@ -109,9 +153,4 @@ public class UserController {
         return userService.findAllWithLeader(leader);
     }
 
-    @CrossOrigin(origins = "*")
-    @PostMapping("/user/addCourseToUser")
-    public UserDTO addCourseToUser(@RequestBody CourseUserDTO array) {
-        return userService.addCourseToUser(array.getUser(), array.getCourse());
-    }
 }

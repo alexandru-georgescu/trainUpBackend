@@ -130,11 +130,6 @@ public class SmtpThread extends Thread {
                      */
                     System.out.println(courseName);
                     for (int i = 0; i < pars.length; i++) {
-                        if (!pars[i].matches("[a-zA-Z]+" + "." + "[a-zA-Z]+" + "[@trainup.com]+")) {
-                            System.out.println(pars[i].matches("[a-zA-Z]*" + "." + "[a-zA-Z]*" + "@trainup" + "." + "com"));
-                            System.out.println(pars[i].matches("[a-zA-Z]*" + "." + "[a-zA-Z]*"));
-                            continue;
-                        }
                         System.out.println(pars[i]);
                     }
 
@@ -219,7 +214,8 @@ public class SmtpThread extends Thread {
         System.out.println(courseService.findAll());
 
         CourseDTO course = courseService
-                .findAll().stream().filter(c -> c.getCourseName().toLowerCase().equals(courseName.toLowerCase()))
+                .findAll().stream()
+                .filter(c -> c.getCourseName().toLowerCase().equals(courseName.toLowerCase()))
                 .findFirst().orElse(null);
 
         if (course == null) {
@@ -228,16 +224,20 @@ public class SmtpThread extends Thread {
 
         for (int i = 0; i < body.length; i++) {
             String dummy = body[i];
-            emailUsers.add(serviceUsers.stream().filter(user -> user.getEmail().equals(dummy)).findFirst().orElse(null));
-
+            UserDTO user1 = serviceUsers.stream()
+                    .filter(user -> user.getEmail().equals(dummy))
+                    .findFirst()
+                    .orElse(null);
+            if (user1 != null) {
+                emailUsers.add(user1);
+            }
         }
 
         emailUsers.forEach(us -> {
-            List<CourseDTO> allCourses = us.getCourses();
+            List<CourseDTO> allCourses = us.getWaitToEnroll();
             allCourses.add(course);
-            us.setCourses(allCourses);
+            us.setWaitToEnroll(allCourses);
         });
-
     }
 
 }
