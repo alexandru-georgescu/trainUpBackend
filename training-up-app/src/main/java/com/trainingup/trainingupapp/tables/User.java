@@ -6,6 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -33,12 +37,15 @@ public class User {
     private boolean enable;
     private String leader;
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany
     private List<Course> courses = new ArrayList<>();
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany
     private List<Course> wishToEnroll = new ArrayList<>();
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany
     private List<Course> waitToEnroll = new ArrayList<>();
 

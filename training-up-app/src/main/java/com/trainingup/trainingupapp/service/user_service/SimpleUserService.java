@@ -288,7 +288,7 @@ public class SimpleUserService implements UserService {
         List<CourseDTO> userDTOWish = userDTO1.getWishToEnroll();
         userDTOWish.removeIf(c -> c.getId() == courseDB.getId());
         userDTO1.setWishToEnroll(userDTOWish);
-        
+
         userRepository.save(userDB);
         return userDTO1;
     }

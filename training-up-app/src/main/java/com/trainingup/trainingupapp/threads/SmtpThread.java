@@ -202,21 +202,8 @@ public class SmtpThread extends Thread {
     }
 
     public void getUsersFromEmail(String[] body, String courseName) {
-        List<UserDTO> emailUsers = new ArrayList<>();
+
         List<UserDTO> serviceUsers = userService.findAll();
-
-        Arrays.stream(body).forEach(element -> {
-            String newElement = element.replaceAll("\r", "");
-
-            UserDTO user1 = serviceUsers.stream()
-                    .filter(user -> user.getEmail().toLowerCase().equals(newElement.toLowerCase()))
-                    .findFirst()
-                    .orElse(null);
-
-            if (user1 != null) {
-                emailUsers.add(user1);
-            }
-        });
 
         CourseDTO course = courseService
                 .findAll().stream()
@@ -227,8 +214,17 @@ public class SmtpThread extends Thread {
             return;
         }
 
-        emailUsers.forEach(us -> {
-            userService.waitToEnroll(us, course);
+        Arrays.stream(body).forEach(element -> {
+            String newElement = element.replaceAll("\r", "");
+
+            UserDTO user1 = serviceUsers.stream()
+                    .filter(user -> user.getEmail().toLowerCase().equals(newElement.toLowerCase()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (user1 != null) {
+                userService.waitToEnroll(user1, course);
+            }
         });
 
         System.out.println("Done!");
