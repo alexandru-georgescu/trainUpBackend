@@ -236,7 +236,7 @@ public class SimpleUserService implements UserService {
         userDTO1.setWishToEnroll(userCourseDTO);
 
         System.out.println(userDB);
-        userRepository.saveAndFlush(userDB);
+        userRepository.save(userDB);
         return userDTO1;
     }
 
@@ -267,24 +267,29 @@ public class SimpleUserService implements UserService {
             return userDTO;
         }
 
+        //DB
         List<Course> userCourse = userDB.getWaitToEnroll();
         userCourse.add(courseDB);
         userDB.setWaitToEnroll(userCourse);
 
+        //DTO
         List<CourseDTO> userCourseDTO = userDTO1.getWaitToEnroll();
         userCourseDTO.add(courseDTO);
         userDTO1.setWaitToEnroll(userCourseDTO);
 
+        //DB
         List<Course> userCourseWish = userDB.getWishToEnroll();
         userCourseWish.removeIf(c -> c.getId() == courseDB.getId());
         List<Course> newWish = new ArrayList<>(userCourseWish);
         userDB.setWishToEnroll(newWish);
 
-        List<CourseDTO> userDTOWish = userDTO1.getWishToEnroll();
-        userCourseWish.removeIf(c -> c.getId() == courseDB.getId());
-        userDTO1.setWishToEnroll(userDTOWish);
 
-        userRepository.saveAndFlush(userDB);
+        //DTO
+        List<CourseDTO> userDTOWish = userDTO1.getWishToEnroll();
+        userDTOWish.removeIf(c -> c.getId() == courseDB.getId());
+        userDTO1.setWishToEnroll(userDTOWish);
+        
+        userRepository.save(userDB);
         return userDTO1;
     }
 
@@ -323,7 +328,7 @@ public class SimpleUserService implements UserService {
         userCourseDTO.add(courseDTO);
         userDTO1.setCourses(userCourseDTO);
 
-        userRepository.saveAndFlush(userDB);
+        userRepository.save(userDB);
         return userDTO1;
     }
 

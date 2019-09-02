@@ -202,13 +202,10 @@ public class SmtpThread extends Thread {
     }
 
     public void getUsersFromEmail(String[] body, String courseName) {
-
-        System.out.println(userService);
         List<UserDTO> emailUsers = new ArrayList<>();
         List<UserDTO> serviceUsers = userService.findAll();
 
         Arrays.stream(body).forEach(element -> {
-            System.out.println("->"+element+"<-");
             String newElement = element.replaceAll("\r", "");
 
             UserDTO user1 = serviceUsers.stream()
@@ -221,25 +218,21 @@ public class SmtpThread extends Thread {
             }
         });
 
-        System.out.println(userService.findAll());
-        System.out.println(courseService.findAll());
-
         CourseDTO course = courseService
                 .findAll().stream()
                 .filter(c -> c.getCourseName().toLowerCase().equals(courseName.toLowerCase()))
                 .findFirst().orElse(null);
 
-        System.out.println("am gasit    " + course);
         if (course == null) {
             return;
         }
 
-
         emailUsers.forEach(us -> {
-            List<CourseDTO> allCourses = us.getWaitToEnroll();
-            allCourses.add(course);
-            us.setWaitToEnroll(allCourses);
+            userService.waitToEnroll(us, course);
         });
+
+        System.out.println("Done!");
+
     }
 
 }
