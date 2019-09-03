@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -44,7 +45,7 @@ public class UserController {
         courseDTO1.setCourseName("Curs1");
         courseDTO1.setStartDate(LocalDate.now());
         courseDTO1.setEndDate(LocalDate.now().plusMonths(1));
-        courseDTO1.setProjectManager("Liviu Gloriosu'");
+        courseDTO1.setProjectManager("p.m@trainup.com");
 
 
         CourseDTO courseDTO2 = new CourseDTO();
@@ -53,7 +54,7 @@ public class UserController {
         courseDTO2.setCourseName("Curs2");
         courseDTO2.setStartDate(LocalDate.now().plusMonths(5));
         courseDTO2.setEndDate(LocalDate.now().plusMonths(10));
-        courseDTO2.setProjectManager("Liviu Gloriosu2'");
+        courseDTO2.setProjectManager("p.m@trainup.com");
 
         CourseDTO courseDTO3 = new CourseDTO();
         courseDTO3.setActualCapacity(10);
@@ -61,7 +62,7 @@ public class UserController {
         courseDTO3.setCourseName("Curs3");
         courseDTO3.setStartDate(LocalDate.now().minusWeeks(10));
         courseDTO3.setEndDate(LocalDate.now().minusWeeks(5));
-        courseDTO3.setProjectManager("Liviu Gloriosu3'");
+        courseDTO3.setProjectManager("p.m@trainup.com");
 
         UserDTO pm = new UserDTO();
         pm.setType("PM");
@@ -113,6 +114,19 @@ public class UserController {
     public UserDTO loginPage(@RequestBody UserDTO user) {
         return userService.loginService(user.getEmail(), user.getPassword());
     }
+
+    @PostMapping("/user/findWaitByCourse")
+    public List<UserDTO> findWaitByCourse(@RequestBody CourseDTO courseDTO) {
+        return userService
+                .findAll()
+                .stream()
+                .filter(
+                        user -> user.getWaitToEnroll().stream()
+                                .filter(course -> course.getId() == courseDTO.getId())
+                                .findFirst().orElse(null) != null
+                        ).collect(Collectors.toList());
+    }
+
 
     @CrossOrigin(origins = "*")
     @PostMapping("/user/wish")

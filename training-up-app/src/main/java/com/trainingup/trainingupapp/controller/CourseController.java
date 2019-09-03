@@ -26,6 +26,15 @@ public class CourseController {
         return courseService.findAll();
     }
 
+    @PostMapping("/course/findByPm")
+    public List<CourseDTO> findByPm(@RequestBody UserDTO pm) {
+        return courseService
+                .findAll()
+                .stream()
+                .filter(c -> c.getProjectManager().toLowerCase().equals(pm.getEmail().toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
     @PostMapping("/course/isCurrent")
     public List<CourseDTO> findCurrent(@RequestBody UserDTO userDTO) {
         LocalDate now = LocalDate.now();
@@ -51,7 +60,7 @@ public class CourseController {
         LocalDate now = LocalDate.now();
 
         UserDTO userDTO = userService.findById(user.getId());
-        
+
         List<CourseDTO> all = courseService.findAll().stream()
                 .filter(courseDTO -> courseDTO.getStartDate().isAfter(now))
                 .collect(Collectors.toList());

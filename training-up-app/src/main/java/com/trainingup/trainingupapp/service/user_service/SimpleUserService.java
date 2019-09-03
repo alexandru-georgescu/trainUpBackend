@@ -116,6 +116,7 @@ public class SimpleUserService implements UserService {
 
         if (user.getType() == null) {
             user.setType("USER");
+            user.setLeader("t.m@trainup.com");
         }
 
         if (!validate(user.getEmail(), user.getPassword())) {
@@ -138,7 +139,8 @@ public class SimpleUserService implements UserService {
 
         newUser.setToken(String.valueOf(1231121312 + random.nextInt(10000000)));
 
-        //TO: TODO, CAND O SA AVEM ADRESE
+        //TODO: CAND O SA AVEM ADRESE o sa trimitem catre adresa de la email
+        //IN LOC DE TRAINUP.COM, O sa avem GMAIL.COM
         if(!user.isEnable()) {
             smtpService.sendValidateEmail("trainupapply@gmail.com", newUser.getToken());
         }
@@ -182,7 +184,7 @@ public class SimpleUserService implements UserService {
         if (user.isPresent()) {
             User userDB = userRepository.findById(user.get().getId()).orElse(null);
             if (!userDB.isEnable()) {
-                return null;
+                return user.orElse(null);
             }
         }
 

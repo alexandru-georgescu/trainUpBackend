@@ -11,6 +11,18 @@ public class SimpleSmtpService implements SmtpService {
    @Autowired
    private JavaMailSender sender;
 
+   public void sendEmailTo(String to, String subject, String content) {
+       new Thread(() -> {
+           synchronized (this) {
+               SimpleMailMessage message = new SimpleMailMessage();
+               message.setTo(to);
+               message.setSubject(subject);
+               message.setText(content);
+               sender.send(message);
+           }
+       }).start();
+   }
+
    public void sendValidateEmail (String to, String token) {
 
        new Thread(() -> {
