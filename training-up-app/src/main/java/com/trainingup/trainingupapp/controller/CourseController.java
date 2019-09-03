@@ -3,6 +3,7 @@ package com.trainingup.trainingupapp.controller;
 import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
+import com.trainingup.trainingupapp.service.user_service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,10 @@ import java.util.stream.Collectors;
 public class CourseController {
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private UserService userService;
+
 
     @GetMapping("/course")
     public List<CourseDTO> introProject() {
@@ -42,9 +47,11 @@ public class CourseController {
     }
 
     @PostMapping("/course/isFuture")
-    public List<CourseDTO> findFuture(@RequestBody UserDTO userDTO) {
+    public List<CourseDTO> findFuture(@RequestBody UserDTO user) {
         LocalDate now = LocalDate.now();
 
+        UserDTO userDTO = userService.findById(user.getId());
+        
         List<CourseDTO> all = courseService.findAll().stream()
                 .filter(courseDTO -> courseDTO.getStartDate().isAfter(now))
                 .collect(Collectors.toList());
