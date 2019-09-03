@@ -55,11 +55,23 @@ public class SimpleUserService implements UserService {
         }
 
         List<Course> courses = userDB.getWishToEnroll();
+
+
+        //Update REJECTED LIST
+        Course toReject = userDB.getWishToEnroll().stream()
+                .filter(c -> c.getId() == course.getId())
+                .findFirst().orElse(null);
+        List<Course> rejectedList = userDB.getRejectedList();
+        rejectedList.add(toReject);
+        userDB.setRejectedList(rejectedList);
+
+        //REMOVE FROM WISH
         courses.removeIf(c -> c.getId() == course.getId());
 
         List<Course> newCourses = new ArrayList<>(courses);
         userDB.setWishToEnroll(newCourses);
 
+        //UPDATE DB
         userRepository.save(userDB);
 
         UserDTO userDTO = userBackend.stream()
@@ -71,6 +83,13 @@ public class SimpleUserService implements UserService {
         }
 
         List<CourseDTO> courseDTOS = userDTO.getWishToEnroll();
+
+        //Update REJECTED LIST
+        List<CourseDTO> rejectedListBack = user.getRejectedList();
+        rejectedListBack.add(course);
+        user.setRejectedList(rejectedListBack);
+
+        //REMOVE FROM WISH
         courseDTOS.removeIf(c -> c.getId() == course.getId());
         userDTO.setWishToEnroll(courseDTOS);
 

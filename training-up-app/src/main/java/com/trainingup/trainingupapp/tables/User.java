@@ -49,5 +49,8 @@ public class User {
     @ManyToMany
     private List<Course> waitToEnroll = new ArrayList<>();
 
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany
+    private List<Course> rejectedList = new ArrayList<>();
 
 }

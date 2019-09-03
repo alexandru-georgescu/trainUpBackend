@@ -28,4 +28,6 @@ public class UserDTO {
     private List<CourseDTO> courses = new ArrayList<>();
     private List<CourseDTO> wishToEnroll = new ArrayList<>();
     private List<CourseDTO> waitToEnroll = new ArrayList<>();
+    private List<CourseDTO> rejectedList = new ArrayList<>();
+
 }

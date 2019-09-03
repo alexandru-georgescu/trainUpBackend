@@ -130,7 +130,7 @@ public class SmtpThread extends Thread {
                          * HAVE FUN!
                          */
                         getUsersFromEmail(pars, courseName);
-                        //sendEmail(emails.get(i).getFrom());
+                        sendEmail(emails.get(i).getFrom());
                     }
                 }
 

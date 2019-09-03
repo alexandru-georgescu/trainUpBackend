@@ -41,13 +41,35 @@ public class CourseController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/course/isFuture")
-    public List<CourseDTO> findFuture() {
+    @PostMapping("/course/isFuture")
+    public List<CourseDTO> findFuture(@RequestBody UserDTO userDTO) {
         LocalDate now = LocalDate.now();
 
-        return courseService.findAll().stream()
+        List<CourseDTO> all = courseService.findAll().stream()
                 .filter(courseDTO -> courseDTO.getStartDate().isAfter(now))
                 .collect(Collectors.toList());
+
+        all.removeIf(c -> userDTO.getWishToEnroll()
+                .stream()
+                .filter( w -> w.getId() == c.getId()).findFirst()
+                .orElse(null) != null);
+
+        all.removeIf(c -> userDTO.getWaitToEnroll()
+                .stream()
+                .filter( w -> w.getId() == c.getId()).findFirst()
+                .orElse(null) != null);
+
+        all.removeIf(c -> userDTO.getRejectedList()
+                .stream()
+                .filter( w -> w.getId() == c.getId()).findFirst()
+                .orElse(null) != null);
+
+        all.removeIf(c -> userDTO.getCourses()
+                .stream()
+                .filter( w -> w.getId() == c.getId()).findFirst()
+                .orElse(null) != null);
+
+        return all;
     }
 
     @PostMapping("/course/add")
