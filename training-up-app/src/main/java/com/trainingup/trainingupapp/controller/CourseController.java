@@ -28,64 +28,24 @@ public class CourseController {
 
     @PostMapping("/course/findByPm")
     public List<CourseDTO> findByPm(@RequestBody UserDTO pm) {
-        return courseService
-                .findAll()
-                .stream()
-                .filter(c -> c.getProjectManager().toLowerCase().equals(pm.getEmail().toLowerCase()))
-                .collect(Collectors.toList());
+        return courseService.findByPm(pm);
     }
 
     @PostMapping("/course/isCurrent")
     public List<CourseDTO> findCurrent(@RequestBody UserDTO userDTO) {
-        LocalDate now = LocalDate.now();
-
-        return userDTO.getCourses().stream()
-                .filter(courseDTO -> courseDTO.getEndDate().isAfter(now)
-                        && courseDTO.getStartDate().isBefore(now))
-                .collect(Collectors.toList());
+        return courseService.findCurrent(userDTO);
     }
 
 
     @PostMapping("/course/isBefore")
     public List<CourseDTO> findBefore(@RequestBody UserDTO userDTO) {
-        LocalDate now = LocalDate.now();
-
-        return userDTO.getCourses().stream()
-                .filter(courseDTO -> courseDTO.getEndDate().isBefore(now))
-                .collect(Collectors.toList());
+        return courseService.findBefore(userDTO);
     }
 
     @PostMapping("/course/isFuture")
     public List<CourseDTO> findFuture(@RequestBody UserDTO user) {
-        LocalDate now = LocalDate.now();
-
         UserDTO userDTO = userService.findById(user.getId());
-
-        List<CourseDTO> all = courseService.findAll().stream()
-                .filter(courseDTO -> courseDTO.getStartDate().isAfter(now))
-                .collect(Collectors.toList());
-
-        all.removeIf(c -> userDTO.getWishToEnroll()
-                .stream()
-                .filter( w -> w.getId() == c.getId()).findFirst()
-                .orElse(null) != null);
-
-        all.removeIf(c -> userDTO.getWaitToEnroll()
-                .stream()
-                .filter( w -> w.getId() == c.getId()).findFirst()
-                .orElse(null) != null);
-
-        all.removeIf(c -> userDTO.getRejectedList()
-                .stream()
-                .filter( w -> w.getId() == c.getId()).findFirst()
-                .orElse(null) != null);
-
-        all.removeIf(c -> userDTO.getCourses()
-                .stream()
-                .filter( w -> w.getId() == c.getId()).findFirst()
-                .orElse(null) != null);
-
-        return all;
+        return courseService.findFuture(userDTO);
     }
 
     @PostMapping("/course/add")

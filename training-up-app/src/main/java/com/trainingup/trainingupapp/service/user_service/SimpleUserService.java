@@ -103,6 +103,17 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
+    public List<UserDTO> findWaitByCourse(CourseDTO courseDTO) {
+        return userBackend
+                .stream()
+                .filter(
+                        user -> user.getWaitToEnroll().stream()
+                                .filter(course -> course.getId() == courseDTO.getId())
+                                .findFirst().orElse(null) != null
+                ).collect(Collectors.toList());
+    }
+
+    @Override
     public UserDTO findById(long id) {
         return this.userBackend
                 .stream()

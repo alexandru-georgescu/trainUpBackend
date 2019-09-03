@@ -20,4 +20,5 @@ public interface UserService {
     List<User> findAllDB();
     UserDTO removeFromWish(UserDTO user, CourseDTO course);
     void saveAndFlush(User user);
+    List<UserDTO> findWaitByCourse(CourseDTO courseDTO);
 }

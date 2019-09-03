@@ -117,14 +117,7 @@ public class UserController {
 
     @PostMapping("/user/findWaitByCourse")
     public List<UserDTO> findWaitByCourse(@RequestBody CourseDTO courseDTO) {
-        return userService
-                .findAll()
-                .stream()
-                .filter(
-                        user -> user.getWaitToEnroll().stream()
-                                .filter(course -> course.getId() == courseDTO.getId())
-                                .findFirst().orElse(null) != null
-                        ).collect(Collectors.toList());
+        return userService.findWaitByCourse(courseDTO);
     }
 
 

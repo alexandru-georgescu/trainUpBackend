@@ -2,6 +2,7 @@ package com.trainingup.trainingupapp.service.course_service;
 
 import com.trainingup.trainingupapp.convertor.CourseConvertor;
 import com.trainingup.trainingupapp.dto.CourseDTO;
+import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.repository.CourseRepository;
 import com.trainingup.trainingupapp.tables.Course;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SimpleCourseService implements CourseService {
@@ -59,5 +61,63 @@ public class SimpleCourseService implements CourseService {
         if (dummy != null) {
             this.backendCourses.remove(dummy);
         }
+    }
+
+    @Override
+    public List<CourseDTO> findCurrent(UserDTO userDTO) {
+        LocalDate now = LocalDate.now();
+
+        return userDTO.getCourses().stream()
+                .filter(courseDTO -> courseDTO.getEndDate().isAfter(now)
+                        && courseDTO.getStartDate().isBefore(now))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CourseDTO> findBefore(UserDTO userDTO) {
+        LocalDate now = LocalDate.now();
+
+        return userDTO.getCourses().stream()
+                .filter(courseDTO -> courseDTO.getEndDate().isBefore(now))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CourseDTO> findFuture(UserDTO userDTO) {
+        LocalDate now = LocalDate.now();
+
+        List<CourseDTO> all = backendCourses.stream()
+                .filter(courseDTO -> courseDTO.getStartDate().isAfter(now))
+                .collect(Collectors.toList());
+
+        all.removeIf(c -> userDTO.getWishToEnroll()
+                .stream()
+                .filter( w -> w.getId() == c.getId()).findFirst()
+                .orElse(null) != null);
+
+        all.removeIf(c -> userDTO.getWaitToEnroll()
+                .stream()
+                .filter( w -> w.getId() == c.getId()).findFirst()
+                .orElse(null) != null);
+
+        all.removeIf(c -> userDTO.getRejectedList()
+                .stream()
+                .filter( w -> w.getId() == c.getId()).findFirst()
+                .orElse(null) != null);
+
+        all.removeIf(c -> userDTO.getCourses()
+                .stream()
+                .filter( w -> w.getId() == c.getId()).findFirst()
+                .orElse(null) != null);
+
+        return all;
+    }
+
+    @Override
+    public List<CourseDTO> findByPm(UserDTO pm) {
+        return backendCourses
+                .stream()
+                .filter(c -> c.getProjectManager().toLowerCase().equals(pm.getEmail().toLowerCase()))
+                .collect(Collectors.toList());
     }
 }
