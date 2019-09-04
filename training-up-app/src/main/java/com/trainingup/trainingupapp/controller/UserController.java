@@ -140,9 +140,9 @@ public class UserController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/user/findByName")
-    public UserDTO findByName(@RequestParam String name) {
+    public UserDTO findByName(@RequestParam("name") String name) {
         return userService.findAll().stream().filter(u -> u.getEmail().toLowerCase().equals(name.toLowerCase()))
-                .findFirst().orElse(null)
+                .findFirst().orElse(null);
     }
 
 
