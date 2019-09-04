@@ -115,7 +115,7 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public UserDTO acceptUser(UserDTO user, CourseDTO course) {
+    public UserDTO acceptFromWait(UserDTO user, CourseDTO course) {
         User userDB = userRepository.findAll().stream()
                 .filter(u -> u.getId() == user.getId())
                 .findFirst().orElse(null);
