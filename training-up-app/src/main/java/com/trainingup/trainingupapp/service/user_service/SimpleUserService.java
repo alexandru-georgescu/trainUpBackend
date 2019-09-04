@@ -72,7 +72,6 @@ public class SimpleUserService implements UserService {
         List<Course> newCourses = new ArrayList<>(courses);
         userDB.setWishToEnroll(newCourses);
 
-
         //Update REJECTED LIST
         List<CourseDTO> rejectedListBack = userDTO.getRejectedList();
         rejectedListBack.add(course);
@@ -259,8 +258,6 @@ public class SimpleUserService implements UserService {
 
         userRepository.saveAndFlush(newUser);
         user.setId(newUser.getId());
-
-
         userBackend.add(user);
         return user;
     }
@@ -363,8 +360,9 @@ public class SimpleUserService implements UserService {
         userCourseDTO.add(courseDTO);
         userDTO1.setWishToEnroll(userCourseDTO);
 
-        System.out.println(userDB);
-        userRepository.save(userDB);
+        saveAndFlushBack(userDTO1);
+        saveAndFlush(userDB);
+
         return userDTO1;
     }
 
@@ -385,7 +383,7 @@ public class SimpleUserService implements UserService {
 
         Course find = courseList.stream().filter(course -> course.getId() == courseDB.getId())
                 .findFirst().orElse(null);
-        
+
         if (find != null) {
             return userDTO;
         }
