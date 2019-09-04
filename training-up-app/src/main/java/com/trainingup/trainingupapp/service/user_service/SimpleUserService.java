@@ -4,6 +4,7 @@ import com.trainingup.trainingupapp.convertor.CourseConvertor;
 import com.trainingup.trainingupapp.convertor.UserConvertor;
 import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
+import com.trainingup.trainingupapp.repository.CourseRepository;
 import com.trainingup.trainingupapp.repository.UserRepository;
 import com.trainingup.trainingupapp.service.smtp_service.SmtpService;
 import com.trainingup.trainingupapp.tables.Course;
