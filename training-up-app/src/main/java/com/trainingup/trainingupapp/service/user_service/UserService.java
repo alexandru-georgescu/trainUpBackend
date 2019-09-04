@@ -21,4 +21,7 @@ public interface UserService {
     UserDTO removeFromWish(UserDTO user, CourseDTO course);
     void saveAndFlush(User user);
     List<UserDTO> findWaitByCourse(CourseDTO courseDTO);
+    UserDTO acceptFromWait(UserDTO user, CourseDTO course);
+    UserDTO rejectFromWait(UserDTO user, CourseDTO course);
+
 }

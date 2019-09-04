@@ -79,8 +79,6 @@ public class SmtpThread extends Thread {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
-
-
     }
 
     public void run() {

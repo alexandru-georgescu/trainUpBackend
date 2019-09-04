@@ -1,4 +1,5 @@
 package com.trainingup.trainingupapp.service.user_service;
+
 import com.trainingup.trainingupapp.convertor.CourseConvertor;
 import com.trainingup.trainingupapp.convertor.UserConvertor;
 import com.trainingup.trainingupapp.dto.CourseDTO;
@@ -114,6 +115,107 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
+    public UserDTO acceptUser(UserDTO user, CourseDTO course) {
+        User userDB = userRepository.findAll().stream()
+                .filter(u -> u.getId() == user.getId())
+                .findFirst().orElse(null);
+
+        if (userDB == null) {
+            return null;
+        }
+
+        List<Course> courses = userDB.getWaitToEnroll();
+
+        //Update COURSE LIST
+        Course toAccept = courses.stream()
+                .filter(c -> c.getId() == course.getId())
+                .findFirst().orElse(null);
+        List<Course> acceptedList = userDB.getCourses();
+        acceptedList.add(toAccept);
+        userDB.setCourses(acceptedList);
+
+        //REMOVE FROM WAIT
+        courses.removeIf(c -> c.getId() == course.getId());
+        List<Course> newCourses = new ArrayList<>(courses);
+        userDB.setWaitToEnroll(newCourses);
+
+        //UPDATE DB
+        userRepository.save(userDB);
+
+        UserDTO userDTO = userBackend.stream()
+                .filter(u -> u.getId() == user.getId())
+                .findFirst().orElse(null);
+
+        if (userDTO == null) {
+            return null;
+        }
+
+        List<CourseDTO> courseDTOS = userDTO.getWaitToEnroll();
+
+        //Update REJECTED LIST
+        List<CourseDTO> acceptedListBack = userDTO.getCourses();
+        acceptedListBack.add(course);
+        userDTO.setCourses(acceptedListBack);
+
+        //REMOVE FROM WAIT
+        courseDTOS.removeIf(c -> c.getId() == course.getId());
+        userDTO.setWaitToEnroll(courseDTOS);
+
+        return userDTO;
+    }
+
+    @Override
+    public UserDTO rejectFromWait(UserDTO user, CourseDTO course) {
+        User userDB = userRepository.findAll().stream()
+                .filter(u -> u.getId() == user.getId())
+                .findFirst().orElse(null);
+
+        if (userDB == null) {
+            return null;
+        }
+
+        List<Course> courses = userDB.getWaitToEnroll();
+
+        //Update REJECTED LIST
+        Course toReject = courses.stream()
+                .filter(c -> c.getId() == course.getId())
+                .findFirst().orElse(null);
+        List<Course> rejectedList = userDB.getRejectedList();
+        rejectedList.add(toReject);
+        userDB.setRejectedList(rejectedList);
+
+        //REMOVE FROM WAIT
+        courses.removeIf(c -> c.getId() == course.getId());
+
+        List<Course> newCourses = new ArrayList<>(courses);
+        userDB.setWaitToEnroll(newCourses);
+
+        //UPDATE DB
+        userRepository.save(userDB);
+
+        UserDTO userDTO = userBackend.stream()
+                .filter(u -> u.getId() == user.getId())
+                .findFirst().orElse(null);
+
+        if (userDTO == null) {
+            return null;
+        }
+
+        List<CourseDTO> courseDTOS = userDTO.getWaitToEnroll();
+
+        //Update REJECTED LIST
+        List<CourseDTO> rejectedListBack = userDTO.getRejectedList();
+        rejectedListBack.add(course);
+        userDTO.setRejectedList(rejectedListBack);
+
+        //REMOVE FROM WAIT
+        courseDTOS.removeIf(c -> c.getId() == course.getId());
+        userDTO.setWaitToEnroll(courseDTOS);
+
+        return userDTO;
+    }
+
+    @Override
     public UserDTO findById(long id) {
         return this.userBackend
                 .stream()
@@ -152,7 +254,7 @@ public class SimpleUserService implements UserService {
 
         //TODO: CAND O SA AVEM ADRESE o sa trimitem catre adresa de la email
         //IN LOC DE TRAINUP.COM, O sa avem GMAIL.COM
-        if(!user.isEnable()) {
+        if (!user.isEnable()) {
             smtpService.sendValidateEmail("trainupapply@gmail.com", newUser.getToken());
         }
 
@@ -208,7 +310,7 @@ public class SimpleUserService implements UserService {
             return false;
         }
 
-        if(email.equals("") || password.equals("")) {
+        if (email.equals("") || password.equals("")) {
             return false;
         }
 
@@ -224,7 +326,7 @@ public class SimpleUserService implements UserService {
             return false;
         }
 
-        if (!beforeAt.matches("[a-zA-Z]+"+ "." + "[a-zA-Z]+")) {
+        if (!beforeAt.matches("[a-zA-Z]+" + "." + "[a-zA-Z]+")) {
             return false;
         }
 

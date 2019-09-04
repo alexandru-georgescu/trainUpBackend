@@ -166,4 +166,16 @@ public class UserController {
         return userService.removeFromWish(array.getUser(),array.getCourse());
     }
 
+    @CrossOrigin(origins = "*")
+    @PostMapping("user/rejectFromWait")
+    public UserDTO rejectFromWait(@RequestBody CourseUserDTO array) {
+        return userService.rejectFromWait(array.getUser(),array.getCourse());
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("user/acceptFromWait")
+    public UserDTO acceptFromWait(@RequestBody CourseUserDTO array) {
+        return userService.acceptFromWait(array.getUser(),array.getCourse());
+    }
+
 }
