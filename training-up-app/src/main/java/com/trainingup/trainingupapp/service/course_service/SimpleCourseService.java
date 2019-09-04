@@ -42,7 +42,6 @@ public class SimpleCourseService implements CourseService {
     @Override
     public CourseDTO addCourse(CourseDTO course) {
         Course newCourse = CourseConvertor.convertToCourse(course);
-
         this.courseRepository.saveAndFlush(newCourse);
         course.setId(newCourse.getId());
         this.backendCourses.add(course);
@@ -68,8 +67,7 @@ public class SimpleCourseService implements CourseService {
         LocalDate now = LocalDate.now();
 
         return userDTO.getCourses().stream()
-                .filter(courseDTO -> courseDTO.getEndDate().isAfter(now)
-                        && courseDTO.getStartDate().isBefore(now))
+                .filter(courseDTO -> courseDTO.getEndDate().isAfter(now))
                 .collect(Collectors.toList());
     }
 
