@@ -3,6 +3,7 @@ package com.trainingup.trainingupapp.controller;
 import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
+import com.trainingup.trainingupapp.service.user_service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,30 +17,35 @@ public class CourseController {
     @Autowired
     private CourseService courseService;
 
+    @Autowired
+    private UserService userService;
+
+
     @GetMapping("/course")
     public List<CourseDTO> introProject() {
         return courseService.findAll();
     }
 
+    @PostMapping("/course/findByPm")
+    public List<CourseDTO> findByPm(@RequestBody UserDTO pm) {
+        return courseService.findByPm(pm);
+    }
 
     @PostMapping("/course/isCurrent")
     public List<CourseDTO> findCurrent(@RequestBody UserDTO userDTO) {
-        LocalDate now = LocalDate.now();
-
-        return userDTO.getCourses().stream()
-                .filter(courseDTO -> courseDTO.getEndDate().isAfter(now)
-                        && courseDTO.getStartDate().isBefore(now))
-                .collect(Collectors.toList());
+        return courseService.findCurrent(userDTO);
     }
 
 
     @PostMapping("/course/isBefore")
     public List<CourseDTO> findBefore(@RequestBody UserDTO userDTO) {
-        LocalDate now = LocalDate.now();
+        return courseService.findBefore(userDTO);
+    }
 
-        return userDTO.getCourses().stream()
-                .filter(courseDTO -> courseDTO.getEndDate().isAfter(now))
-                .collect(Collectors.toList());
+    @PostMapping("/course/isFuture")
+    public List<CourseDTO> findFuture(@RequestBody UserDTO user) {
+        UserDTO userDTO = userService.findById(user.getId());
+        return courseService.findFuture(userDTO);
     }
 
     @PostMapping("/course/add")

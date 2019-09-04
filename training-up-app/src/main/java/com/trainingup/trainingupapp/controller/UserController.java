@@ -1,9 +1,10 @@
 
 package com.trainingup.trainingupapp.controller;
 
+import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.CourseUserDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
-import com.trainingup.trainingupapp.service.smtp_service.SmtpService;
+import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import com.trainingup.trainingupapp.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -19,6 +22,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CourseService courseService;
 
     @GetMapping("/user")
     public List<UserDTO> introProject() {
@@ -32,6 +38,32 @@ public class UserController {
 
     @GetMapping("/in")
     public List<UserDTO> in() {
+
+        CourseDTO courseDTO1 = new CourseDTO();
+        courseDTO1.setActualCapacity(10);
+        courseDTO1.setCapacity(20);
+        courseDTO1.setCourseName("Curs1");
+        courseDTO1.setStartDate(LocalDate.now());
+        courseDTO1.setEndDate(LocalDate.now().plusMonths(1));
+        courseDTO1.setProjectManager("p.m@trainup.com");
+
+
+        CourseDTO courseDTO2 = new CourseDTO();
+        courseDTO2.setActualCapacity(10);
+        courseDTO2.setCapacity(20);
+        courseDTO2.setCourseName("Curs2");
+        courseDTO2.setStartDate(LocalDate.now().plusMonths(5));
+        courseDTO2.setEndDate(LocalDate.now().plusMonths(10));
+        courseDTO2.setProjectManager("p.m@trainup.com");
+
+        CourseDTO courseDTO3 = new CourseDTO();
+        courseDTO3.setActualCapacity(10);
+        courseDTO3.setCapacity(20);
+        courseDTO3.setCourseName("Curs3");
+        courseDTO3.setStartDate(LocalDate.now().minusWeeks(10));
+        courseDTO3.setEndDate(LocalDate.now().minusWeeks(5));
+        courseDTO3.setProjectManager("p.m@trainup.com");
+
         UserDTO pm = new UserDTO();
         pm.setType("PM");
         pm.setLeader("ADMIN");
@@ -40,6 +72,7 @@ public class UserController {
         pm.setLastName("m");
         pm.setPassword("Pm123456");
         pm.setLeader("admin.admin@trainup.com");
+        pm.setEnable(true);
 
         UserDTO tm = new UserDTO();
         tm.setType("TM");
@@ -49,6 +82,7 @@ public class UserController {
         tm.setLastName("m");
         tm.setPassword("Tm123456");
         tm.setLeader("p.m@trainup.com");
+        tm.setEnable(true);
 
         UserDTO user = new UserDTO();
         user.setType("USER");
@@ -58,10 +92,19 @@ public class UserController {
         user.setLastName("s");
         user.setPassword("User123456");
         user.setLeader("t.m@trainup.com");
+        user.setEnable(true);
 
-        userService.addUser(user);
-        userService.addUser(pm);
-        userService.addUser(tm);
+        synchronized (userService) {
+            userService.addUser(user);
+            userService.addUser(pm);
+            userService.addUser(tm);
+        }
+
+        synchronized (courseService) {
+            courseService.addCourse(courseDTO1);
+            courseService.addCourse(courseDTO2);
+            courseService.addCourse(courseDTO3);
+        }
 
         return userService.findAll();
     }
@@ -72,10 +115,28 @@ public class UserController {
         return userService.loginService(user.getEmail(), user.getPassword());
     }
 
+    @PostMapping("/user/findWaitByCourse")
+    public List<UserDTO> findWaitByCourse(@RequestBody CourseDTO courseDTO) {
+        return userService.findWaitByCourse(courseDTO);
+    }
+
+
     @CrossOrigin(origins = "*")
     @PostMapping("/user/wish")
     public UserDTO wishToEnroll(@RequestBody CourseUserDTO array) {
         return userService.wishToEnroll(array.getUser(), array.getCourse());
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/user/addCourse")
+    public UserDTO addCourseToUser(@RequestBody CourseUserDTO array) {
+        return userService.addCourseToUser(array.getUser(), array.getCourse());
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/user/waitToEnroll")
+    public UserDTO waitToEnroll(@RequestBody CourseUserDTO array) {
+        return userService.waitToEnroll(array.getUser(), array.getCourse());
     }
 
     @CrossOrigin(origins = "*")
@@ -100,8 +161,21 @@ public class UserController {
     }
 
     @CrossOrigin(origins = "*")
-    @PostMapping("/user/addCourseToUser")
-    public UserDTO addCourseToUser(@RequestBody CourseUserDTO array) {
-        return userService.addCourseToUser(array.getUser(), array.getCourse());
+    @PostMapping("user/refuseToEnroll")
+    public UserDTO refuseToEnroll(@RequestBody CourseUserDTO array) {
+        return userService.removeFromWish(array.getUser(),array.getCourse());
     }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("user/rejectFromWait")
+    public UserDTO rejectFromWait(@RequestBody CourseUserDTO array) {
+        return userService.rejectFromWait(array.getUser(),array.getCourse());
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("user/acceptFromWait")
+    public UserDTO acceptFromWait(@RequestBody CourseUserDTO array) {
+        return userService.acceptFromWait(array.getUser(),array.getCourse());
+    }
+
 }

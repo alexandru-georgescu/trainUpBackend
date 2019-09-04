@@ -15,7 +15,13 @@ public interface UserService {
     boolean validate(String email, String password);
     UserDTO wishToEnroll(UserDTO user, CourseDTO course);
     UserDTO addCourseToUser(UserDTO user, CourseDTO course);
+    UserDTO waitToEnroll(UserDTO user, CourseDTO course);
     List<UserDTO> findAllWithLeader(String leader);
     List<User> findAllDB();
+    UserDTO removeFromWish(UserDTO user, CourseDTO course);
     void saveAndFlush(User user);
+    List<UserDTO> findWaitByCourse(CourseDTO courseDTO);
+    UserDTO acceptFromWait(UserDTO user, CourseDTO course);
+    UserDTO rejectFromWait(UserDTO user, CourseDTO course);
+
 }
