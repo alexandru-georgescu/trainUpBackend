@@ -3,11 +3,14 @@ package com.trainingup.trainingupapp.controller;
 
 import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.CourseUserDTO;
+import com.trainingup.trainingupapp.dto.PasswordDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import com.trainingup.trainingupapp.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +38,7 @@ public class UserController {
     public List<User> introProject1() {
         return userService.findAllDB();
     }
+
 
     @GetMapping("/in")
     public List<UserDTO> in() {
@@ -114,6 +118,7 @@ public class UserController {
     public UserDTO loginPage(@RequestBody UserDTO user) {
         return userService.loginService(user.getEmail(), user.getPassword());
     }
+
 
     @PostMapping("/user/findWaitByCourse")
     public List<UserDTO> findWaitByCourse(@RequestBody CourseDTO courseDTO) {

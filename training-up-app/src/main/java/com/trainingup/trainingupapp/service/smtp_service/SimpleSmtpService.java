@@ -19,6 +19,7 @@ public class SimpleSmtpService implements SmtpService {
                message.setSubject(subject);
                message.setText(content);
                sender.send(message);
+               System.out.println("done");
            }
        }).start();
    }

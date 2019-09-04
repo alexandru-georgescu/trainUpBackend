@@ -130,6 +130,9 @@ public class SimpleUserService implements UserService {
         Course toAccept = courses.stream()
                 .filter(c -> c.getId() == course.getId())
                 .findFirst().orElse(null);
+
+        toAccept.setActualCapacity(toAccept.getActualCapacity() - 1);
+
         List<Course> acceptedList = userDB.getCourses();
         acceptedList.add(toAccept);
         userDB.setCourses(acceptedList);
@@ -376,7 +379,7 @@ public class SimpleUserService implements UserService {
 
     @Override
     public UserDTO waitToEnroll(UserDTO userDTO, CourseDTO courseDTO) {
-        System.out.println(userDTO + " " + courseDTO);
+
         User userDB = userRepository.findAll()
                 .stream().filter(us -> us.getId() == userDTO.getId())
                 .findFirst().orElse(null);

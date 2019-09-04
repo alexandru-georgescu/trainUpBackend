@@ -1,23 +1,46 @@
 package com.trainingup.trainingupapp.controller;
 
+import com.trainingup.trainingupapp.dto.PasswordDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.service.smtp_service.SmtpService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import com.trainingup.trainingupapp.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-@RestController
+@Controller
 @CrossOrigin (origins = "*")
 public class SmtpController {
 
     @Autowired
     UserService userService;
 
+    @Autowired
+    SmtpService smtpService;
+
+
+    @PostMapping("trainup/reset_pass")
+    @ResponseBody
+    public void mail_to_reset(@RequestBody UserDTO userDTO) {
+        User user = userService.findAllDB()
+                .stream()
+                .filter(user1 -> user1.getId() == userDTO.getId())
+                .findFirst().orElse(null);
+        System.out.println(user);
+        if (user == null) {
+            return;
+        }
+        String content = "http://localhost:8080/trainup/reset?id="+ user.getToken();
+        smtpService.sendEmailTo("trainupapply@gmail.com", "Reset password", content);
+    }
+
     @GetMapping("/trainup/validate")
+    @ResponseBody
     public void validateEmail(@RequestParam("id") String token) {
         List<User> users = userService.findAllDB();
         List<UserDTO> userDTOS = userService.findAll();
