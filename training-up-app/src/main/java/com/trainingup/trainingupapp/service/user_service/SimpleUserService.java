@@ -453,13 +453,13 @@ public class SimpleUserService implements UserService {
             return userDTO;
         }
 
-        courseDB.setActualCapacity(courseDB.getActualCapacity() + 1);
+        courseDB.setActualCapacity(courseDB.getActualCapacity() - 1);
 
         List<Course> userCourse = userDB.getCourses();
         userCourse.add(courseDB);
         userDB.setCourses(userCourse);
 
-        courseDTO.setActualCapacity(courseDTO.getActualCapacity() + 1);
+        courseDTO.setActualCapacity(courseDTO.getActualCapacity() - 1);
 
         List<CourseDTO> userCourseDTO = userDTO1.getCourses();
         userCourseDTO.add(courseDTO);
