@@ -9,6 +9,7 @@ import java.util.List;
 public interface UserService {
     List<UserDTO> findAll();
     UserDTO findById(long id);
+    User findByIdDB(long id);
     UserDTO addUser(UserDTO user);
     void removeUser(long id);
     UserDTO loginService(String username, String password);
@@ -19,6 +20,8 @@ public interface UserService {
     List<User> findAllDB();
     UserDTO removeFromWish(UserDTO user, CourseDTO course);
     void saveAndFlush(User user);
+    void saveAndFlushBack(UserDTO user);
+
     List<UserDTO> findWaitByCourse(CourseDTO courseDTO);
     UserDTO acceptFromWait(UserDTO user, CourseDTO course);
     UserDTO rejectFromWait(UserDTO user, CourseDTO course);
