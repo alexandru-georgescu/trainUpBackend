@@ -428,48 +428,6 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public UserDTO addCourseToUser(UserDTO userDTO, CourseDTO courseDTO) {
-        User userDB = userRepository.findAll()
-                .stream().filter(us -> us.getId() == userDTO.getId())
-                .findFirst().orElse(null);
-
-        Course courseDB = CourseConvertor.convertToCourse(courseDTO);
-
-        UserDTO userDTO1 = userBackend
-                .stream().filter(us -> us.getId() == userDTO.getId())
-                .findFirst().orElse(null);
-
-        if (userDB == null || userDTO1 == null) {
-            return null;
-        }
-
-        List<Course> courseList = userDB.getCourses();
-
-        Course find = courseList.stream().filter(course -> course.getId() == courseDB.getId())
-                .findFirst().orElse(null);
-
-
-        if (find != null) {
-            return userDTO;
-        }
-
-        courseDB.setActualCapacity(courseDB.getActualCapacity() - 1);
-
-        List<Course> userCourse = userDB.getCourses();
-        userCourse.add(courseDB);
-        userDB.setCourses(userCourse);
-
-        courseDTO.setActualCapacity(courseDTO.getActualCapacity() - 1);
-
-        List<CourseDTO> userCourseDTO = userDTO1.getCourses();
-        userCourseDTO.add(courseDTO);
-        userDTO1.setCourses(userCourseDTO);
-
-        userRepository.save(userDB);
-        return userDTO1;
-    }
-
-    @Override
     public List<UserDTO> findAllWithLeader(String leader) {
         return userBackend.stream()
                 .filter(user -> user.getLeader().toLowerCase().equals(leader.toLowerCase()))

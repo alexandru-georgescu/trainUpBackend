@@ -14,7 +14,6 @@ public interface UserService {
     UserDTO loginService(String username, String password);
     boolean validate(String email, String password);
     UserDTO wishToEnroll(UserDTO user, CourseDTO course);
-    UserDTO addCourseToUser(UserDTO user, CourseDTO course);
     UserDTO waitToEnroll(UserDTO user, CourseDTO course);
     List<UserDTO> findAllWithLeader(String leader);
     List<User> findAllDB();
