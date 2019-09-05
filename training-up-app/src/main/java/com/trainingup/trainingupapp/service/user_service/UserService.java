@@ -21,7 +21,7 @@ public interface UserService {
     UserDTO removeFromWish(UserDTO user, CourseDTO course);
     void saveAndFlush(User user);
     void saveAndFlushBack(UserDTO user);
-
+    String generateToken();
     List<UserDTO> findWaitByCourse(CourseDTO courseDTO);
     UserDTO acceptFromWait(UserDTO user, CourseDTO course);
     UserDTO rejectFromWait(UserDTO user, CourseDTO course);

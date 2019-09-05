@@ -107,6 +107,11 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
+    public String generateToken() {
+        return String.valueOf(135222323 + random.nextInt(10000000));
+    }
+
+    @Override
     public List<UserDTO> findWaitByCourse(CourseDTO courseDTO) {
         return userBackend
                 .stream()
@@ -248,7 +253,7 @@ public class SimpleUserService implements UserService {
         newUser.setCourses(new ArrayList<>());
         newUser.setWishToEnroll(new ArrayList<>());
 
-        newUser.setToken(String.valueOf(1231121312 + random.nextInt(10000000)));
+        newUser.setToken(generateToken());
 
         //TODO: CAND O SA AVEM ADRESE o sa trimitem catre adresa de la email
         //IN LOC DE TRAINUP.COM, O sa avem GMAIL.COM
