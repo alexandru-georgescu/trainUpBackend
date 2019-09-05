@@ -132,13 +132,19 @@ public class UserController {
         return userService.wishToEnroll(array.getUser(), array.getCourse());
     }
 
-
-
     @CrossOrigin(origins = "*")
     @PostMapping("/user/waitToEnroll")
     public UserDTO waitToEnroll(@RequestBody CourseUserDTO array) {
         return userService.waitToEnroll(array.getUser(), array.getCourse());
     }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/user/findByName")
+    public UserDTO findByName(@RequestParam("name") String name) {
+        return userService.findAll().stream().filter(u -> u.getEmail().toLowerCase().equals(name.toLowerCase()))
+                .findFirst().orElse(null);
+    }
+
 
     @CrossOrigin(origins = "*")
     @PostMapping("/user/register")

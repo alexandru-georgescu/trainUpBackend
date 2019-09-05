@@ -30,6 +30,16 @@ public class ResetPasswordController {
     public String resetPassword(@RequestParam("id") String token, Model model) {
         PasswordDTO pass = new PasswordDTO();
 
+        User user = userService.findAllDB()
+                .stream()
+                .filter(u -> u.getToken().equals(token))
+                .findFirst()
+                .orElse(null);
+
+        if (user == null) {
+            return "errorPage";
+        }
+
         map.put("token" + requestOrder, token);
         requestQueue.add(requestOrder);
         requestOrder++;
@@ -39,7 +49,6 @@ public class ResetPasswordController {
     }
 
     @PostMapping("/trainup/reset_password")
-    @ResponseBody
     public String greetingSubmit(@ModelAttribute PasswordDTO passwordDTO, Model model) {
 
         String token = map.get("token" + requestQueue.poll());
@@ -57,20 +66,14 @@ public class ResetPasswordController {
                 .findFirst()
                 .orElse(null);
 
-        if (!passwordDTO.getPassword().equals(passwordDTO.getConfirm_password())) {
-            return "Parola nu corespunde!";
-        }
-
-        if (passwordDTO.getPassword().length() < 8) {
-            return "Parola prea mica!";
-        }
-
         user.setPassword(passwordDTO.getPassword());
         userDTO.setPassword(passwordDTO.getPassword());
+        user.setToken(userService.generateToken());
 
         userService.saveAndFlush(user);
+        userService.saveAndFlushBack(userDTO);
 
-        return "Parola modificata!";
+        return "succesPage";
     }
 
 

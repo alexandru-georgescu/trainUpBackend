@@ -40,6 +40,16 @@ public class SimpleCourseService implements CourseService {
     }
 
     @Override
+    public Course findByIdDB(long id) {
+        return courseRepository
+                .findAll()
+                .stream()
+                .filter(c -> c.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
     public CourseDTO addCourse(CourseDTO course) {
         Course newCourse = CourseConvertor.convertToCourse(course);
         this.courseRepository.saveAndFlush(newCourse);
@@ -51,12 +61,7 @@ public class SimpleCourseService implements CourseService {
     @Override
     public void removeCourse(long id) {
         this.courseRepository.deleteById(id);
-        CourseDTO dummy = this.backendCourses
-                .stream()
-                .filter(el -> el.getId() == id)
-                .findFirst()
-                .orElse(null);
-
+        CourseDTO dummy = findById(id);
         if (dummy != null) {
             this.backendCourses.remove(dummy);
         }
@@ -117,5 +122,20 @@ public class SimpleCourseService implements CourseService {
                 .stream()
                 .filter(c -> c.getProjectManager().toLowerCase().equals(pm.getEmail().toLowerCase()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void saveAndFlash(Course course) {
+        courseRepository.save(course);
+    }
+
+    @Override
+    public void saveAndFlashBack(CourseDTO courseDTO) {
+        backendCourses = backendCourses.stream().map(c -> {
+            if (c.getId() == courseDTO.getId()) {
+                c = courseDTO;
+            }
+            return c;
+        }).collect(Collectors.toList());
     }
 }

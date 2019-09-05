@@ -7,11 +7,9 @@ import com.trainingup.trainingupapp.service.user_service.UserService;
 import com.trainingup.trainingupapp.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Controller
 @CrossOrigin (origins = "*")
@@ -40,23 +38,33 @@ public class SmtpController {
     }
 
     @GetMapping("/trainup/validate")
-    @ResponseBody
-    public void validateEmail(@RequestParam("id") String token) {
+    public String validateEmail(@RequestParam("id") String token) {
         List<User> users = userService.findAllDB();
         List<UserDTO> userDTOS = userService.findAll();
+        User check = users.stream()
+                .filter(u -> u.getToken().equals(token))
+                .findFirst()
+                .orElse(null);
 
+        if (check == null) {
+            return "errorPage";
+        }
         users.forEach(us -> {
             if (us.getToken().equals(token)) {
 
                 userDTOS.forEach(uss -> {
                     if (uss.getId() == us.getId()) {
                         uss.setEnable(true);
+                        userService.saveAndFlushBack(uss);
                     }
                 });
 
                 us.setEnable(true);
+                us.setToken(userService.generateToken());
                 userService.saveAndFlush(us);
             }
         });
+
+        return "succesRegister";
     }
 }

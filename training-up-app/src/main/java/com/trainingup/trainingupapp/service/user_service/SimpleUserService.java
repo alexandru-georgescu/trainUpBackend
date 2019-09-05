@@ -5,6 +5,7 @@ import com.trainingup.trainingupapp.convertor.UserConvertor;
 import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.repository.UserRepository;
+import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.smtp_service.SmtpService;
 import com.trainingup.trainingupapp.tables.Course;
 import com.trainingup.trainingupapp.tables.User;
@@ -22,6 +23,9 @@ public class SimpleUserService implements UserService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    CourseService courseService;
 
     @Autowired
     SmtpService smtpService;
@@ -47,11 +51,10 @@ public class SimpleUserService implements UserService {
     @Override
     public UserDTO removeFromWish(UserDTO user, CourseDTO course) {
 
-        User userDB = userRepository.findAll().stream()
-                .filter(u -> u.getId() == user.getId())
-                .findFirst().orElse(null);
+        User userDB = findByIdDB(user.getId());
+        UserDTO userDTO = findById(user.getId());
 
-        if (userDB == null) {
+        if (userDB == null || userDTO == null) {
             return null;
         }
 
@@ -59,40 +62,30 @@ public class SimpleUserService implements UserService {
 
 
         //Update REJECTED LIST
-        Course toReject = userDB.getWishToEnroll().stream()
-                .filter(c -> c.getId() == course.getId())
-                .findFirst().orElse(null);
+        Course toReject = courseService.findByIdDB(course.getId());
         List<Course> rejectedList = userDB.getRejectedList();
         rejectedList.add(toReject);
         userDB.setRejectedList(rejectedList);
 
         //REMOVE FROM WISH
         courses.removeIf(c -> c.getId() == course.getId());
-
         List<Course> newCourses = new ArrayList<>(courses);
         userDB.setWishToEnroll(newCourses);
-
-        //UPDATE DB
-        userRepository.save(userDB);
-
-        UserDTO userDTO = userBackend.stream()
-                .filter(u -> u.getId() == user.getId())
-                .findFirst().orElse(null);
-
-        if (userDTO == null) {
-            return null;
-        }
-
-        List<CourseDTO> courseDTOS = userDTO.getWishToEnroll();
 
         //Update REJECTED LIST
         List<CourseDTO> rejectedListBack = userDTO.getRejectedList();
         rejectedListBack.add(course);
         userDTO.setRejectedList(rejectedListBack);
 
+        //UPDATE DB
+        saveAndFlush(userDB);
+        saveAndFlushBack(userDTO);
+
+        List<CourseDTO> courseDTOS = userDTO.getWishToEnroll();
         //REMOVE FROM WISH
         courseDTOS.removeIf(c -> c.getId() == course.getId());
         userDTO.setWishToEnroll(courseDTOS);
+
 
         return userDTO;
     }
@@ -101,6 +94,21 @@ public class SimpleUserService implements UserService {
     @Override
     public void saveAndFlush(User user) {
         userRepository.save(user);
+    }
+
+    @Override
+    public void saveAndFlushBack(UserDTO user) {
+        userBackend = userBackend.stream().map(c -> {
+            if (c.getId() == user.getId()) {
+                c = user;
+            }
+            return c;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public String generateToken() {
+        return String.valueOf(135222323 + random.nextInt(10000000));
     }
 
     @Override
@@ -116,23 +124,26 @@ public class SimpleUserService implements UserService {
 
     @Override
     public UserDTO acceptFromWait(UserDTO user, CourseDTO course) {
-        User userDB = userRepository.findAll().stream()
-                .filter(u -> u.getId() == user.getId())
-                .findFirst().orElse(null);
+        User userDB = findByIdDB(user.getId());
+        UserDTO userDTO = findById(user.getId());
 
-        if (userDB == null) {
+        if (userDB == null || userDTO == null) {
             return null;
         }
 
         List<Course> courses = userDB.getWaitToEnroll();
 
         //Update COURSE LIST
-        Course toAccept = courses.stream()
-                .filter(c -> c.getId() == course.getId())
-                .findFirst().orElse(null);
+        Course toAccept = courseService.findByIdDB(course.getId());
 
         toAccept.setActualCapacity(toAccept.getActualCapacity() - 1);
+        course.setActualCapacity(toAccept.getActualCapacity());
 
+        courseService.saveAndFlashBack(course);
+        courseService.saveAndFlash(toAccept);
+
+
+        //ADD COURSE TO USER
         List<Course> acceptedList = userDB.getCourses();
         acceptedList.add(toAccept);
         userDB.setCourses(acceptedList);
@@ -141,17 +152,6 @@ public class SimpleUserService implements UserService {
         courses.removeIf(c -> c.getId() == course.getId());
         List<Course> newCourses = new ArrayList<>(courses);
         userDB.setWaitToEnroll(newCourses);
-
-        //UPDATE DB
-        userRepository.save(userDB);
-
-        UserDTO userDTO = userBackend.stream()
-                .filter(u -> u.getId() == user.getId())
-                .findFirst().orElse(null);
-
-        if (userDTO == null) {
-            return null;
-        }
 
         List<CourseDTO> courseDTOS = userDTO.getWaitToEnroll();
 
@@ -164,46 +164,35 @@ public class SimpleUserService implements UserService {
         courseDTOS.removeIf(c -> c.getId() == course.getId());
         userDTO.setWaitToEnroll(courseDTOS);
 
+        //UPDATE DB
+        saveAndFlush(userDB);
+        saveAndFlushBack(userDTO);
+
         return userDTO;
     }
 
     @Override
     public UserDTO rejectFromWait(UserDTO user, CourseDTO course) {
-        User userDB = userRepository.findAll().stream()
-                .filter(u -> u.getId() == user.getId())
-                .findFirst().orElse(null);
+        User userDB = findByIdDB(user.getId());
+        UserDTO userDTO = findById(user.getId());
 
-        if (userDB == null) {
+        if (userDB == null || userDTO == null) {
             return null;
         }
 
         List<Course> courses = userDB.getWaitToEnroll();
 
         //Update REJECTED LIST
-        Course toReject = courses.stream()
-                .filter(c -> c.getId() == course.getId())
-                .findFirst().orElse(null);
+        Course toReject = courseService.findByIdDB(course.getId());
+
         List<Course> rejectedList = userDB.getRejectedList();
         rejectedList.add(toReject);
         userDB.setRejectedList(rejectedList);
 
         //REMOVE FROM WAIT
         courses.removeIf(c -> c.getId() == course.getId());
-
         List<Course> newCourses = new ArrayList<>(courses);
         userDB.setWaitToEnroll(newCourses);
-
-        //UPDATE DB
-        userRepository.save(userDB);
-
-        UserDTO userDTO = userBackend.stream()
-                .filter(u -> u.getId() == user.getId())
-                .findFirst().orElse(null);
-
-        if (userDTO == null) {
-            return null;
-        }
-
         List<CourseDTO> courseDTOS = userDTO.getWaitToEnroll();
 
         //Update REJECTED LIST
@@ -215,6 +204,10 @@ public class SimpleUserService implements UserService {
         courseDTOS.removeIf(c -> c.getId() == course.getId());
         userDTO.setWaitToEnroll(courseDTOS);
 
+        //UPDATE DB
+        saveAndFlush(userDB);
+        saveAndFlushBack(userDTO);
+
         return userDTO;
     }
 
@@ -225,6 +218,13 @@ public class SimpleUserService implements UserService {
                 .filter(e -> e.getId() == id)
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public User findByIdDB(long id) {
+        return userRepository.findAll().stream()
+                .filter(u -> u.getId() == id)
+                .findFirst().orElse(null);
     }
 
     @Override
@@ -253,7 +253,7 @@ public class SimpleUserService implements UserService {
         newUser.setCourses(new ArrayList<>());
         newUser.setWishToEnroll(new ArrayList<>());
 
-        newUser.setToken(String.valueOf(1231121312 + random.nextInt(10000000)));
+        newUser.setToken(generateToken());
 
         //TODO: CAND O SA AVEM ADRESE o sa trimitem catre adresa de la email
         //IN LOC DE TRAINUP.COM, O sa avem GMAIL.COM
@@ -263,8 +263,6 @@ public class SimpleUserService implements UserService {
 
         userRepository.saveAndFlush(newUser);
         user.setId(newUser.getId());
-
-
         userBackend.add(user);
         return user;
     }
@@ -298,7 +296,7 @@ public class SimpleUserService implements UserService {
         }).findFirst();
 
         if (user.isPresent()) {
-            User userDB = userRepository.findById(user.get().getId()).orElse(null);
+            User userDB = findByIdDB(user.get().getId());
             if (!userDB.isEnable()) {
                 return user.orElse(null);
             }
@@ -339,15 +337,11 @@ public class SimpleUserService implements UserService {
     @Override
     public UserDTO wishToEnroll(UserDTO userDTO, CourseDTO courseDTO) {
         System.out.println(userDTO + " " + courseDTO);
-        User userDB = userRepository.findAll()
-                .stream().filter(us -> us.getId() == userDTO.getId())
-                .findFirst().orElse(null);
+        User userDB = findByIdDB(userDTO.getId());
 
         Course courseDB = CourseConvertor.convertToCourse(courseDTO);
 
-        UserDTO userDTO1 = userBackend
-                .stream().filter(us -> us.getId() == userDTO.getId())
-                .findFirst().orElse(null);
+        UserDTO userDTO1 = findById(userDTO.getId());
 
         if (userDB == null || userDTO1 == null) {
             return null;
@@ -357,7 +351,6 @@ public class SimpleUserService implements UserService {
 
         Course find = courseList.stream().filter(course -> course.getId() == courseDB.getId())
                 .findFirst().orElse(null);
-
 
         if (find != null) {
             return userDTO;
@@ -372,23 +365,20 @@ public class SimpleUserService implements UserService {
         userCourseDTO.add(courseDTO);
         userDTO1.setWishToEnroll(userCourseDTO);
 
-        System.out.println(userDB);
-        userRepository.save(userDB);
+        saveAndFlushBack(userDTO1);
+        saveAndFlush(userDB);
+
         return userDTO1;
     }
 
     @Override
     public UserDTO waitToEnroll(UserDTO userDTO, CourseDTO courseDTO) {
 
-        User userDB = userRepository.findAll()
-                .stream().filter(us -> us.getId() == userDTO.getId())
-                .findFirst().orElse(null);
+        User userDB = findByIdDB(userDTO.getId());
 
         Course courseDB = CourseConvertor.convertToCourse(courseDTO);
 
-        UserDTO userDTO1 = userBackend
-                .stream().filter(us -> us.getId() == userDTO.getId())
-                .findFirst().orElse(null);
+        UserDTO userDTO1 = findById(userDB.getId());
 
         if (userDB == null || userDTO1 == null) {
             return null;
@@ -398,7 +388,6 @@ public class SimpleUserService implements UserService {
 
         Course find = courseList.stream().filter(course -> course.getId() == courseDB.getId())
                 .findFirst().orElse(null);
-
 
         if (find != null) {
             return userDTO;
@@ -426,7 +415,8 @@ public class SimpleUserService implements UserService {
         userDTOWish.removeIf(c -> c.getId() == courseDB.getId());
         userDTO1.setWishToEnroll(userDTOWish);
 
-        userRepository.save(userDB);
+        saveAndFlushBack(userDTO1);
+        saveAndFlush(userDB);
         return userDTO1;
     }
 
