@@ -14,6 +14,7 @@
 
 ## Reminder
 - Inainte sa incep as vrea sa va multumesc pentru buna colaborare si intelegere. Have fun!
+- Vlad trebuie sa caute o bricheta!
 
 <img src="https://media.giphy.com/media/NylYRvfyaIwtW/giphy.gif" height="300" height="300" align="middle">
 

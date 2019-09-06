@@ -28,4 +28,5 @@ public class Course {
     private LocalDate startDate;
     private LocalDate endDate;
     private String projectManager;
+    private String domain;
 }

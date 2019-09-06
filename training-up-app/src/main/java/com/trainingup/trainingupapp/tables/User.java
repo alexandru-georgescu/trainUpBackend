@@ -36,6 +36,8 @@ public class User {
     private String token;
     private boolean enable;
     private String leader;
+    private int accepted;
+    private int rejected;
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany

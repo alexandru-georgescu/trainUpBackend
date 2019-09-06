@@ -60,7 +60,6 @@ public class SimpleUserService implements UserService {
 
         List<Course> courses = userDB.getWishToEnroll();
 
-
         //Update REJECTED LIST
         Course toReject = courseService.findByIdDB(course.getId());
         List<Course> rejectedList = userDB.getRejectedList();
@@ -77,16 +76,18 @@ public class SimpleUserService implements UserService {
         rejectedListBack.add(course);
         userDTO.setRejectedList(rejectedListBack);
 
-        //UPDATE DB
-        saveAndFlush(userDB);
-        saveAndFlushBack(userDTO);
+
 
         List<CourseDTO> courseDTOS = userDTO.getWishToEnroll();
         //REMOVE FROM WISH
         courseDTOS.removeIf(c -> c.getId() == course.getId());
         userDTO.setWishToEnroll(courseDTOS);
 
+        //UPDATE DB
+        saveAndFlush(userDB);
+        saveAndFlushBack(userDTO);
 
+        updateRejected(user);
         return userDTO;
     }
 
@@ -167,6 +168,7 @@ public class SimpleUserService implements UserService {
         //UPDATE DB
         saveAndFlush(userDB);
         saveAndFlushBack(userDTO);
+        updateAccepted(user);
 
         return userDTO;
     }
@@ -175,6 +177,7 @@ public class SimpleUserService implements UserService {
     public UserDTO rejectFromWait(UserDTO user, CourseDTO course) {
         User userDB = findByIdDB(user.getId());
         UserDTO userDTO = findById(user.getId());
+
 
         if (userDB == null || userDTO == null) {
             return null;
@@ -207,6 +210,7 @@ public class SimpleUserService implements UserService {
         //UPDATE DB
         saveAndFlush(userDB);
         saveAndFlushBack(userDTO);
+        updateRejected(user);
 
         return userDTO;
     }
@@ -225,6 +229,30 @@ public class SimpleUserService implements UserService {
         return userRepository.findAll().stream()
                 .filter(u -> u.getId() == id)
                 .findFirst().orElse(null);
+    }
+
+    @Override
+    public User findByName(String name) {
+        return userRepository
+                .findAll()
+                .stream()
+                .filter(u -> u.getEmail().toLowerCase().equals(name.toLowerCase()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public void updateAccepted(UserDTO user) {
+        User leader = findByName(user.getLeader());
+        leader.setAccepted(leader.getAccepted() + 1);
+        saveAndFlush(leader);
+    }
+
+    @Override
+    public void updateRejected(UserDTO user) {
+        User leader = findByName(user.getLeader());
+        leader.setRejected(leader.getRejected() + 1);
+        saveAndFlush(leader);
     }
 
     @Override
@@ -417,6 +445,7 @@ public class SimpleUserService implements UserService {
 
         saveAndFlushBack(userDTO1);
         saveAndFlush(userDB);
+        updateAccepted(userDTO);
         return userDTO1;
     }
 
