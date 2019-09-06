@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,6 +41,18 @@ public class UserController {
     }
 
 
+    @PostConstruct
+    public void createAdmin() {
+        UserDTO admin = new UserDTO();
+        admin.setType("ADMIN");
+        admin.setLeader("ALEX");
+        admin.setEmail("admin.admin@trainup.com");
+        admin.setFirstName("admin");
+        admin.setLastName("admin");
+        admin.setPassword("Admin123456");
+        admin.setEnable(true);
+        userService.addUser(admin);
+    }
     @GetMapping("/in")
     public List<UserDTO> in() {
 
