@@ -30,6 +30,8 @@ public class UserController {
     @Autowired
     private CourseService courseService;
 
+    int course = 1;
+
     @GetMapping("/user")
     public List<UserDTO> introProject() {
         return userService.findAll();
@@ -51,35 +53,6 @@ public class UserController {
         admin.setLastName("admin");
         admin.setPassword("Admin123456");
         admin.setEnable(true);
-        userService.addUser(admin);
-    }
-    @GetMapping("/in")
-    public List<UserDTO> in() {
-
-        CourseDTO courseDTO1 = new CourseDTO();
-        courseDTO1.setActualCapacity(10);
-        courseDTO1.setCapacity(20);
-        courseDTO1.setCourseName("Curs1");
-        courseDTO1.setStartDate(LocalDate.now());
-        courseDTO1.setEndDate(LocalDate.now().plusMonths(1));
-        courseDTO1.setProjectManager("p.m@trainup.com");
-
-
-        CourseDTO courseDTO2 = new CourseDTO();
-        courseDTO2.setActualCapacity(10);
-        courseDTO2.setCapacity(20);
-        courseDTO2.setCourseName("Curs2");
-        courseDTO2.setStartDate(LocalDate.now().plusMonths(5));
-        courseDTO2.setEndDate(LocalDate.now().plusMonths(10));
-        courseDTO2.setProjectManager("p.m@trainup.com");
-
-        CourseDTO courseDTO3 = new CourseDTO();
-        courseDTO3.setActualCapacity(10);
-        courseDTO3.setCapacity(20);
-        courseDTO3.setCourseName("Curs3");
-        courseDTO3.setStartDate(LocalDate.now().minusWeeks(10));
-        courseDTO3.setEndDate(LocalDate.now().minusWeeks(5));
-        courseDTO3.setProjectManager("p.m@trainup.com");
 
         UserDTO pm = new UserDTO();
         pm.setType("PM");
@@ -112,10 +85,40 @@ public class UserController {
         user.setEnable(true);
 
         synchronized (userService) {
+            userService.addUser(admin);
             userService.addUser(user);
             userService.addUser(pm);
             userService.addUser(tm);
         }
+
+    }
+    @GetMapping("/in")
+    public List<CourseDTO> in() {
+
+        CourseDTO courseDTO1 = new CourseDTO();
+        courseDTO1.setActualCapacity(10);
+        courseDTO1.setCapacity(10);
+        courseDTO1.setCourseName("Curs" + course++);
+        courseDTO1.setStartDate(LocalDate.now());
+        courseDTO1.setEndDate(LocalDate.now().plusMonths(1));
+        courseDTO1.setProjectManager("p.m@trainup.com");
+
+
+        CourseDTO courseDTO2 = new CourseDTO();
+        courseDTO2.setActualCapacity(10);
+        courseDTO2.setCapacity(10);
+        courseDTO2.setCourseName("Curs" + course++);
+        courseDTO2.setStartDate(LocalDate.now().plusMonths(5));
+        courseDTO2.setEndDate(LocalDate.now().plusMonths(10));
+        courseDTO2.setProjectManager("p.m@trainup.com");
+
+        CourseDTO courseDTO3 = new CourseDTO();
+        courseDTO3.setActualCapacity(10);
+        courseDTO3.setCapacity(10);
+        courseDTO3.setCourseName("Curs" + course++);
+        courseDTO3.setStartDate(LocalDate.now().minusWeeks(10));
+        courseDTO3.setEndDate(LocalDate.now().minusWeeks(5));
+        courseDTO3.setProjectManager("p.m@trainup.com");
 
         synchronized (courseService) {
             courseService.addCourse(courseDTO1);
@@ -123,7 +126,7 @@ public class UserController {
             courseService.addCourse(courseDTO3);
         }
 
-        return userService.findAll();
+        return courseService.findAll();
     }
 
     @CrossOrigin(origins = "*")
