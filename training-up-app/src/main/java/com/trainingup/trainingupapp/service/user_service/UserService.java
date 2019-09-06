@@ -10,6 +10,9 @@ public interface UserService {
     List<UserDTO> findAll();
     UserDTO findById(long id);
     User findByIdDB(long id);
+    User findByName(String name);
+    void updateAccepted(UserDTO user);
+    void updateRejected(UserDTO user);
     UserDTO addUser(UserDTO user);
     void removeUser(long id);
     UserDTO loginService(String username, String password);
