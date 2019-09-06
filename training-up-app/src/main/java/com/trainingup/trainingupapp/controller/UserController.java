@@ -6,6 +6,7 @@ import com.trainingup.trainingupapp.dto.CourseUserDTO;
 import com.trainingup.trainingupapp.dto.PasswordDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
+import com.trainingup.trainingupapp.service.outlook_service.InvitationService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import com.trainingup.trainingupapp.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ import java.util.stream.Collectors;
 @RestController
 @CrossOrigin(origins = "*")
 public class UserController {
+
+    @Autowired
+    private InvitationService invitationService;
 
     @Autowired
     private UserService userService;
@@ -45,6 +49,7 @@ public class UserController {
 
     @PostConstruct
     public void createAdmin() {
+
         UserDTO admin = new UserDTO();
         admin.setType("ADMIN");
         admin.setLeader("ALEX");
@@ -95,6 +100,7 @@ public class UserController {
     @GetMapping("/in")
     public List<CourseDTO> in() {
 
+
         CourseDTO courseDTO1 = new CourseDTO();
         courseDTO1.setActualCapacity(10);
         courseDTO1.setCapacity(10);
@@ -102,7 +108,6 @@ public class UserController {
         courseDTO1.setStartDate(LocalDate.now());
         courseDTO1.setEndDate(LocalDate.now().plusMonths(1));
         courseDTO1.setProjectManager("p.m@trainup.com");
-
 
         CourseDTO courseDTO2 = new CourseDTO();
         courseDTO2.setActualCapacity(10);

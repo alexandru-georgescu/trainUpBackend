@@ -6,6 +6,7 @@ import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.repository.UserRepository;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
+import com.trainingup.trainingupapp.service.outlook_service.InvitationService;
 import com.trainingup.trainingupapp.service.smtp_service.SmtpService;
 import com.trainingup.trainingupapp.tables.Course;
 import com.trainingup.trainingupapp.tables.User;
@@ -26,6 +27,9 @@ public class SimpleUserService implements UserService {
 
     @Autowired
     CourseService courseService;
+
+    @Autowired
+    InvitationService invitationService;
 
     @Autowired
     SmtpService smtpService;
@@ -128,6 +132,7 @@ public class SimpleUserService implements UserService {
         User userDB = findByIdDB(user.getId());
         UserDTO userDTO = findById(user.getId());
 
+
         if (userDB == null || userDTO == null) {
             return null;
         }
@@ -169,6 +174,7 @@ public class SimpleUserService implements UserService {
         saveAndFlush(userDB);
         saveAndFlushBack(userDTO);
         updateAccepted(user);
+        invitationService.send(user, course);
 
         return userDTO;
     }
