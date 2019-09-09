@@ -222,6 +222,27 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
+    public boolean updateUsers(List<UserDTO> users) {
+        users.forEach(u -> {
+            User db = findByIdDB(u.getId());
+            UserDTO dto = findById(u.getId());
+
+            db.setEnable(u.isEnable());
+            db.setLeader(u.getLeader());
+            db.setType(u.getType());
+
+            dto.setEnable(u.isEnable());
+            dto.setLeader(u.getLeader());
+            dto.setType(u.getType());
+
+            saveAndFlush(db);
+            saveAndFlushBack(dto);
+        });
+
+        return true;
+    }
+
+    @Override
     public UserDTO findById(long id) {
         return this.userBackend
                 .stream()

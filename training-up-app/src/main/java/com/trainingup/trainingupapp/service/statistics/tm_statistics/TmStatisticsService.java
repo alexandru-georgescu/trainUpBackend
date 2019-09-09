@@ -9,4 +9,5 @@ public interface TmStatisticsService {
     int accepted(UserDTO tm);
     List<String> predominantDomain(UserDTO tm);
     void addDomain(String domain);
+    String teamPercentage(UserDTO tm);
 }

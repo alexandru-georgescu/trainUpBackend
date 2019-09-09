@@ -46,4 +46,10 @@ public class StatisticsController {
     }
 
 
+    @PostMapping("/tm_statistics/team_percentage")
+    public String teamPercentage(@RequestBody UserDTO tm) {
+        return tmStatisticsService.teamPercentage(tm);
+    }
+
+
 }

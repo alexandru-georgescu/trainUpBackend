@@ -117,7 +117,7 @@ public class UserController {
         courseDTO2.setStartDate(LocalDate.now().plusMonths(5));
         courseDTO2.setEndDate(LocalDate.now().plusMonths(10));
         courseDTO2.setProjectManager("p.m@trainup.com");
-        courseDTO1.setDomain("NFR");
+        courseDTO2.setDomain("NFR");
 
 
         CourseDTO courseDTO3 = new CourseDTO();
@@ -127,7 +127,7 @@ public class UserController {
         courseDTO3.setStartDate(LocalDate.now().minusWeeks(10));
         courseDTO3.setEndDate(LocalDate.now().minusWeeks(5));
         courseDTO3.setProjectManager("p.m@trainup.com");
-        courseDTO1.setDomain("EDA_A_FOST_AICI");
+        courseDTO3.setDomain("EDA_A_FOST_AICI");
 
         synchronized (courseService) {
             courseService.addCourse(courseDTO1);
@@ -144,6 +144,11 @@ public class UserController {
         return userService.loginService(user.getEmail(), user.getPassword());
     }
 
+    @CrossOrigin(origins = "*")
+    @PostMapping("/user/update_users")
+    public boolean updateUsers(@RequestBody List<UserDTO> users) {
+        return userService.updateUsers(users);
+    }
 
     @PostMapping("/user/findWaitByCourse")
     public List<UserDTO> findWaitByCourse(@RequestBody CourseDTO courseDTO) {

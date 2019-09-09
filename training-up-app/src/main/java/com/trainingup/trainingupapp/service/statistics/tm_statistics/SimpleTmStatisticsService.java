@@ -76,4 +76,17 @@ public class SimpleTmStatisticsService implements TmStatisticsService {
 
         domains.put(domain, domains.get(domain) + 1);
     }
+
+    @Override
+    public String teamPercentage(UserDTO tm) {
+        List<UserDTO> allUsers = userService.findAllWithLeader(tm.getEmail());
+
+        List<UserDTO> fillterUser = allUsers
+                .stream()
+                .filter(u -> u.getCourses().size() >= 1)
+                .collect(Collectors.toList());
+
+        String percentage = 1F * fillterUser.size()/allUsers.size() * 100 + "%";
+        return percentage;
+    }
 }
