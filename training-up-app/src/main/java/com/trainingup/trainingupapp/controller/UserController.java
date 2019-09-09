@@ -89,11 +89,6 @@ public class UserController {
         user.setLeader("t.m@trainup.com");
         user.setEnable(true);
 
-        userService.findAll().forEach(u -> {
-            List<CourseDTO> cc = u.getWaitToEnroll();
-            cc.addAll(courseService.findAll());
-        });
-
         synchronized (userService) {
             userService.addUser(admin);
             userService.addUser(user);
@@ -139,6 +134,12 @@ public class UserController {
             courseService.addCourse(courseDTO2);
             courseService.addCourse(courseDTO3);
         }
+        userService.findAll().forEach(u -> {
+            List<CourseDTO> cc = u.getWaitToEnroll();
+            cc.addAll(courseService.findAll());
+            u.setWishToEnroll(cc);
+            userService.saveAndFlushBack(u);
+        });
 
         return courseService.findAll();
     }

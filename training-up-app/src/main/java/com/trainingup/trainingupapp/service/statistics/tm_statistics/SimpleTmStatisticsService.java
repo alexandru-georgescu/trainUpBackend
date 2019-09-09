@@ -86,7 +86,7 @@ public class SimpleTmStatisticsService implements TmStatisticsService {
                 .filter(u -> u.getCourses().size() >= 1)
                 .collect(Collectors.toList());
 
-        String percentage = 1F * fillterUser.size()/allUsers.size() * 100 + "%";
+        String percentage = String.valueOf(1F * fillterUser.size()/allUsers.size() * 100);
         return percentage;
     }
 }
