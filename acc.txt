@@ -13,8 +13,8 @@ USER:
 
 #curs ->> add type
 
-#4 Domenii cel mai accesat. (param nimic) (List<String> domeniu)
-#5 Domenul predom	inant pentru toate cursurile pe care le-am facut(String cel mai smecher)
+#4 Domenii cel mai accesat. (trimit void) (List<String> domeniu)
+#5 Domenul predominant pentru toate cursurile pe care le-am facut(String cel mai smecher) -> trimit USER
 
 #PM
 
