@@ -1,7 +1,6 @@
 package com.trainingup.trainingupapp;
 
 import com.trainingup.trainingupapp.threads.SmtpThread;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;

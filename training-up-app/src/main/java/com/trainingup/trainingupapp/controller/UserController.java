@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -49,7 +48,6 @@ public class UserController {
 
     @PostConstruct
     public void createAdmin() {
-
         UserDTO admin = new UserDTO();
         admin.setType("ADMIN");
         admin.setLeader("ALEX");
@@ -95,7 +93,6 @@ public class UserController {
             userService.addUser(pm);
             userService.addUser(tm);
         }
-
     }
     @GetMapping("/in")
     public List<CourseDTO> in() {
@@ -108,7 +105,8 @@ public class UserController {
         courseDTO1.setStartDate(LocalDate.now());
         courseDTO1.setEndDate(LocalDate.now().plusMonths(1));
         courseDTO1.setProjectManager("p.m@trainup.com");
-        
+        courseDTO1.setDomain("RCA");
+
         CourseDTO courseDTO2 = new CourseDTO();
         courseDTO2.setActualCapacity(10);
         courseDTO2.setCapacity(10);
@@ -116,6 +114,8 @@ public class UserController {
         courseDTO2.setStartDate(LocalDate.now().plusMonths(5));
         courseDTO2.setEndDate(LocalDate.now().plusMonths(10));
         courseDTO2.setProjectManager("p.m@trainup.com");
+        courseDTO2.setDomain("NFR");
+
 
         CourseDTO courseDTO3 = new CourseDTO();
         courseDTO3.setActualCapacity(10);
@@ -124,12 +124,19 @@ public class UserController {
         courseDTO3.setStartDate(LocalDate.now().minusWeeks(10));
         courseDTO3.setEndDate(LocalDate.now().minusWeeks(5));
         courseDTO3.setProjectManager("p.m@trainup.com");
+        courseDTO3.setDomain("EDA_A_FOST_AICI");
 
         synchronized (courseService) {
             courseService.addCourse(courseDTO1);
             courseService.addCourse(courseDTO2);
             courseService.addCourse(courseDTO3);
         }
+        userService.findAll().forEach(u -> {
+            List<CourseDTO> cc = u.getWaitToEnroll();
+            cc.addAll(courseService.findAll());
+            u.setWishToEnroll(cc);
+            userService.saveAndFlushBack(u);
+        });
 
         return courseService.findAll();
     }
@@ -140,6 +147,11 @@ public class UserController {
         return userService.loginService(user.getEmail(), user.getPassword());
     }
 
+    @CrossOrigin(origins = "*")
+    @PostMapping("/user/update_users")
+    public boolean updateUsers(@RequestBody List<UserDTO> users) {
+        return userService.updateUsers(users);
+    }
 
     @PostMapping("/user/findWaitByCourse")
     public List<UserDTO> findWaitByCourse(@RequestBody CourseDTO courseDTO) {
