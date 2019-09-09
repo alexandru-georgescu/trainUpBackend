@@ -27,6 +27,7 @@ public class Course {
     private int actualCapacity;
     private LocalDate startDate;
     private LocalDate endDate;
+    private String timeInterval;
     private String projectManager;
     private String domain;
 }

@@ -108,7 +108,7 @@ public class UserController {
         courseDTO1.setStartDate(LocalDate.now());
         courseDTO1.setEndDate(LocalDate.now().plusMonths(1));
         courseDTO1.setProjectManager("p.m@trainup.com");
-        
+
         CourseDTO courseDTO2 = new CourseDTO();
         courseDTO2.setActualCapacity(10);
         courseDTO2.setCapacity(10);

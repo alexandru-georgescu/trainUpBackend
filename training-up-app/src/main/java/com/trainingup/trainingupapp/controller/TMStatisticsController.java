@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @CrossOrigin(origins = "*")
 @RestController
 public class TMStatisticsController {
@@ -28,7 +30,7 @@ public class TMStatisticsController {
     }
 
     @PostMapping("/tm_statistics/predominant_domain")
-    public String predominantDomain(@RequestBody UserDTO tm) {
+    public List<String> predominantDomain(@RequestBody UserDTO tm) {
         return statisticsService.predominantDomain(tm);
     }
 
