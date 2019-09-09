@@ -62,4 +62,15 @@ public class CourseController {
     public CourseDTO findCourseByIdPage(@RequestParam("id") long id) {
         return courseService.findById(id);
     }
+
+    @PostMapping("/course/findAcceptedByPm")
+    public List<UserDTO> findAcceptedByPm(@RequestBody CourseDTO course) {
+        return courseService.findAcceptedByPm(course);
+    }
+
+    @PostMapping("/course/findRejectedByPm")
+    public List<UserDTO> findRejectedByPm(@RequestBody CourseDTO course) {
+        return courseService.findRejectedByPm(course);
+    }
+
 }
