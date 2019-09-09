@@ -6,7 +6,6 @@ import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.statistics.tm_statistics.SortCourse;
 import com.trainingup.trainingupapp.service.user_service.UserService;
-import com.trainingup.trainingupapp.tables.Course;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +37,9 @@ public class SimpleUserStatisticsService implements UserStatisticsService {
     @Override
     public List<String> findBestCourse() {
         domains.clear();
-        List<CourseDTO> allCourses = courseService.findAll();
+        List<UserDTO> allUsers = userService.findAll();
+        List<CourseDTO> allCourses = new ArrayList<>();
+        allUsers.forEach(u -> allCourses.addAll(u.getCourses()));
 
         allCourses.forEach(c -> addDomain(c.getDomain()));
 
@@ -47,7 +48,6 @@ public class SimpleUserStatisticsService implements UserStatisticsService {
 
     public List<String> toSort() {
         List<SortCourse> toSort = new ArrayList<>();
-
 
         domains.forEach((c, i) -> {
             SortCourse course = new SortCourse();

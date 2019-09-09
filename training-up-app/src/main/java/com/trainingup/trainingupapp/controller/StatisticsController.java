@@ -12,7 +12,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class TMStatisticsController {
+public class StatisticsController {
 
     @Autowired
     TmStatisticsService tmStatisticsService;

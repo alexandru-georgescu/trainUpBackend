@@ -3,8 +3,6 @@ package com.trainingup.trainingupapp.convertor;
 import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.tables.Course;
 
-import javax.persistence.Transient;
-
 public class CourseConvertor {
 
     public static Course convertToCourse(CourseDTO course) {
