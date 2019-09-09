@@ -146,19 +146,23 @@ public class SimpleCourseService implements CourseService {
 
     @Override
     public List<UserDTO> findAcceptedByPm(CourseDTO course) {
+        CourseDTO backendDTO = findById(course.getId());
+
         return userService
                 .findAll()
                 .stream()
-                .filter(u -> u.getCourses().contains(course))
+                .filter(u -> u.getCourses().contains(backendDTO))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<UserDTO> findRejectedByPm(CourseDTO course) {
+        CourseDTO backendDTO = findById(course.getId());
+
         return userService
                 .findAll()
                 .stream()
-                .filter(u -> u.getRejectedList().contains(course))
+                .filter(u -> u.getRejectedList().contains(backendDTO))
                 .collect(Collectors.toList());
     }
 }

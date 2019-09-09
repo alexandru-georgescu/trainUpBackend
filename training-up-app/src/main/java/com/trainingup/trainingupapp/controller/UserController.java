@@ -89,6 +89,11 @@ public class UserController {
         user.setLeader("t.m@trainup.com");
         user.setEnable(true);
 
+        userService.findAll().forEach(u -> {
+            List<CourseDTO> cc = u.getWaitToEnroll();
+            cc.addAll(courseService.findAll());
+        });
+
         synchronized (userService) {
             userService.addUser(admin);
             userService.addUser(user);
