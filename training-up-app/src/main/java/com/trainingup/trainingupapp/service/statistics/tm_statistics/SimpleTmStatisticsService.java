@@ -36,7 +36,7 @@ public class SimpleTmStatisticsService implements TmStatisticsService {
         List<CourseDTO> courses = new ArrayList<>();
 
         allUsers.forEach(u -> courses.addAll(u.getWaitToEnroll()));
-        domains.clear();
+
 
         courses.forEach(c -> addDomain(c.getDomain()));
 
@@ -50,7 +50,7 @@ public class SimpleTmStatisticsService implements TmStatisticsService {
         });
 
         Collections.sort(toSort, (c1, c2) -> {
-            if (c1.getNr() >= c2.getNr()) {
+            if (c1.getNr() < c2.getNr()) {
                 return 1;
             };
             return -1;

@@ -57,10 +57,9 @@ public class SimpleUserStatisticsService implements UserStatisticsService {
         });
 
         Collections.sort(toSort, (c1, c2) -> {
-            if (c1.getNr() >= c2.getNr()) {
+            if (c1.getNr() < c2.getNr()) {
                 return 1;
-            }
-            ;
+            };
             return -1;
         });
         if (toSort.size() == 0) {
