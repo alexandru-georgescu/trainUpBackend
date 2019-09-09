@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -49,7 +48,6 @@ public class UserController {
 
     @PostConstruct
     public void createAdmin() {
-
         UserDTO admin = new UserDTO();
         admin.setType("ADMIN");
         admin.setLeader("ALEX");
@@ -95,7 +93,6 @@ public class UserController {
             userService.addUser(pm);
             userService.addUser(tm);
         }
-
     }
     @GetMapping("/in")
     public List<CourseDTO> in() {
