@@ -14,6 +14,10 @@ USER:
 #curs ->> add type
 
 #4 Domenii cel mai accesat. (param nimic) (List<String> domeniu)
-#5 Domenul predominant pentru toate cursurile pe care le-am facut(String cel mai smecher)
+#5 Domenul predom	inant pentru toate cursurile pe care le-am facut(String cel mai smecher)
 
+#PM
+
+CURS -> CEI CARE AU CURS UL IN LISTA DE ACCEPT
+CURS -> CEI CARE NU SUNT ACCEPTATI
 

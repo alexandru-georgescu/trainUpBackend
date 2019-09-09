@@ -33,9 +33,9 @@ public class SimpleTmStatisticsService implements TmStatisticsService {
     @Override
     public List<String> predominantDomain(UserDTO tm) {
         List<UserDTO> allUsers = userService.findAllWithLeader(tm.getEmail());
-        Set<CourseDTO> courses = new HashSet<>();
+        List<CourseDTO> courses = new ArrayList<>();
 
-        allUsers.forEach(u -> courses.addAll(u.getCourses()));
+        allUsers.forEach(u -> courses.addAll(u.getWaitToEnroll()));
         domains.clear();
 
         courses.forEach(c -> addDomain(c.getDomain()));
