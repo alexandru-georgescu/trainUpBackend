@@ -1,10 +1,7 @@
 
 package com.trainingup.trainingupapp.controller;
 
-import com.trainingup.trainingupapp.dto.CourseDTO;
-import com.trainingup.trainingupapp.dto.CourseUserDTO;
-import com.trainingup.trainingupapp.dto.PasswordDTO;
-import com.trainingup.trainingupapp.dto.UserDTO;
+import com.trainingup.trainingupapp.dto.*;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.outlook_service.InvitationService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
@@ -218,4 +215,9 @@ public class UserController {
         return userService.acceptFromWait(array.getUser(),array.getCourse());
     }
 
+    @CrossOrigin(origins = "*")
+    @PostMapping("user/acceptAll")
+    public List<UserDTO> acceptAll(@RequestBody LUsersCourse array) {
+        return userService.acceptAllUsers(array.getUsers(),array.getCourse());
+    }
 }

@@ -29,5 +29,5 @@ public interface UserService {
     UserDTO acceptFromWait(UserDTO user, CourseDTO course);
     UserDTO rejectFromWait(UserDTO user, CourseDTO course);
     boolean updateUsers(List<UserDTO> users);
-
+    List<UserDTO> acceptAllUsers(List<UserDTO> users, CourseDTO course);
 }

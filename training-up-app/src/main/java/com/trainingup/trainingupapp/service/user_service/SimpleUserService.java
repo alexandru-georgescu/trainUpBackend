@@ -481,4 +481,14 @@ public class SimpleUserService implements UserService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<UserDTO> acceptAllUsers(List<UserDTO> users, CourseDTO course) {
+        List<UserDTO> returnList = new ArrayList<>();
+        users.forEach(u -> {
+            acceptFromWait(u, course);
+            returnList.add(findById(u.getId()));
+        });
+        return returnList;
+    }
+
 }
