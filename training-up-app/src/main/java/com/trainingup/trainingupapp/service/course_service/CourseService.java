@@ -18,4 +18,6 @@ public interface CourseService {
     List<CourseDTO> findByPm(UserDTO pm);
     void saveAndFlash(Course course);
     void saveAndFlashBack(CourseDTO courseDTO);
+    List<UserDTO> findAcceptedByPm(CourseDTO course);
+    List<UserDTO> findRejectedByPm(CourseDTO course);
 }

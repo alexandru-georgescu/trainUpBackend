@@ -1,6 +1,7 @@
 package com.trainingup.trainingupapp;
 
 import com.trainingup.trainingupapp.threads.SmtpThread;
+import com.trainingup.trainingupapp.threads.TokenThread;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,7 +15,11 @@ public class TrainingUpAppApplication {
 		ApplicationContext context = SpringApplication.run(TrainingUpAppApplication.class, args);
 		SmtpThread thread = new SmtpThread();
 		context.getAutowireCapableBeanFactory().autowireBean(thread);
+		TokenThread tokenThread = new TokenThread();
+		context.getAutowireCapableBeanFactory().autowireBean(tokenThread);
+
 		thread.start();
+		tokenThread.start();
 	}
 
 }

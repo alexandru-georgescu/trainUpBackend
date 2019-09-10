@@ -12,6 +12,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +36,7 @@ public class User {
     private String password;
     private String token;
     private boolean enable;
+    private LocalDate dateOfRegistration;
     private String leader;
     private int accepted;
     private int rejected;

@@ -4,6 +4,7 @@ import com.trainingup.trainingupapp.convertor.CourseConvertor;
 import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.repository.CourseRepository;
+import com.trainingup.trainingupapp.service.user_service.UserService;
 import com.trainingup.trainingupapp.tables.Course;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,10 @@ public class SimpleCourseService implements CourseService {
 
     @Autowired
     CourseRepository courseRepository;
+
+    @Autowired
+    UserService userService;
+
 
     List<CourseDTO> backendCourses = new ArrayList<>();
 
@@ -137,5 +142,48 @@ public class SimpleCourseService implements CourseService {
             }
             return c;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserDTO> findAcceptedByPm(CourseDTO course) {
+        CourseDTO backendDTO = findById(course.getId());
+
+        return userService
+                .findAll()
+                .stream()
+                .filter(u -> {
+                    List<CourseDTO> courseDTOS = u.getCourses();
+                    CourseDTO dummy = courseDTOS.stream().filter(c -> c.getId() == backendDTO.getId())
+                            .findFirst()
+                            .orElse(null);
+                    if (dummy != null) {
+                        return true;
+                    }
+
+                    return false;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserDTO> findRejectedByPm(CourseDTO course) {
+        CourseDTO backendDTO = findById(course.getId());
+
+        return userService
+                .findAll()
+                .stream()
+                .filter(u -> {
+                    List<CourseDTO> courseDTOS = u.getRejectedList();
+                    CourseDTO dummy = courseDTOS.stream().filter(c -> c.getId() == backendDTO.getId())
+                            .findFirst()
+                            .orElse(null);
+                    if (dummy != null) {
+                        return true;
+                    }
+
+                    return false;
+
+                })
+                .collect(Collectors.toList());
     }
 }
