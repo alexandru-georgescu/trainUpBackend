@@ -28,14 +28,16 @@ public class SimplePmStatisticsService implements PmStatisticsService {
                 .collect(Collectors.toList());
 
         AtomicInteger cap = new AtomicInteger();
-        AtomicInteger actualCap = new AtomicInteger();
+        cap.getAndSet(0);
 
+        AtomicInteger actualCap = new AtomicInteger();
+        actualCap.getAndSet(0);
         courses.forEach(c -> {
             cap.addAndGet(c.getCapacity());
             actualCap.addAndGet(c.getActualCapacity());
         });
 
-        int finalValue = 100 - actualCap.get()/cap.get();
+        float finalValue = (float) (100 - 1F* actualCap.get()/cap.get() * 100);
 
         return String.valueOf(finalValue);
     }
