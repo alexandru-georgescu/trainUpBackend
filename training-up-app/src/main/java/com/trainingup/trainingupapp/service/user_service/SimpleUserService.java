@@ -80,8 +80,6 @@ public class SimpleUserService implements UserService {
         rejectedListBack.add(course);
         userDTO.setRejectedList(rejectedListBack);
 
-
-
         List<CourseDTO> courseDTOS = userDTO.getWishToEnroll();
         //REMOVE FROM WISH
         courseDTOS.removeIf(c -> c.getId() == course.getId());
