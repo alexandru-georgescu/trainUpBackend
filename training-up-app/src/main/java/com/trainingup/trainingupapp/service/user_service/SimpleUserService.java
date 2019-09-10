@@ -81,8 +81,6 @@ public class SimpleUserService implements UserService {
         rejectedListBack.add(course);
         userDTO.setRejectedList(rejectedListBack);
 
-
-
         List<CourseDTO> courseDTOS = userDTO.getWishToEnroll();
         //REMOVE FROM WISH
         courseDTOS.removeIf(c -> c.getId() == course.getId());
@@ -220,6 +218,27 @@ public class SimpleUserService implements UserService {
         updateRejected(user);
 
         return userDTO;
+    }
+
+    @Override
+    public boolean updateUsers(List<UserDTO> users) {
+        users.forEach(u -> {
+            User db = findByIdDB(u.getId());
+            UserDTO dto = findById(u.getId());
+
+            db.setEnable(u.isEnable());
+            db.setLeader(u.getLeader());
+            db.setType(u.getType());
+
+            dto.setEnable(u.isEnable());
+            dto.setLeader(u.getLeader());
+            dto.setType(u.getType());
+
+            saveAndFlush(db);
+            saveAndFlushBack(dto);
+        });
+
+        return true;
     }
 
     @Override

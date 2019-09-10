@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.Duration;
 import java.time.LocalDate;
 
-public class TokenThread extends  Thread {
+public class TokenThread extends Thread {
 
     @Autowired
     UserService userService;
@@ -16,9 +16,9 @@ public class TokenThread extends  Thread {
         while(true) {
             userService.findAllDB()
                     .stream().forEach(u -> {
-                        if (!u.isEnable() && (Duration.between(LocalDate.now(),
-                                u.getDateOfRegistration()).toHours() > 24))
-                            userService.removeUser(u.getId());
+                if (!u.isEnable() && (Duration.between(LocalDate.now(),
+                        u.getDateOfRegistration()).toHours() > 24))
+                    userService.removeUser(u.getId());
             });
 
             try {

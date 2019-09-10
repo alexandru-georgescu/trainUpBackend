@@ -32,75 +32,78 @@ public class SimpleInvitationService implements InvitationService {
 
     @Override
     public void send(UserDTO user, CourseDTO courseDTO) {
-        MimeMessage message = javaMailSender.createMimeMessage();
 
-        try {
-            message.addHeaderLine("method=REQUEST");
-            message.addHeaderLine("charset=UTF-8");
-            message.setSubject("TrainUp Course Meeting");
+        new Thread(() -> {
+            synchronized (this) {
+                MimeMessage message = javaMailSender.createMimeMessage();
 
-            message.setFrom(new InternetAddress("trainupapply@gmail.com"));
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress("alexgeorgescu98@gmail.com"));
-            message.setSubject("TrainUp Course Meeting");
+                try {
+                    message.addHeaderLine("method=REQUEST");
+                    message.addHeaderLine("charset=UTF-8");
+                    message.setSubject("TrainUp Course Meeting");
 
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+                    message.setFrom(new InternetAddress("trainupapply@gmail.com"));
+                    message.addRecipient(Message.RecipientType.TO, new InternetAddress("alexgeorgescu98@gmail.com"));
+                    message.setSubject("TrainUp Course Meeting");
 
-        StringBuffer sb = new StringBuffer();
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
 
-        StringBuffer buffer = sb.append("BEGIN:VCALENDAR\n"+
-                "PRODID:-//Microsoft Corporation//Outlook 9.0 MIMEDIR//EN\n"+
-                "VERSION:2.0\n" +
-                "METHOD:REQUEST\n" +
-                "BEGIN:VEVENT\n" +
-                "ATTENDEE;ROLE=REQ-PARTICIPANT;RSVP=TRUE:MAILTO:alexgeorgescu98@gmail.com\n" +
-                "ORGANIZER:MAILTO:alexgeorgescu98@gmail.com\n" +
-                "DTSTART:" + courseDTO.getStartDate().toString() + "T053000Z\n" +
-                "DTEND:" + courseDTO.getEndDate().toString() + "T060000Z\n" +
-                "LOCATION:TrainUp.srl\n" +
-                "TRANSP:OPAQUE\n" +
-                "SEQUENCE:0\n" +
-                "UID:040000008200E00074C5B7101A82E00800000000002FF466CE3AC5010000000000000000100\n" +
-                " 000004377FE5C37984842BF9440448399EB02\n" +
-                "DTSTAMP:" +courseDTO.getStartDate().toString() + "T120102Z\n" +
-                "CATEGORIES:Meeting\n" +
-                "DESCRIPTION: TrainUp Course Meeting for " +  courseDTO.getCourseName() + ".\n\n" +
-                "SUMMARY:TrainUp Meeting for " + user.getFirstName() +  "\n" +
-                "PRIORITY:5\n" +
-                "CLASS:PUBLIC\n" +
-                "BEGIN:VALARM\n" +
-                "TRIGGER:PT1440M\n" +
-                "ACTION:DISPLAY\n" +
-                "DESCRIPTION:Reminder\n" +
-                "END:VALARM\n" +
-                "END:VEVENT\n" +
-                "END:VCALENDAR");
+                StringBuffer sb = new StringBuffer();
 
-        BodyPart messageBodyPart = new MimeBodyPart();
+                StringBuffer buffer = sb.append("BEGIN:VCALENDAR\n" +
+                        "PRODID:-//Microsoft Corporation//Outlook 9.0 MIMEDIR//EN\n" +
+                        "VERSION:2.0\n" +
+                        "METHOD:REQUEST\n" +
+                        "BEGIN:VEVENT\n" +
+                        "ATTENDEE;ROLE=REQ-PARTICIPANT;RSVP=TRUE:MAILTO:alexgeorgescu98@gmail.com\n" +
+                        "ORGANIZER:MAILTO:alexgeorgescu98@gmail.com\n" +
+                        "DTSTART:" + courseDTO.getStartDate().toString() + "T053000Z\n" +
+                        "DTEND:" + courseDTO.getEndDate().toString() + "T060000Z\n" +
+                        "LOCATION:TrainUp.srl\n" +
+                        "TRANSP:OPAQUE\n" +
+                        "SEQUENCE:0\n" +
+                        "UID:040000008200E00074C5B7101A82E00800000000002FF466CE3AC5010000000000000000100\n" +
+                        " 000004377FE5C37984842BF9440448399EB02\n" +
+                        "DTSTAMP:" + courseDTO.getStartDate().toString() + "T120102Z\n" +
+                        "CATEGORIES:Meeting\n" +
+                        "DESCRIPTION: TrainUp Course Meeting for " + courseDTO.getCourseName() + ".\n\n" +
+                        "SUMMARY:TrainUp Meeting for " + user.getFirstName() + "\n" +
+                        "PRIORITY:5\n" +
+                        "CLASS:PUBLIC\n" +
+                        "BEGIN:VALARM\n" +
+                        "TRIGGER:PT1440M\n" +
+                        "ACTION:DISPLAY\n" +
+                        "DESCRIPTION:Reminder\n" +
+                        "END:VALARM\n" +
+                        "END:VEVENT\n" +
+                        "END:VCALENDAR");
 
-        try {
-            messageBodyPart.setHeader("Content-Class", "urn:content-classes:calendarmessage");
-            messageBodyPart.setHeader("Content-ID","calendar_message");
-            messageBodyPart.setDataHandler(new DataHandler(
-                    new ByteArrayDataSource(buffer.toString(), "text/calendar")));
+                BodyPart messageBodyPart = new MimeBodyPart();
 
-            Multipart multipart = new MimeMultipart();
+                try {
+                    messageBodyPart.setHeader("Content-Class", "urn:content-classes:calendarmessage");
+                    messageBodyPart.setHeader("Content-ID", "calendar_message");
+                    messageBodyPart.setDataHandler(new DataHandler(
+                            new ByteArrayDataSource(buffer.toString(), "text/calendar")));
 
-            // Add part one
-            multipart.addBodyPart(messageBodyPart);
+                    Multipart multipart = new MimeMultipart();
+
+                    // Add part one
+                    multipart.addBodyPart(messageBodyPart);
 
 
+                    // Put parts in message
+                    message.setContent(multipart);
 
-            // Put parts in message
-            message.setContent(multipart);
+                    // send message
+                    javaMailSender.send(message);
 
-            // send message
-            javaMailSender.send(message);
-
-        } catch (MessagingException | IOException e) {
-            e.printStackTrace();
-        }
-
+                } catch (MessagingException | IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }

@@ -1,13 +1,10 @@
 package com.trainingup.trainingupapp.tables;
 
-import com.trainingup.trainingupapp.dto.UserDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
