@@ -1,11 +1,9 @@
 package com.trainingup.trainingupapp.controller;
 
 import com.trainingup.trainingupapp.dto.UserDTO;
-import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.statistics.pm_statistics.PmStatisticsService;
 import com.trainingup.trainingupapp.service.statistics.tm_statistics.TmStatisticsService;
 import com.trainingup.trainingupapp.service.statistics.user_statistics.UserStatisticsService;
-import com.trainingup.trainingupapp.service.user_service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

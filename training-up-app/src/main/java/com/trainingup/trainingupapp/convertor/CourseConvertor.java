@@ -15,6 +15,8 @@ public class CourseConvertor {
         newCourse.setActualCapacity(course.getActualCapacity());
         newCourse.setCourseName(course.getCourseName());
         newCourse.setDomain(course.getDomain());
+        newCourse.setType(course.getType());
+        newCourse.setTimeInterval(course.getTimeInterval());
         return newCourse;
     }
 
@@ -28,6 +30,8 @@ public class CourseConvertor {
         newCourse.setActualCapacity(course.getActualCapacity());
         newCourse.setCourseName(course.getCourseName());
         newCourse.setDomain(course.getDomain());
+        newCourse.setType(course.getType());
+        newCourse.setTimeInterval(course.getTimeInterval());
         return newCourse;
     }
 }

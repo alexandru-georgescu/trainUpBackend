@@ -1,6 +1,6 @@
 package com.trainingup.trainingupapp.tables;
 
-import com.trainingup.trainingupapp.dto.CourseDTO;
+import com.trainingup.trainingupapp.enums.CourseType;
 import com.trainingup.trainingupapp.enums.Domains;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,5 +31,5 @@ public class Course {
     private String timeInterval;
     private String projectManager;
     private Domains domain;
-    private String type;
+    private CourseType type;
 }
