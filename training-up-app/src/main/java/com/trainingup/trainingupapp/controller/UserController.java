@@ -60,7 +60,6 @@ public class UserController {
 
         UserDTO pm = new UserDTO();
         pm.setType(UserType.PM);
-        pm.setLeader("ADMIN");
         pm.setEmail("p.m@trainup.com");
         pm.setFirstName("p");
         pm.setLastName("m");
@@ -70,7 +69,6 @@ public class UserController {
 
         UserDTO tm = new UserDTO();
         tm.setType(UserType.TM);
-        tm.setLeader("ADMIN");
         tm.setEmail("t.m@trainup.com");
         tm.setFirstName("t");
         tm.setLastName("m");
@@ -85,6 +83,24 @@ public class UserController {
         user.setFirstName("u");
         user.setLastName("s");
         user.setPassword("User123456");
+        user.setLeader("t.m@trainup.com");
+        user.setEnable(true);
+
+        UserDTO user2 = new UserDTO();
+        user.setType(UserType.USER);
+        user.setEmail("eda.ibram@trainup.com");
+        user.setFirstName("eda");
+        user.setLastName("ibram");
+        user.setPassword("Eda123456");
+        user.setLeader("t.m@trainup.com");
+        user.setEnable(true);
+
+        UserDTO user3 = new UserDTO();
+        user.setType(UserType.USER);
+        user.setEmail("liviu.ibram@trainup.com");
+        user.setFirstName("liviu");
+        user.setLastName("ibram");
+        user.setPassword("Eda123456");
         user.setLeader("t.m@trainup.com");
         user.setEnable(true);
 
@@ -133,7 +149,7 @@ public class UserController {
             courseService.addCourse(courseDTO3);
         }
 
-        userService.findAll().forEach(u -> {
+        userService.findAll().stream().filter(u -> u.getType().equals(UserType.USER)).forEach(u -> {
             List<CourseDTO> cc = u.getWaitToEnroll();
             cc.addAll(courseService.findAll());
             u.setWaitToEnroll(cc);

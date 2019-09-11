@@ -498,6 +498,12 @@ public class SimpleUserService implements UserService {
         Course courseDummy = courseService.findByIdDB(course.getId());
         CourseDTO courseDummyDTO = courseService.findById(course.getId());
 
+        courseDummy.setActualCapacity(courseDummy.getActualCapacity() + 1);
+        courseDummyDTO.setActualCapacity(courseDummy.getActualCapacity() + 1);
+
+        courseService.saveAndFlashBack(courseDummyDTO);
+        courseService.saveAndFlash(courseDummy);
+
         //REMOVE FROM ACCEPTED DB
         List<Course> accepted = userDummy.getCourses();
         accepted.removeIf(c -> c.getId() == course.getId());
@@ -533,6 +539,13 @@ public class SimpleUserService implements UserService {
 
         Course courseDummy = courseService.findByIdDB(course.getId());
         CourseDTO courseDummyDTO = courseService.findById(course.getId());
+
+
+        courseDummy.setActualCapacity(courseDummy.getActualCapacity() - 1);
+        courseDummyDTO.setActualCapacity(courseDummy.getActualCapacity() - 1);
+
+        courseService.saveAndFlashBack(courseDummyDTO);
+        courseService.saveAndFlash(courseDummy);
 
         //REMOVE FROM REJECTED DB
         List<Course> rejected = userDummy.getRejectedList();
