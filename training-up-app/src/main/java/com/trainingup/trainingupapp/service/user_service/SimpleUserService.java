@@ -24,10 +24,10 @@ import java.util.stream.Collectors;
 public class SimpleUserService implements UserService {
 
     @Autowired
-    UserRepository userRepository;
+    CourseService courseService;
 
     @Autowired
-    CourseService courseService;
+    UserRepository userRepository;
 
     @Autowired
     InvitationService invitationService;

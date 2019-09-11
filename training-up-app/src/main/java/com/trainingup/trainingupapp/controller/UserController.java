@@ -6,13 +6,10 @@ import com.trainingup.trainingupapp.enums.CourseType;
 import com.trainingup.trainingupapp.enums.Domains;
 import com.trainingup.trainingupapp.enums.UserType;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
-import com.trainingup.trainingupapp.service.outlook_service.InvitationService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import com.trainingup.trainingupapp.tables.Course;
 import com.trainingup.trainingupapp.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +23,6 @@ import java.util.stream.Collectors;
 @RestController
 @CrossOrigin(origins = "*")
 public class UserController {
-
-    @Autowired
-    private InvitationService invitationService;
 
     @Autowired
     private UserService userService;
@@ -80,7 +74,6 @@ public class UserController {
 
         UserDTO user = new UserDTO();
         user.setType(UserType.USER);
-        user.setLeader("ADMIN");
         user.setEmail("u.s@trainup.com");
         user.setFirstName("u");
         user.setLastName("s");
@@ -89,29 +82,29 @@ public class UserController {
         user.setEnable(true);
 
         UserDTO user2 = new UserDTO();
-        user.setType(UserType.USER);
-        user.setEmail("eda.ibram@trainup.com");
-        user.setFirstName("eda");
-        user.setLastName("ibram");
-        user.setPassword("Eda123456");
-        user.setLeader("t.m@trainup.com");
-        user.setEnable(true);
+        user2.setType(UserType.USER);
+        user2.setEmail("eda.ibram@trainup.com");
+        user2.setFirstName("eda");
+        user2.setLastName("ibram");
+        user2.setPassword("Eda123456");
+        user2.setLeader("t.m@trainup.com");
+        user2.setEnable(true);
 
         UserDTO user3 = new UserDTO();
-        user.setType(UserType.USER);
-        user.setEmail("liviu.ibram@trainup.com");
-        user.setFirstName("liviu");
-        user.setLastName("ibram");
-        user.setPassword("Eda123456");
-        user.setLeader("t.m@trainup.com");
-        user.setEnable(true);
+        user3.setType(UserType.USER);
+        user3.setEmail("liviu.ibram@trainup.com");
+        user3.setFirstName("liviu");
+        user3.setLastName("ibram");
+        user3.setPassword("Eda123456");
+        user3.setLeader("t.m@trainup.com");
+        user3.setEnable(true);
 
         synchronized (userService) {
-            userService.addUser(user2);
-            userService.addUser(user3);
             userService.addUser(user);
             userService.addUser(pm);
             userService.addUser(tm);
+            userService.addUser(user2);
+            userService.addUser(user3);
         }
     }
     @GetMapping("/in")
@@ -153,7 +146,7 @@ public class UserController {
             courseService.addCourse(courseDTO3);
         }
 
-        userService.findAll().stream().filter(u -> u.getType().equals(UserType.USER)).collect(Collectors.toList())
+        userService.findAll().stream().filter(u -> u.getType().equals(UserType.USER))
                 .forEach(uu -> {
             List<CourseDTO> cc = uu.getWaitToEnroll();
             cc.addAll(courseService.findAll());
@@ -161,7 +154,8 @@ public class UserController {
             userService.saveAndFlushBack(uu);
         });
 
-        userService.findAllDB().stream().filter(u -> u.getType().equals(UserType.USER)).collect(Collectors.toList()).forEach(u -> {
+        userService.findAllDB().stream().filter(u -> u.getType().equals(UserType.USER))
+                .forEach(u -> {
             List<Course> cc = new ArrayList<>();
             cc.addAll(u.getWaitToEnroll());
             cc.addAll(courseService.findAllDB());
