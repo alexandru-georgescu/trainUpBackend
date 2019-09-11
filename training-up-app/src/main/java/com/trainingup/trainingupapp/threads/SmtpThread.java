@@ -215,7 +215,6 @@ public class SmtpThread extends Thread {
         }
 
 
-
         Arrays.stream(body).forEach(element -> {
             String newElement = element.replaceAll("\r", "");
 

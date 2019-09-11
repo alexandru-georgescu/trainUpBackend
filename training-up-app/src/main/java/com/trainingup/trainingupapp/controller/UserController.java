@@ -134,7 +134,7 @@ public class UserController {
         userService.findAll().forEach(u -> {
             List<CourseDTO> cc = u.getWaitToEnroll();
             cc.addAll(courseService.findAll());
-            u.setWishToEnroll(cc);
+            u.setWaitToEnroll(cc);
             userService.saveAndFlushBack(u);
         });
 
