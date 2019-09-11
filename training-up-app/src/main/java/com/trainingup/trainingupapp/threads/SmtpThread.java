@@ -106,7 +106,9 @@ public class SmtpThread extends Thread {
                                 .split(" ");
 
                         String courseName = subject[0];
-
+                        String number = subject[1];
+                        String dayInterval = subject[2];
+                        String timeInterval = subject[3];
 
                         String body = emails.get(i).getBody();
                         String[] pars = body.split("\n");
@@ -127,7 +129,7 @@ public class SmtpThread extends Thread {
                          * DACA AVEM CONFLITE ITI RUP CAPU
                          * HAVE FUN!
                          */
-                        getUsersFromEmail(pars, courseName);
+                        getUsersFromEmail(pars, courseName, dayInterval, timeInterval);
                         sendEmail(emails.get(i).getFrom());
                     }
                 }
@@ -199,7 +201,7 @@ public class SmtpThread extends Thread {
         return null;
     }
 
-    public void getUsersFromEmail(String[] body, String courseName) {
+    public void getUsersFromEmail(String[] body, String courseName, String dayInterval, String timeInterval) {
 
         List<UserDTO> serviceUsers = userService.findAll();
 
@@ -211,6 +213,8 @@ public class SmtpThread extends Thread {
         if (course == null) {
             return;
         }
+
+
 
         Arrays.stream(body).forEach(element -> {
             String newElement = element.replaceAll("\r", "");
