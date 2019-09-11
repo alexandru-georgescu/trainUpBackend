@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 import javax.mail.*;
 import javax.mail.internet.MimeMultipart;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -214,6 +216,24 @@ public class SmtpThread extends Thread {
             return;
         }
 
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+
+        String[] interval = dayInterval.split("-");
+
+        LocalDate startTime = LocalDate.parse(interval[0], dateTimeFormatter);
+        LocalDate endTime = LocalDate.parse(interval[1], dateTimeFormatter);
+
+        if (!course.getStartDate().isEqual(startTime) || !course.getEndDate().isEqual(endTime))
+        {
+            System.out.println("Datile nu sunt bune!");
+            return;
+        }
+
+        if (!course.getTimeInterval().equals(timeInterval))
+        {
+            System.out.println("intervalul de timp nu e bun!");
+            return ;
+        }
 
         Arrays.stream(body).forEach(element -> {
             String newElement = element.replaceAll("\r", "");

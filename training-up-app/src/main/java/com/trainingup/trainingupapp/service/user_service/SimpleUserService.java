@@ -4,6 +4,7 @@ import com.trainingup.trainingupapp.convertor.CourseConvertor;
 import com.trainingup.trainingupapp.convertor.UserConvertor;
 import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
+import com.trainingup.trainingupapp.enums.UserType;
 import com.trainingup.trainingupapp.repository.UserRepository;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.outlook_service.InvitationService;
@@ -284,7 +285,7 @@ public class SimpleUserService implements UserService {
     public UserDTO addUser(UserDTO user) {
 
         if (user.getType() == null) {
-            user.setType("USER");
+            user.setType(UserType.USER);
             user.setLeader("t.m@trainup.com");
         }
 

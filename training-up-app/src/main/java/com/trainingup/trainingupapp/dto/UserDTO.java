@@ -1,5 +1,6 @@
 package com.trainingup.trainingupapp.dto;
 
+import com.trainingup.trainingupapp.enums.UserType;
 import com.trainingup.trainingupapp.tables.Course;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ import java.util.List;
 public class UserDTO {
     private long id;
     private String email;
-    private String type;
+    private UserType type;
     private String firstName;
     private String lastName;
     private String password;

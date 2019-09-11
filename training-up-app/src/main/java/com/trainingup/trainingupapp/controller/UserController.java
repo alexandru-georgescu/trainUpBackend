@@ -2,6 +2,8 @@
 package com.trainingup.trainingupapp.controller;
 
 import com.trainingup.trainingupapp.dto.*;
+import com.trainingup.trainingupapp.enums.Domains;
+import com.trainingup.trainingupapp.enums.UserType;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.outlook_service.InvitationService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
@@ -48,7 +50,7 @@ public class UserController {
     @PostConstruct
     public void createAdmin() {
         UserDTO admin = new UserDTO();
-        admin.setType("ADMIN");
+        admin.setType(UserType.ADMIN);
         admin.setLeader("ALEX");
         admin.setEmail("admin.admin@trainup.com");
         admin.setFirstName("admin");
@@ -57,7 +59,7 @@ public class UserController {
         admin.setEnable(true);
 
         UserDTO pm = new UserDTO();
-        pm.setType("PM");
+        pm.setType(UserType.PM);
         pm.setLeader("ADMIN");
         pm.setEmail("p.m@trainup.com");
         pm.setFirstName("p");
@@ -67,7 +69,7 @@ public class UserController {
         pm.setEnable(true);
 
         UserDTO tm = new UserDTO();
-        tm.setType("TM");
+        tm.setType(UserType.TM);
         tm.setLeader("ADMIN");
         tm.setEmail("t.m@trainup.com");
         tm.setFirstName("t");
@@ -77,7 +79,7 @@ public class UserController {
         tm.setEnable(true);
 
         UserDTO user = new UserDTO();
-        user.setType("USER");
+        user.setType(UserType.USER);
         user.setLeader("ADMIN");
         user.setEmail("u.s@trainup.com");
         user.setFirstName("u");
@@ -104,7 +106,7 @@ public class UserController {
         courseDTO1.setStartDate(LocalDate.now());
         courseDTO1.setEndDate(LocalDate.now().plusMonths(1));
         courseDTO1.setProjectManager("p.m@trainup.com");
-        courseDTO1.setDomain("RCA");
+        courseDTO1.setDomain(Domains.RCA);
 
         CourseDTO courseDTO2 = new CourseDTO();
         courseDTO2.setActualCapacity(10);
@@ -113,7 +115,7 @@ public class UserController {
         courseDTO2.setStartDate(LocalDate.now().plusMonths(5));
         courseDTO2.setEndDate(LocalDate.now().plusMonths(10));
         courseDTO2.setProjectManager("p.m@trainup.com");
-        courseDTO2.setDomain("NFR");
+        courseDTO2.setDomain(Domains.GTB);
 
 
         CourseDTO courseDTO3 = new CourseDTO();
@@ -123,7 +125,7 @@ public class UserController {
         courseDTO3.setStartDate(LocalDate.now().minusWeeks(10));
         courseDTO3.setEndDate(LocalDate.now().minusWeeks(5));
         courseDTO3.setProjectManager("p.m@trainup.com");
-        courseDTO3.setDomain("EDA_A_FOST_AICI");
+        courseDTO3.setDomain(Domains.NFR);
 
         synchronized (courseService) {
             courseService.addCourse(courseDTO1);

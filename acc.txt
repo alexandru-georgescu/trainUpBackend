@@ -25,3 +25,18 @@ Mihai:
 
 
 Eda:
+
+USER:
+		cate din fiecare am (type) din trecut
+total 	cate zile de curs am facut
+	    cate zile de curs mi au ramas
+USER BIFAT
+
+
+TM 
+	cat oameni au facut un curs de tech etc
+	care luna din an are mai multi oameni inscrisi
+
+PM pe tip de curs (TECH, SOFT, PROCESS):
+	enrollment/type of training
+	courses with less than 50% enrollment

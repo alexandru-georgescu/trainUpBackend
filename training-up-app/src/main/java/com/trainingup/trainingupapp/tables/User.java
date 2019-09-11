@@ -1,5 +1,6 @@
 package com.trainingup.trainingupapp.tables;
 
+import com.trainingup.trainingupapp.enums.UserType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,7 +28,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String email;
-    private String type;
+    private UserType type;
     private String firstName;
     private String lastName;
     private String password;

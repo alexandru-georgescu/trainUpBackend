@@ -30,4 +30,5 @@ public class Course {
     private String timeInterval;
     private String projectManager;
     private String domain;
+    private String type;
 }
