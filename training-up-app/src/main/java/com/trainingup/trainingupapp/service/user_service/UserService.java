@@ -1,6 +1,7 @@
 package com.trainingup.trainingupapp.service.user_service;
 
 import com.trainingup.trainingupapp.dto.CourseDTO;
+import com.trainingup.trainingupapp.dto.CourseUserDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.tables.User;
 
@@ -30,4 +31,6 @@ public interface UserService {
     UserDTO rejectFromWait(UserDTO user, CourseDTO course);
     boolean updateUsers(List<UserDTO> users);
     List<UserDTO> acceptAllUsers(List<UserDTO> users, CourseDTO course);
+    UserDTO swapAcceptedRejected(UserDTO user, CourseDTO course);
+    UserDTO swapRejectedAccepted(UserDTO user, CourseDTO course);
 }

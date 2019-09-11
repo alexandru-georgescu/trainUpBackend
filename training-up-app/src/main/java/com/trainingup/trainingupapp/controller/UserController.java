@@ -5,6 +5,7 @@ import com.trainingup.trainingupapp.dto.*;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.outlook_service.InvitationService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
+import com.trainingup.trainingupapp.tables.Course;
 import com.trainingup.trainingupapp.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -128,11 +130,20 @@ public class UserController {
             courseService.addCourse(courseDTO2);
             courseService.addCourse(courseDTO3);
         }
+
         userService.findAll().forEach(u -> {
             List<CourseDTO> cc = u.getWaitToEnroll();
             cc.addAll(courseService.findAll());
             u.setWishToEnroll(cc);
             userService.saveAndFlushBack(u);
+        });
+
+        userService.findAllDB().forEach(u -> {
+            List<Course> cc = new ArrayList<>();
+            cc.addAll(u.getWaitToEnroll());
+            cc.addAll(courseService.findAllDB());
+            u.setWaitToEnroll(cc);
+            userService.saveAndFlush(u);
         });
 
         return courseService.findAll();
@@ -219,5 +230,18 @@ public class UserController {
     @PostMapping("user/acceptAll")
     public List<UserDTO> acceptAll(@RequestBody LUsersCourse array) {
         return userService.acceptAllUsers(array.getUsers(),array.getCourse());
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("user/moveToAccepted")
+    public UserDTO moveToAccepted(@RequestBody CourseUserDTO array) {
+        return userService.swapRejectedAccepted(array.getUser(),array.getCourse());
+    }
+
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("user/moveToRejected")
+    public UserDTO moveToRejected(@RequestBody CourseUserDTO array) {
+        return userService.swapAcceptedRejected(array.getUser(),array.getCourse());
     }
 }

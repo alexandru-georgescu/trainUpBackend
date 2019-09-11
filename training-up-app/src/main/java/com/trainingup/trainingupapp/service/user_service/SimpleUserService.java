@@ -491,4 +491,77 @@ public class SimpleUserService implements UserService {
         return returnList;
     }
 
+    @Override
+    public UserDTO swapAcceptedRejected(UserDTO user, CourseDTO course) {
+        User userDummy = findByIdDB(user.getId());
+        UserDTO userDummyDTO = findById(user.getId());
+
+        Course courseDummy = courseService.findByIdDB(course.getId());
+        CourseDTO courseDummyDTO = courseService.findById(course.getId());
+
+        //REMOVE FROM ACCEPTED DB
+        List<Course> accepted = userDummy.getCourses();
+        accepted.removeIf(c -> c.getId() == course.getId());
+        List<Course> newAcceptedList = new ArrayList<>();
+        newAcceptedList.addAll(accepted);
+
+        List<Course> rejected = userDummy.getRejectedList();
+        rejected.add(courseDummy);
+
+        userDummy.setRejectedList(rejected);
+        userDummy.setCourses(newAcceptedList);
+
+        //REMOVE FROM CACHE
+        List<CourseDTO> acceptedDTO = userDummyDTO.getCourses();
+        acceptedDTO.removeIf(c -> c.getId() == course.getId());
+
+        List<CourseDTO> rejectedDTO = userDummyDTO.getRejectedList();
+        rejectedDTO.add(courseDummyDTO);
+
+        userDummyDTO.setCourses(acceptedDTO);
+        userDummyDTO.setRejectedList(rejectedDTO);
+
+        saveAndFlushBack(userDummyDTO);
+        saveAndFlush(userDummy);
+
+        return userDummyDTO;
+    }
+
+    @Override
+    public UserDTO swapRejectedAccepted(UserDTO user, CourseDTO course) {
+        User userDummy = findByIdDB(user.getId());
+        UserDTO userDummyDTO = findById(user.getId());
+
+        Course courseDummy = courseService.findByIdDB(course.getId());
+        CourseDTO courseDummyDTO = courseService.findById(course.getId());
+
+        //REMOVE FROM REJECTED DB
+        List<Course> rejected = userDummy.getRejectedList();
+        rejected.removeIf(c -> c.getId() == course.getId());
+        List<Course> newRejectedList = new ArrayList<>();
+        newRejectedList.addAll(newRejectedList);
+
+        List<Course> accepted = userDummy.getCourses();
+        accepted.add(courseDummy);
+
+        userDummy.setRejectedList(newRejectedList);
+        userDummy.setCourses(accepted);
+
+
+        //REMOVE FROM CACHE
+        List<CourseDTO> rejectedDTO = userDummyDTO.getRejectedList();
+        rejectedDTO.removeIf(c -> c.getId() == course.getId());
+
+        List<CourseDTO> acceptedDTO = userDummyDTO.getCourses();
+        acceptedDTO.add(courseDummyDTO);
+
+        userDummyDTO.setCourses(acceptedDTO);
+        userDummyDTO.setRejectedList(rejectedDTO);
+
+        saveAndFlushBack(userDummyDTO);
+        saveAndFlush(userDummy);
+
+        return userDummyDTO;
+    }
+
 }

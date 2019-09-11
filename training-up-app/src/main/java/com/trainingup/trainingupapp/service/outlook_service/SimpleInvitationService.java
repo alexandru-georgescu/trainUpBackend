@@ -43,7 +43,7 @@ public class SimpleInvitationService implements InvitationService {
                     message.setSubject("TrainUp Course Meeting");
 
                     message.setFrom(new InternetAddress("trainupapply@gmail.com"));
-                    message.addRecipient(Message.RecipientType.TO, new InternetAddress("alexgeorgescu98@gmail.com"));
+                    message.addRecipient(Message.RecipientType.TO, new InternetAddress("trainUpApply@gmail.com"));
                     message.setSubject("TrainUp Course Meeting");
 
                 } catch (MessagingException e) {
@@ -57,8 +57,8 @@ public class SimpleInvitationService implements InvitationService {
                         "VERSION:2.0\n" +
                         "METHOD:REQUEST\n" +
                         "BEGIN:VEVENT\n" +
-                        "ATTENDEE;ROLE=REQ-PARTICIPANT;RSVP=TRUE:MAILTO:alexgeorgescu98@gmail.com\n" +
-                        "ORGANIZER:MAILTO:alexgeorgescu98@gmail.com\n" +
+                        "ATTENDEE;ROLE=REQ-PARTICIPANT;RSVP=TRUE:MAILTO:trainUpApply@gmail.com\n" +
+                        "ORGANIZER:MAILTO:trainUpApply@gmail.com\n" +
                         "DTSTART:" + courseDTO.getStartDate().toString() + "T053000Z\n" +
                         "DTEND:" + courseDTO.getEndDate().toString() + "T060000Z\n" +
                         "LOCATION:TrainUp.srl\n" +
