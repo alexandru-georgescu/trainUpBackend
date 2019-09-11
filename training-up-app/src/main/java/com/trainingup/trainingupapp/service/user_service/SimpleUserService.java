@@ -389,10 +389,9 @@ public class SimpleUserService implements UserService {
 
     @Override
     public UserDTO wishToEnroll(UserDTO userDTO, CourseDTO courseDTO) {
-        System.out.println(userDTO + " " + courseDTO);
         User userDB = findByIdDB(userDTO.getId());
 
-        Course courseDB = CourseConvertor.convertToCourse(courseDTO);
+        Course courseDB = courseService.findByIdDB(courseDTO.getId());
 
         UserDTO userDTO1 = findById(userDTO.getId());
 
@@ -428,8 +427,7 @@ public class SimpleUserService implements UserService {
     public UserDTO waitToEnroll(UserDTO userDTO, CourseDTO courseDTO) {
 
         User userDB = findByIdDB(userDTO.getId());
-
-        Course courseDB = CourseConvertor.convertToCourse(courseDTO);
+        Course courseDB = courseService.findByIdDB(courseDTO.getId());
 
         UserDTO userDTO1 = findById(userDB.getId());
 
