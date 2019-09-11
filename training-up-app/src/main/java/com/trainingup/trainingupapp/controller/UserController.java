@@ -2,6 +2,7 @@
 package com.trainingup.trainingupapp.controller;
 
 import com.trainingup.trainingupapp.dto.*;
+import com.trainingup.trainingupapp.enums.CourseType;
 import com.trainingup.trainingupapp.enums.Domains;
 import com.trainingup.trainingupapp.enums.UserType;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
@@ -20,6 +21,7 @@ import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -105,7 +107,8 @@ public class UserController {
         user.setEnable(true);
 
         synchronized (userService) {
-            userService.addUser(admin);
+            userService.addUser(user2);
+            userService.addUser(user3);
             userService.addUser(user);
             userService.addUser(pm);
             userService.addUser(tm);
@@ -113,7 +116,6 @@ public class UserController {
     }
     @GetMapping("/in")
     public List<CourseDTO> in() {
-
 
         CourseDTO courseDTO1 = new CourseDTO();
         courseDTO1.setActualCapacity(10);
@@ -123,6 +125,7 @@ public class UserController {
         courseDTO1.setEndDate(LocalDate.now().plusMonths(1));
         courseDTO1.setProjectManager("p.m@trainup.com");
         courseDTO1.setDomain(Domains.RCA);
+        courseDTO1.setType(CourseType.PROCESS);
 
         CourseDTO courseDTO2 = new CourseDTO();
         courseDTO2.setActualCapacity(10);
@@ -132,7 +135,7 @@ public class UserController {
         courseDTO2.setEndDate(LocalDate.now().plusMonths(10));
         courseDTO2.setProjectManager("p.m@trainup.com");
         courseDTO2.setDomain(Domains.GTB);
-
+        courseDTO2.setType(CourseType.PROCESS);
 
         CourseDTO courseDTO3 = new CourseDTO();
         courseDTO3.setActualCapacity(10);
@@ -142,6 +145,7 @@ public class UserController {
         courseDTO3.setEndDate(LocalDate.now().minusWeeks(5));
         courseDTO3.setProjectManager("p.m@trainup.com");
         courseDTO3.setDomain(Domains.NFR);
+        courseDTO3.setType(CourseType.PROCESS);
 
         synchronized (courseService) {
             courseService.addCourse(courseDTO1);
@@ -149,14 +153,15 @@ public class UserController {
             courseService.addCourse(courseDTO3);
         }
 
-        userService.findAll().stream().filter(u -> u.getType().equals(UserType.USER)).forEach(u -> {
-            List<CourseDTO> cc = u.getWaitToEnroll();
+        userService.findAll().stream().filter(u -> u.getType().equals(UserType.USER)).collect(Collectors.toList())
+                .forEach(uu -> {
+            List<CourseDTO> cc = uu.getWaitToEnroll();
             cc.addAll(courseService.findAll());
-            u.setWaitToEnroll(cc);
-            userService.saveAndFlushBack(u);
+                    uu.setWaitToEnroll(cc);
+            userService.saveAndFlushBack(uu);
         });
 
-        userService.findAllDB().forEach(u -> {
+        userService.findAllDB().stream().filter(u -> u.getType().equals(UserType.USER)).collect(Collectors.toList()).forEach(u -> {
             List<Course> cc = new ArrayList<>();
             cc.addAll(u.getWaitToEnroll());
             cc.addAll(courseService.findAllDB());
