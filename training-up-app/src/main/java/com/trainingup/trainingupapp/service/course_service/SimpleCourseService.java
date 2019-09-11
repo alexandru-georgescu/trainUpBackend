@@ -36,6 +36,11 @@ public class SimpleCourseService implements CourseService {
     }
 
     @Override
+    public List<Course> findAllDB() {
+        return courseRepository.findAll();
+    }
+
+    @Override
     public CourseDTO findById(long id) {
         return this.backendCourses
                 .stream()

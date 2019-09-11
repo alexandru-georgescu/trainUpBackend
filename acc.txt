@@ -1,27 +1,27 @@
-t.m.trainup@gmail.com TrainUp112
-user.trainup@gmail.com TrainUp112
-p.m.trainup@gmail.com TrainUp112
+Ce timpuri de cursuri fac oamenii mei
+Perioada cu activitatea cea mai mare
 
-TM:
-#1 Cati oameni am acceptat/respins (intorc un numer) (param: user)
-#2 Cat % din echipa mea este inscrisa la minim un curs (return procent) (param: user)
 
-#3 Domeniul cu cel mai multi useri (parm: TM USER)
+TECH C: 3
+SOFT C: 3
+PROCESS C: 3
 
-USER:
+USER: un curs pe zi
 
-#curs ->> add type
 
-	#4 Domenii cel mai accesat. (trimit void) (List<String> domeniu)
-	#5 Domenul predominant pentru toate cursurile pe care le-am facut(String cel mai smecher) -> trimit USER
+MAIL: ZIUA IN CARE MERGE LA CURS, INTERVAL
 
-#PM
-CURS -> CEI CARE AU CURS UL IN LISTA DE ACCEPT
-CURS -> CEI CARE NU SUNT ACCEPTATI
 
-DONE!
+pm TECH, SOFT, PROCESS
 
-PM: 
+Alex G:
+MAIL: MODIFICARE CURS NR INTERVAL ZILE, INTERVAL ORE
 
-CAT A ACCEPTAT SAU A RESPINS (CA LA TM)
-CATI USERI SUNT NONELIGIBIL
+Alex:
+USER + CURS: sa-l iau din accepted si sa-l bag in rejected
+USER + CURS: face fix invers
+
+Mihai:
+
+
+Eda:
