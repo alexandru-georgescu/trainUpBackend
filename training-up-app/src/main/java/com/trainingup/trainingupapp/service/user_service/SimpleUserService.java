@@ -4,6 +4,7 @@ import com.trainingup.trainingupapp.convertor.CourseConvertor;
 import com.trainingup.trainingupapp.convertor.UserConvertor;
 import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
+import com.trainingup.trainingupapp.enums.UserType;
 import com.trainingup.trainingupapp.repository.UserRepository;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.outlook_service.InvitationService;
@@ -24,10 +25,10 @@ import java.util.stream.Collectors;
 public class SimpleUserService implements UserService {
 
     @Autowired
-    UserRepository userRepository;
+    CourseService courseService;
 
     @Autowired
-    CourseService courseService;
+    UserRepository userRepository;
 
     @Autowired
     InvitationService invitationService;
@@ -285,7 +286,7 @@ public class SimpleUserService implements UserService {
     public UserDTO addUser(UserDTO user) {
 
         if (user.getType() == null) {
-            user.setType("USER");
+            user.setType(UserType.USER);
             user.setLeader("t.m@trainup.com");
         }
 
@@ -390,10 +391,9 @@ public class SimpleUserService implements UserService {
 
     @Override
     public UserDTO wishToEnroll(UserDTO userDTO, CourseDTO courseDTO) {
-        System.out.println(userDTO + " " + courseDTO);
         User userDB = findByIdDB(userDTO.getId());
 
-        Course courseDB = CourseConvertor.convertToCourse(courseDTO);
+        Course courseDB = courseService.findByIdDB(courseDTO.getId());
 
         UserDTO userDTO1 = findById(userDTO.getId());
 
@@ -429,8 +429,7 @@ public class SimpleUserService implements UserService {
     public UserDTO waitToEnroll(UserDTO userDTO, CourseDTO courseDTO) {
 
         User userDB = findByIdDB(userDTO.getId());
-
-        Course courseDB = CourseConvertor.convertToCourse(courseDTO);
+        Course courseDB = courseService.findByIdDB(courseDTO.getId());
 
         UserDTO userDTO1 = findById(userDB.getId());
 
@@ -500,6 +499,12 @@ public class SimpleUserService implements UserService {
         Course courseDummy = courseService.findByIdDB(course.getId());
         CourseDTO courseDummyDTO = courseService.findById(course.getId());
 
+        courseDummy.setActualCapacity(courseDummy.getActualCapacity() + 1);
+        courseDummyDTO.setActualCapacity(courseDummy.getActualCapacity() + 1);
+
+        courseService.saveAndFlashBack(courseDummyDTO);
+        courseService.saveAndFlash(courseDummy);
+
         //REMOVE FROM ACCEPTED DB
         List<Course> accepted = userDummy.getCourses();
         accepted.removeIf(c -> c.getId() == course.getId());
@@ -535,6 +540,13 @@ public class SimpleUserService implements UserService {
 
         Course courseDummy = courseService.findByIdDB(course.getId());
         CourseDTO courseDummyDTO = courseService.findById(course.getId());
+
+
+        courseDummy.setActualCapacity(courseDummy.getActualCapacity() - 1);
+        courseDummyDTO.setActualCapacity(courseDummy.getActualCapacity() - 1);
+
+        courseService.saveAndFlashBack(courseDummyDTO);
+        courseService.saveAndFlash(courseDummy);
 
         //REMOVE FROM REJECTED DB
         List<Course> rejected = userDummy.getRejectedList();

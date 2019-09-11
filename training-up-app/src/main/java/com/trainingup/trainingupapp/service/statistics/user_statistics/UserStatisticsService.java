@@ -5,7 +5,7 @@ import com.trainingup.trainingupapp.dto.UserDTO;
 import java.util.List;
 
 public interface UserStatisticsService {
-    List<String> findBestCourseFromPast(UserDTO user);
-    List<String> findBestCourse();
-    void addDomain(String domain);
+    List<Integer> courseStatistic(UserDTO user);
+    int days(UserDTO user);
+    int daysLeft(UserDTO user);
 }

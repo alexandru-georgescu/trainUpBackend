@@ -7,7 +7,8 @@ import java.util.List;
 public interface TmStatisticsService {
     int rejected(UserDTO tm);
     int accepted(UserDTO tm);
-    List<String> predominantDomain(UserDTO tm);
-    void addDomain(String domain);
     String teamPercentage(UserDTO tm);
+
+    List<Integer> typeStatistic(UserDTO user);
+    List<Integer> yearStatistic(UserDTO user);
 }

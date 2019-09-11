@@ -2,14 +2,14 @@
 package com.trainingup.trainingupapp.controller;
 
 import com.trainingup.trainingupapp.dto.*;
+import com.trainingup.trainingupapp.enums.CourseType;
+import com.trainingup.trainingupapp.enums.Domains;
+import com.trainingup.trainingupapp.enums.UserType;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
-import com.trainingup.trainingupapp.service.outlook_service.InvitationService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import com.trainingup.trainingupapp.tables.Course;
 import com.trainingup.trainingupapp.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +18,11 @@ import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "*")
 public class UserController {
-
-    @Autowired
-    private InvitationService invitationService;
 
     @Autowired
     private UserService userService;
@@ -48,7 +46,7 @@ public class UserController {
     @PostConstruct
     public void createAdmin() {
         UserDTO admin = new UserDTO();
-        admin.setType("ADMIN");
+        admin.setType(UserType.ADMIN);
         admin.setLeader("ALEX");
         admin.setEmail("admin.admin@trainup.com");
         admin.setFirstName("admin");
@@ -57,8 +55,7 @@ public class UserController {
         admin.setEnable(true);
 
         UserDTO pm = new UserDTO();
-        pm.setType("PM");
-        pm.setLeader("ADMIN");
+        pm.setType(UserType.PM);
         pm.setEmail("p.m@trainup.com");
         pm.setFirstName("p");
         pm.setLastName("m");
@@ -67,8 +64,7 @@ public class UserController {
         pm.setEnable(true);
 
         UserDTO tm = new UserDTO();
-        tm.setType("TM");
-        tm.setLeader("ADMIN");
+        tm.setType(UserType.TM);
         tm.setEmail("t.m@trainup.com");
         tm.setFirstName("t");
         tm.setLastName("m");
@@ -77,8 +73,7 @@ public class UserController {
         tm.setEnable(true);
 
         UserDTO user = new UserDTO();
-        user.setType("USER");
-        user.setLeader("ADMIN");
+        user.setType(UserType.USER);
         user.setEmail("u.s@trainup.com");
         user.setFirstName("u");
         user.setLastName("s");
@@ -86,16 +81,34 @@ public class UserController {
         user.setLeader("t.m@trainup.com");
         user.setEnable(true);
 
+        UserDTO user2 = new UserDTO();
+        user2.setType(UserType.USER);
+        user2.setEmail("eda.ibram@trainup.com");
+        user2.setFirstName("eda");
+        user2.setLastName("ibram");
+        user2.setPassword("Eda123456");
+        user2.setLeader("t.m@trainup.com");
+        user2.setEnable(true);
+
+        UserDTO user3 = new UserDTO();
+        user3.setType(UserType.USER);
+        user3.setEmail("liviu.ibram@trainup.com");
+        user3.setFirstName("liviu");
+        user3.setLastName("ibram");
+        user3.setPassword("Eda123456");
+        user3.setLeader("t.m@trainup.com");
+        user3.setEnable(true);
+
         synchronized (userService) {
-            userService.addUser(admin);
             userService.addUser(user);
             userService.addUser(pm);
             userService.addUser(tm);
+            userService.addUser(user2);
+            userService.addUser(user3);
         }
     }
     @GetMapping("/in")
     public List<CourseDTO> in() {
-
 
         CourseDTO courseDTO1 = new CourseDTO();
         courseDTO1.setActualCapacity(10);
@@ -104,7 +117,8 @@ public class UserController {
         courseDTO1.setStartDate(LocalDate.now());
         courseDTO1.setEndDate(LocalDate.now().plusMonths(1));
         courseDTO1.setProjectManager("p.m@trainup.com");
-        courseDTO1.setDomain("RCA");
+        courseDTO1.setDomain(Domains.RCA);
+        courseDTO1.setType(CourseType.PROCESS);
 
         CourseDTO courseDTO2 = new CourseDTO();
         courseDTO2.setActualCapacity(10);
@@ -113,8 +127,8 @@ public class UserController {
         courseDTO2.setStartDate(LocalDate.now().plusMonths(5));
         courseDTO2.setEndDate(LocalDate.now().plusMonths(10));
         courseDTO2.setProjectManager("p.m@trainup.com");
-        courseDTO2.setDomain("NFR");
-
+        courseDTO2.setDomain(Domains.GTB);
+        courseDTO2.setType(CourseType.PROCESS);
 
         CourseDTO courseDTO3 = new CourseDTO();
         courseDTO3.setActualCapacity(10);
@@ -123,7 +137,8 @@ public class UserController {
         courseDTO3.setStartDate(LocalDate.now().minusWeeks(10));
         courseDTO3.setEndDate(LocalDate.now().minusWeeks(5));
         courseDTO3.setProjectManager("p.m@trainup.com");
-        courseDTO3.setDomain("EDA_A_FOST_AICI");
+        courseDTO3.setDomain(Domains.NFR);
+        courseDTO3.setType(CourseType.PROCESS);
 
         synchronized (courseService) {
             courseService.addCourse(courseDTO1);
@@ -131,14 +146,16 @@ public class UserController {
             courseService.addCourse(courseDTO3);
         }
 
-        userService.findAll().forEach(u -> {
-            List<CourseDTO> cc = u.getWaitToEnroll();
+        userService.findAll().stream().filter(u -> u.getType().equals(UserType.USER))
+                .forEach(uu -> {
+            List<CourseDTO> cc = uu.getWaitToEnroll();
             cc.addAll(courseService.findAll());
-            u.setWaitToEnroll(cc);
-            userService.saveAndFlushBack(u);
+                    uu.setWaitToEnroll(cc);
+            userService.saveAndFlushBack(uu);
         });
 
-        userService.findAllDB().forEach(u -> {
+        userService.findAllDB().stream().filter(u -> u.getType().equals(UserType.USER))
+                .forEach(u -> {
             List<Course> cc = new ArrayList<>();
             cc.addAll(u.getWaitToEnroll());
             cc.addAll(courseService.findAllDB());

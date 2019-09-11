@@ -1,6 +1,5 @@
 package com.trainingup.trainingupapp.controller;
 
-import com.trainingup.trainingupapp.dto.PasswordDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.service.smtp_service.SmtpService;
 import com.trainingup.trainingupapp.service.user_service.UserService;

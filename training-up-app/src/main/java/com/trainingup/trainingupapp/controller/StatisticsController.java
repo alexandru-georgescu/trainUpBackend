@@ -34,21 +34,25 @@ public class StatisticsController {
         return tmStatisticsService.accepted(tm);
     }
 
-    @PostMapping("/tm_statistics/predominant_domain")
-    public List<String> predominantDomain(@RequestBody UserDTO tm) {
-        return tmStatisticsService.predominantDomain(tm);
+    @PostMapping("/user_statistics/days")
+    public int days(@RequestBody UserDTO user) {
+        return userStatisticsService.days(user);
     }
 
-    @GetMapping("/user_statistics/findBestCourse")
-    public List<String> findBestCourse() {
-        return userStatisticsService.findBestCourse();
+    @PostMapping("/user_statistics/type_statistic")
+    public List<Integer> typeStatistic(@RequestBody UserDTO tm) {
+        return tmStatisticsService.typeStatistic(tm);
     }
 
-    @PostMapping("/user_statistics/findBestCourseFromPast")
-    public List<String> findBestCourseFromPast(@RequestBody UserDTO user) {
-        return userStatisticsService.findBestCourseFromPast(user);
+    @PostMapping("/user_statistics/course_statistic")
+    public List<Integer> courseStatistic(@RequestBody UserDTO tm) {
+        return userStatisticsService.courseStatistic(tm);
     }
 
+    @PostMapping("/user_statistics/days_left")
+    public int daysLeft(@RequestBody UserDTO tm) {
+        return userStatisticsService.daysLeft(tm);
+    }
 
     @PostMapping("/tm_statistics/team_percentage")
     public String teamPercentage(@RequestBody UserDTO tm) {

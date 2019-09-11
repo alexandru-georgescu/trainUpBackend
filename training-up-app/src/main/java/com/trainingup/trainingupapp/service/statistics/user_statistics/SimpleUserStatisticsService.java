@@ -6,11 +6,14 @@ import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.statistics.tm_statistics.SortCourse;
 import com.trainingup.trainingupapp.service.user_service.UserService;
+import com.trainingup.trainingupapp.tables.Course;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class SimpleUserStatisticsService implements UserStatisticsService {
@@ -23,64 +26,56 @@ public class SimpleUserStatisticsService implements UserStatisticsService {
     @Autowired
     CourseController courseController;
 
-    Map<String, Integer> domains = new HashMap<>();
-
     @Override
-    public List<String> findBestCourseFromPast(UserDTO user) {
-        domains.clear();
-        List<CourseDTO> fromPast = courseController.findBefore(user);
-        fromPast.forEach(c -> addDomain(c.getDomain()));
+    public List<Integer> courseStatistic(UserDTO user) {
+        List<CourseDTO> allCourses = courseService.findBefore(user);
 
-        return toSort();
-    }
+        AtomicInteger tech = new AtomicInteger(0);
+        AtomicInteger soft = new AtomicInteger(0);
+        AtomicInteger process = new AtomicInteger(0);
 
-    @Override
-    public List<String> findBestCourse() {
-        domains.clear();
-        List<UserDTO> allUsers = userService.findAll();
-        List<CourseDTO> allCourses = new ArrayList<>();
-        allUsers.forEach(u -> allCourses.addAll(u.getCourses()));
-
-        allCourses.forEach(c -> addDomain(c.getDomain()));
-
-        return toSort();
-    }
-
-    public List<String> toSort() {
-        List<SortCourse> toSort = new ArrayList<>();
-
-        domains.forEach((c, i) -> {
-            SortCourse course = new SortCourse();
-            course.setName(c);
-            course.setNr(i);
-            toSort.add(course);
+        allCourses.forEach(c -> {
+            switch (c.getType()) {
+                case TECH:
+                    tech.set(tech.get() + 1);
+                    break;
+                case SOFT:
+                    soft.set(soft.get() + 1);
+                    break;
+                case PROCESS:
+                    process.set(process.get() + 1);
+                    break;
+            }
         });
 
-        Collections.sort(toSort, (c1, c2) -> {
-            if (c1.getNr() < c2.getNr()) {
-                return 1;
-            };
-            return -1;
-        });
-        if (toSort.size() == 0) {
-            return null;
-        }
-
-        int maxValue = toSort.get(0).getNr();
-        List<String> toEda = toSort.stream()
-                .filter(c -> c.getNr() == maxValue)
-                .map(c -> c.getName())
-                .collect(Collectors.toList());
-        return toEda;
+        List<Integer> types = new ArrayList<>();
+        types.add(tech.get());
+        types.add(soft.get());
+        types.add(process.get());
+        return types;
     }
 
     @Override
-    public void addDomain(String domain) {
-        if (!domains.containsKey(domain)) {
-            domains.put(domain, 1);
-            return;
-        }
+    public int days(UserDTO user) {
+        List<CourseDTO> courses = courseService.findCurrent(user);
+        AtomicInteger days = new AtomicInteger(0);
 
-        domains.put(domain, domains.get(domain) + 1);
+        courses.forEach(c -> {
+            days.set(days.get() + (int) Duration.between(c.getStartDate(), LocalDate.now()).toDays());
+        });
+
+        return days.get();
+    }
+
+    @Override
+    public int daysLeft(UserDTO user) {
+        List<CourseDTO> courses = courseService.findCurrent(user);
+        AtomicInteger days = new AtomicInteger(0);
+
+        courses.forEach(c -> {
+            days.set(days.get() + (int) Duration.between(LocalDate.now(), c.getEndDate()).toDays());
+        });
+
+        return days.get();
     }
 }
