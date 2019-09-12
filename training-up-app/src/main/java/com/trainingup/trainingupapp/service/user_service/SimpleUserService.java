@@ -4,6 +4,7 @@ import com.trainingup.trainingupapp.convertor.CourseConvertor;
 import com.trainingup.trainingupapp.convertor.UserConvertor;
 import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
+import com.trainingup.trainingupapp.enums.UserType;
 import com.trainingup.trainingupapp.repository.UserRepository;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.outlook_service.InvitationService;
@@ -13,6 +14,7 @@ import com.trainingup.trainingupapp.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,10 +25,10 @@ import java.util.stream.Collectors;
 public class SimpleUserService implements UserService {
 
     @Autowired
-    UserRepository userRepository;
+    CourseService courseService;
 
     @Autowired
-    CourseService courseService;
+    UserRepository userRepository;
 
     @Autowired
     InvitationService invitationService;
@@ -79,8 +81,6 @@ public class SimpleUserService implements UserService {
         List<CourseDTO> rejectedListBack = userDTO.getRejectedList();
         rejectedListBack.add(course);
         userDTO.setRejectedList(rejectedListBack);
-
-
 
         List<CourseDTO> courseDTOS = userDTO.getWishToEnroll();
         //REMOVE FROM WISH
@@ -286,7 +286,7 @@ public class SimpleUserService implements UserService {
     public UserDTO addUser(UserDTO user) {
 
         if (user.getType() == null) {
-            user.setType("USER");
+            user.setType(UserType.USER);
             user.setLeader("t.m@trainup.com");
         }
 
@@ -305,6 +305,7 @@ public class SimpleUserService implements UserService {
         }
 
         User newUser = UserConvertor.convertToUser(user);
+        newUser.setDateOfRegistration(LocalDate.now());
         newUser.setCourses(new ArrayList<>());
         newUser.setWishToEnroll(new ArrayList<>());
 
@@ -391,10 +392,9 @@ public class SimpleUserService implements UserService {
 
     @Override
     public UserDTO wishToEnroll(UserDTO userDTO, CourseDTO courseDTO) {
-        System.out.println(userDTO + " " + courseDTO);
         User userDB = findByIdDB(userDTO.getId());
 
-        Course courseDB = CourseConvertor.convertToCourse(courseDTO);
+        Course courseDB = courseService.findByIdDB(courseDTO.getId());
 
         UserDTO userDTO1 = findById(userDTO.getId());
 
@@ -430,8 +430,7 @@ public class SimpleUserService implements UserService {
     public UserDTO waitToEnroll(UserDTO userDTO, CourseDTO courseDTO) {
 
         User userDB = findByIdDB(userDTO.getId());
-
-        Course courseDB = CourseConvertor.convertToCourse(courseDTO);
+        Course courseDB = courseService.findByIdDB(courseDTO.getId());
 
         UserDTO userDTO1 = findById(userDB.getId());
 
@@ -481,6 +480,102 @@ public class SimpleUserService implements UserService {
         return userBackend.stream()
                 .filter(user -> user.getLeader().toLowerCase().equals(leader.toLowerCase()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserDTO> acceptAllUsers(List<UserDTO> users, CourseDTO course) {
+        List<UserDTO> returnList = new ArrayList<>();
+        users.forEach(u -> {
+            acceptFromWait(u, course);
+            returnList.add(findById(u.getId()));
+        });
+        return returnList;
+    }
+
+    @Override
+    public UserDTO swapAcceptedRejected(UserDTO user, CourseDTO course) {
+        User userDummy = findByIdDB(user.getId());
+        UserDTO userDummyDTO = findById(user.getId());
+
+        Course courseDummy = courseService.findByIdDB(course.getId());
+        CourseDTO courseDummyDTO = courseService.findById(course.getId());
+
+        courseDummy.setActualCapacity(courseDummy.getActualCapacity() + 1);
+        courseDummyDTO.setActualCapacity(courseDummyDTO.getActualCapacity() + 1);
+
+        courseService.saveAndFlashBack(courseDummyDTO);
+        courseService.saveAndFlash(courseDummy);
+
+        //REMOVE FROM ACCEPTED DB
+        List<Course> accepted = userDummy.getCourses();
+        accepted.removeIf(c -> c.getId() == course.getId());
+        List<Course> newAcceptedList = new ArrayList<>();
+        newAcceptedList.addAll(accepted);
+
+        List<Course> rejected = userDummy.getRejectedList();
+        rejected.add(courseDummy);
+
+        userDummy.setRejectedList(rejected);
+        userDummy.setCourses(newAcceptedList);
+
+        //REMOVE FROM CACHE
+        List<CourseDTO> acceptedDTO = userDummyDTO.getCourses();
+        acceptedDTO.removeIf(c -> c.getId() == course.getId());
+
+        List<CourseDTO> rejectedDTO = userDummyDTO.getRejectedList();
+        rejectedDTO.add(courseDummyDTO);
+
+        userDummyDTO.setCourses(acceptedDTO);
+        userDummyDTO.setRejectedList(rejectedDTO);
+
+        saveAndFlushBack(userDummyDTO);
+        saveAndFlush(userDummy);
+
+        return userDummyDTO;
+    }
+
+    @Override
+    public UserDTO swapRejectedAccepted(UserDTO user, CourseDTO course) {
+        User userDummy = findByIdDB(user.getId());
+        UserDTO userDummyDTO = findById(user.getId());
+
+        Course courseDummy = courseService.findByIdDB(course.getId());
+        CourseDTO courseDummyDTO = courseService.findById(course.getId());
+
+
+        courseDummy.setActualCapacity(courseDummy.getActualCapacity() - 1);
+        courseDummyDTO.setActualCapacity(courseDummyDTO.getActualCapacity() - 1);
+
+        courseService.saveAndFlashBack(courseDummyDTO);
+        courseService.saveAndFlash(courseDummy);
+
+        //REMOVE FROM REJECTED DB
+        List<Course> rejected = userDummy.getRejectedList();
+        rejected.removeIf(c -> c.getId() == course.getId());
+        List<Course> newRejectedList = new ArrayList<>();
+        newRejectedList.addAll(newRejectedList);
+
+        List<Course> accepted = userDummy.getCourses();
+        accepted.add(courseDummy);
+
+        userDummy.setRejectedList(newRejectedList);
+        userDummy.setCourses(accepted);
+
+
+        //REMOVE FROM CACHE
+        List<CourseDTO> rejectedDTO = userDummyDTO.getRejectedList();
+        rejectedDTO.removeIf(c -> c.getId() == course.getId());
+
+        List<CourseDTO> acceptedDTO = userDummyDTO.getCourses();
+        acceptedDTO.add(courseDummyDTO);
+
+        userDummyDTO.setCourses(acceptedDTO);
+        userDummyDTO.setRejectedList(rejectedDTO);
+
+        saveAndFlushBack(userDummyDTO);
+        saveAndFlush(userDummy);
+
+        return userDummyDTO;
     }
 
 }

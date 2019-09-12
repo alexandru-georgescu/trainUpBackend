@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface CourseService {
     List<CourseDTO> findAll();
+    List<Course> findAllDB();
     CourseDTO findById(long id);
     Course findByIdDB(long id);
     CourseDTO addCourse(CourseDTO course);

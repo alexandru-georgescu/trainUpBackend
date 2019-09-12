@@ -1,5 +1,7 @@
 package com.trainingup.trainingupapp.dto;
 
+import com.trainingup.trainingupapp.enums.CourseType;
+import com.trainingup.trainingupapp.enums.Domains;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,5 +24,6 @@ public class CourseDTO {
     private LocalDate endDate;
     private String timeInterval;
     private String projectManager;
-    private String domain;
+    private Domains domain;
+    private CourseType type;
 }

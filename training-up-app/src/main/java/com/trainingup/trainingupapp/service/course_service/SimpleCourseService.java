@@ -36,6 +36,11 @@ public class SimpleCourseService implements CourseService {
     }
 
     @Override
+    public List<Course> findAllDB() {
+        return courseRepository.findAll();
+    }
+
+    @Override
     public CourseDTO findById(long id) {
         return this.backendCourses
                 .stream()
@@ -151,7 +156,17 @@ public class SimpleCourseService implements CourseService {
         return userService
                 .findAll()
                 .stream()
-                .filter(u -> u.getCourses().contains(backendDTO))
+                .filter(u -> {
+                    List<CourseDTO> courseDTOS = u.getCourses();
+                    CourseDTO dummy = courseDTOS.stream().filter(c -> c.getId() == backendDTO.getId())
+                            .findFirst()
+                            .orElse(null);
+                    if (dummy != null) {
+                        return true;
+                    }
+
+                    return false;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -162,7 +177,18 @@ public class SimpleCourseService implements CourseService {
         return userService
                 .findAll()
                 .stream()
-                .filter(u -> u.getRejectedList().contains(backendDTO))
+                .filter(u -> {
+                    List<CourseDTO> courseDTOS = u.getRejectedList();
+                    CourseDTO dummy = courseDTOS.stream().filter(c -> c.getId() == backendDTO.getId())
+                            .findFirst()
+                            .orElse(null);
+                    if (dummy != null) {
+                        return true;
+                    }
+
+                    return false;
+
+                })
                 .collect(Collectors.toList());
     }
 }
