@@ -1,5 +1,5 @@
 package com.trainingup.trainingupapp.enums;
 
 public enum UserType {
-    ADMIN, PM, TM, USER;
+    ADMIN, TM, USER, PMTECH, PMSOFT, PMPROC;
 }

@@ -14,10 +14,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.cors();
+        httpSecurity.headers().frameOptions().sameOrigin();
         httpSecurity.addFilterBefore(new CustomFilter(), ChannelProcessingFilter.class);
         httpSecurity
                 .authorizeRequests()
-                .antMatchers("/trainup/validate", "/trainup/reset", "/trainup/reset_password")
+                .antMatchers("/trainup/validate",
+                        "/trainup/reset",
+                        "/trainup/reset_password",
+                        "/h2-console")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

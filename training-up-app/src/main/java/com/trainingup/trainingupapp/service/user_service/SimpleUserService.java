@@ -305,6 +305,7 @@ public class SimpleUserService implements UserService {
         }
 
         User newUser = UserConvertor.convertToUser(user);
+        newUser.setDateOfRegistration(LocalDate.now());
         newUser.setCourses(new ArrayList<>());
         newUser.setWishToEnroll(new ArrayList<>());
         newUser.setDateOfRegistration(LocalDate.now());
@@ -500,7 +501,7 @@ public class SimpleUserService implements UserService {
         CourseDTO courseDummyDTO = courseService.findById(course.getId());
 
         courseDummy.setActualCapacity(courseDummy.getActualCapacity() + 1);
-        courseDummyDTO.setActualCapacity(courseDummy.getActualCapacity() + 1);
+        courseDummyDTO.setActualCapacity(courseDummyDTO.getActualCapacity() + 1);
 
         courseService.saveAndFlashBack(courseDummyDTO);
         courseService.saveAndFlash(courseDummy);
@@ -543,7 +544,7 @@ public class SimpleUserService implements UserService {
 
 
         courseDummy.setActualCapacity(courseDummy.getActualCapacity() - 1);
-        courseDummyDTO.setActualCapacity(courseDummy.getActualCapacity() - 1);
+        courseDummyDTO.setActualCapacity(courseDummyDTO.getActualCapacity() - 1);
 
         courseService.saveAndFlashBack(courseDummyDTO);
         courseService.saveAndFlash(courseDummy);
