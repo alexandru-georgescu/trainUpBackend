@@ -7,6 +7,7 @@ import com.trainingup.trainingupapp.service.user_service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -77,6 +78,31 @@ public class SimpleTmStatisticsService implements TmStatisticsService {
 
     @Override
     public List<Integer> yearStatistic(UserDTO user) {
-        return null;
+        List<AtomicInteger> year = new ArrayList<>();
+        for (int i = 0; i < 11; i++) {
+            year.add(new AtomicInteger(0));
+        }
+
+        List<UserDTO> users = userService.findAllWithLeader(user.getEmail());
+
+        List<CourseDTO> courses = new ArrayList<>();
+        users.forEach(u -> courses.addAll(u.getCourses()));
+
+        courses.forEach(c -> {
+            LocalDate start = c.getStartDate();
+            LocalDate end = c.getEndDate();
+
+            int mStart = start.getMonth().getValue();
+            int mStop = end.getMonth().getValue();
+
+            for (int i = mStart; i <= mStop; i++) {
+                AtomicInteger m = year.get(i - 1);
+                m.set(m.get() + 1);
+            }
+        });
+        List<Integer> finalYear = new ArrayList<>();
+        year.forEach(m -> finalYear.add(m.get()));
+
+        return finalYear;
     }
 }
