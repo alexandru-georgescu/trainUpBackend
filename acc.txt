@@ -35,8 +35,18 @@ USER BIFAT
 
 TM 
 	cat oameni au facut un curs de tech etc
-	care luna din an are mai multi oameni inscrisi
+	care luna din an are mai multi oameni inscrisi TODO
 
 PM pe tip de curs (TECH, SOFT, PROCESS):
 	enrollment/type of training
 	courses with less than 50% enrollment
+
+	UPDATE /IN 
+	+1 -1 la accept sau reject
+
+
+PM:
+1) VREA SA ISI VADA CURSURILE CU ENROLLMENT MAI MIC DE 50%
+   user -> list de nume
+
+2) Care din domenii are un enrollment mai are (List domenii)

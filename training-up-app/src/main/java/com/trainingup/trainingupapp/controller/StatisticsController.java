@@ -57,9 +57,14 @@ public class StatisticsController {
         return tmStatisticsService.teamPercentage(tm);
     }
 
-    @PostMapping("/pm_statistics/course_average")
-    public String courseAverage(@RequestBody UserDTO pm) {
-        return pmStatisticsService.courseAverage(pm);
+    @PostMapping("/pm_statistics/max_enrollment_domains")
+    public List<String> maxEnrollmentDomains(@RequestBody UserDTO pm) {
+        return pmStatisticsService.maxEnrollmentDomains(pm);
+    }
+
+    @PostMapping("/pm_statistics/course_below_50")
+    public List<String> courseBelow50(@RequestBody UserDTO pm) {
+        return pmStatisticsService.courseBelow50(pm);
     }
 
 
