@@ -191,4 +191,25 @@ public class SimpleCourseService implements CourseService {
                 })
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public boolean updateCourses(List<CourseDTO> courses) {
+        courses.forEach(c -> {
+            Course db = findByIdDB(c.getId());
+            CourseDTO dto = findById(c.getId());
+
+            db.setCourseName(c.getCourseName());
+            db.setProjectManager(c.getProjectManager());
+            db.setDomain(c.getDomain());
+
+            dto.setCourseName(c.getCourseName());
+            dto.setProjectManager(c.getProjectManager());
+            dto.setDomain(c.getDomain());
+
+            saveAndFlash(db);
+            saveAndFlashBack(dto);
+        });
+
+        return true;
+    }
 }
