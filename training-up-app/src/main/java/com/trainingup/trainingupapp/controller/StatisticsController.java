@@ -67,5 +67,9 @@ public class StatisticsController {
         return pmStatisticsService.courseBelow50(pm);
     }
 
+    @PostMapping("/tm_statistics/year_statistic")
+    public List<Integer> yearStatistic(@RequestBody UserDTO tm) {
+        return tmStatisticsService.yearStatistic(tm);
+    }
 
 }

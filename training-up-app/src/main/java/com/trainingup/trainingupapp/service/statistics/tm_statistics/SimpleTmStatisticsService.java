@@ -79,7 +79,7 @@ public class SimpleTmStatisticsService implements TmStatisticsService {
     @Override
     public List<Integer> yearStatistic(UserDTO user) {
         List<AtomicInteger> year = new ArrayList<>();
-        for (int i = 0; i < 11; i++) {
+        for (int i = 0; i < 12; i++) {
             year.add(new AtomicInteger(0));
         }
 
