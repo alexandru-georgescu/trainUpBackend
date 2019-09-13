@@ -89,7 +89,7 @@ public class UserController {
         tm.setFirstName("t");
         tm.setLastName("m");
         tm.setPassword("Tm123456");
-        tm.setLeader("p.m@trainup.com");
+        tm.setLeader("pm.tech@trainup.com");
         tm.setEnable(true);
 
         UserDTO user = new UserDTO();

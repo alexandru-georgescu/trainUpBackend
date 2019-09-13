@@ -35,9 +35,7 @@ public class SimplePmStatisticsService implements PmStatisticsService {
 
     @Override
     public List<String> maxEnrollmentDomains(UserDTO user) {
-        List<UserDTO> users = userService.findAllWithLeader(user.getEmail());
-        List<CourseDTO> courseDTOS = new ArrayList<>();
-        users.forEach(u -> courseDTOS.addAll(u.getCourses()));
+        List<CourseDTO> courseDTOS = courseService.findByPm(user);
 
         AtomicInteger RCA = new AtomicInteger(0);
         AtomicInteger NFR = new AtomicInteger(0);
@@ -45,18 +43,24 @@ public class SimplePmStatisticsService implements PmStatisticsService {
 
         courseDTOS.forEach(c -> {
             switch (c.getDomain()) {
-                case RCA: RCA.set(RCA.get() + 1);
-                case GTB: GTB.set(GTB.get() + 1);
-                case NFR: NFR.set(NFR.get() + 1);
+                case RCA: RCA.set(RCA.get() + 1); break;
+                case GTB: GTB.set(GTB.get() + 1); break;
+                case NFR: NFR.set(NFR.get() + 1); break; //AICI
             }
         });
 
         int sum = RCA.get() + NFR.get() + GTB.get();
 
         List<String> domains = new ArrayList<>();
-        domains.add(String.valueOf(RCA.get()/sum));
-        domains.add(String.valueOf(NFR.get()/sum));
-        domains.add(String.valueOf(GTB.get()/sum));
+        if (sum == 0) {
+            domains.add(String.valueOf(0));
+            domains.add(String.valueOf(0));
+            domains.add(String.valueOf(0));
+            return domains;
+        }
+        domains.add(String.valueOf((1F * RCA.get()/sum) * 100));
+        domains.add(String.valueOf((1F *NFR.get()/sum) * 100));
+        domains.add(String.valueOf((1F *GTB.get()/sum) * 100));
         return domains;
     }
 }
