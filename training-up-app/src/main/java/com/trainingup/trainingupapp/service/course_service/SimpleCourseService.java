@@ -3,6 +3,7 @@ package com.trainingup.trainingupapp.service.course_service;
 import com.trainingup.trainingupapp.convertor.CourseConvertor;
 import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
+import com.trainingup.trainingupapp.enums.CourseType;
 import com.trainingup.trainingupapp.repository.CourseRepository;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import com.trainingup.trainingupapp.tables.Course;
@@ -61,6 +62,16 @@ public class SimpleCourseService implements CourseService {
 
     @Override
     public CourseDTO addCourse(CourseDTO course) {
+        String email = course.getProjectManager().toLowerCase();
+
+        if (email.contains("tech")) {
+            course.setType(CourseType.TECH);
+        } else if (email.contains("soft")) {
+            course.setType(CourseType.SOFT);
+        } else {
+            course.setType(CourseType.PROCESS);
+        }
+
         Course newCourse = CourseConvertor.convertToCourse(course);
         this.courseRepository.saveAndFlush(newCourse);
         course.setId(newCourse.getId());
