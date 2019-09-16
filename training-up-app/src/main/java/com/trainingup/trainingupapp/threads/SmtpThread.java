@@ -133,6 +133,7 @@ public class SmtpThread extends Thread {
 
                         String courseName = subject[0];
                         String body = emails.get(i).getBody();
+
                         String[] pars = body.split("\n");
 
                         for (int j = 1; j < pars.length; j++) {
@@ -161,15 +162,15 @@ public class SmtpThread extends Thread {
                         } else if (courseName.toLowerCase().equals(DnsRequest.ACCEPT_REQ)) {
                                 //TODO: ACCEPTA CERERILE DE LA USERI PE CARE II ARE IN BODY.
                                 //TODO: DAY 1
-                            sendEmail(sendFrom, DnsRequest.ACCEPT, emailService.accept(sendFrom));
+                            sendEmail(sendFrom, DnsRequest.ACCEPT, emailService.accept(sendFrom, pars));
                             continue;
                         } else if (courseName.toLowerCase().equals(DnsRequest.REJECT_REQ)) {
                                 //TODO: RESPINGE CERERILE DE LA USERI PE CARE II ARE IN BODY.
-                            sendEmail(sendFrom, DnsRequest.REJECT, emailService.reject(sendFrom));
+                            sendEmail(sendFrom, DnsRequest.REJECT, emailService.reject(sendFrom, pars));
                             continue;
                         } else if (courseName.toLowerCase().equals(DnsRequest.WISH_REQ)) {
                                 //TODO: FACE CERERE SA SE INSCRIE LA UN ANUMIT CURS, DACA ACESTA EXISTA.
-                            sendEmail(sendFrom, DnsRequest.WISH, emailService.wish(sendFrom));
+                            sendEmail(sendFrom, DnsRequest.WISH, emailService.wish(sendFrom, pars));
                             continue;
                         } else if (subject.length == 4){
                             String info = subject[1];
@@ -185,7 +186,7 @@ public class SmtpThread extends Thread {
                     }
                 }
 
-                Thread.sleep(15000);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

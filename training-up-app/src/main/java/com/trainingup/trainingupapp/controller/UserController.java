@@ -57,13 +57,13 @@ public class UserController {
 
 
         EmailTemplate userr1 = new EmailTemplate();
-        userr1.setEmail("a.alexandru.georgescu@gmail.com");
+        userr1.setEmail("alexgeorgescu98@gmail.com");
         userr1.setTrainUpEmail("t.m@trainup.com");
         userr1.setUserType(UserType.TM);
 
 
         EmailTemplate userr2 = new EmailTemplate();
-        userr2.setEmail("a.alexandru.georgescu@gmail.com");
+        userr2.setEmail("wblueme@gmail.com");
         userr2.setTrainUpEmail("pm.tech@trainup.com");
         userr2.setUserType(UserType.PMTECH);
 
@@ -180,7 +180,7 @@ public class UserController {
         courseDTO2.setCourseName("Curs" + course++);
         courseDTO2.setStartDate(LocalDate.now().plusMonths(5));
         courseDTO2.setEndDate(LocalDate.now().plusMonths(10));
-        courseDTO2.setProjectManager("pm.proc@trainup.com");
+        courseDTO2.setProjectManager("pm.tech@trainup.com");
         courseDTO2.setDomain(Domains.GTB);
         courseDTO2.setType(CourseType.PROCESS);
         courseDTO2.setTimeInterval("10:00-14:00");
@@ -214,22 +214,22 @@ public class UserController {
             courseService.addCourse(courseDTO4);
         }
 
-        userService.findAll().stream().filter(u -> u.getType().equals(UserType.USER))
-                .forEach(uu -> {
-                    List<CourseDTO> cc = uu.getWaitToEnroll();
-                    cc.addAll(courseService.findAll());
-                    uu.setWaitToEnroll(cc);
-                    userService.saveAndFlushBack(uu);
-                });
-
-        userService.findAllDB().stream().filter(u -> u.getType().equals(UserType.USER))
-                .forEach(u -> {
-                    List<Course> cc = new ArrayList<>();
-                    cc.addAll(u.getWaitToEnroll());
-                    cc.addAll(courseService.findAllDB());
-                    u.setWaitToEnroll(cc);
-                    userService.saveAndFlush(u);
-                });
+//        userService.findAll().stream().filter(u -> u.getType().equals(UserType.USER))
+//                .forEach(uu -> {
+//                    List<CourseDTO> cc = uu.getWaitToEnroll();
+//                    cc.addAll(courseService.findAll());
+//                    uu.setWaitToEnroll(cc);
+//                    userService.saveAndFlushBack(uu);
+//                });
+//
+//        userService.findAllDB().stream().filter(u -> u.getType().equals(UserType.USER))
+//                .forEach(u -> {
+//                    List<Course> cc = new ArrayList<>();
+//                    cc.addAll(u.getWaitToEnroll());
+//                    cc.addAll(courseService.findAllDB());
+//                    u.setWaitToEnroll(cc);
+//                    userService.saveAndFlush(u);
+//                });
 
         return courseService.findAll();
     }
@@ -270,7 +270,6 @@ public class UserController {
         return userService.findAll().stream().filter(u -> u.getEmail().toLowerCase().equals(name.toLowerCase()))
                 .findFirst().orElse(null);
     }
-
 
     @CrossOrigin(origins = "*")
     @PostMapping("/user/register")

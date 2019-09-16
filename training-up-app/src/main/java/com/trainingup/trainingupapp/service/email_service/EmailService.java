@@ -7,9 +7,9 @@ public interface EmailService {
 
     //TODO: DAY 1
     String info(String email);
-    String wish(String email);
-    String accept(String email);
-    String reject(String email);
+    String wish(String email, String[] coursesName);
+    String accept(String email, String[] users);
+    String reject(String email, String[] users);
     String acceptAll(String email);
     String rejectAll(String email);
 

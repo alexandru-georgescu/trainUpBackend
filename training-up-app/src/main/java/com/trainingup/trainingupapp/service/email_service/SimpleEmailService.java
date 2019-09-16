@@ -1,17 +1,33 @@
 package com.trainingup.trainingupapp.service.email_service;
 
+import com.trainingup.trainingupapp.convertor.UserConvertor;
+import com.trainingup.trainingupapp.dto.CourseDTO;
+import com.trainingup.trainingupapp.dto.UserDTO;
+import com.trainingup.trainingupapp.enums.UserType;
 import com.trainingup.trainingupapp.repository.EmailRepository;
+import com.trainingup.trainingupapp.service.course_service.CourseService;
+import com.trainingup.trainingupapp.service.user_service.UserService;
 import com.trainingup.trainingupapp.tables.EmailTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 @Service
 public class SimpleEmailService implements EmailService {
 
     @Autowired
     EmailRepository emailRepository;
+
+    @Autowired
+    CourseService courseService;
+
+    @Autowired
+    UserService userService;
 
     @Override
     public EmailTemplate getUser(String email) {
@@ -28,61 +44,434 @@ public class SimpleEmailService implements EmailService {
     @Override
     public String info(String email) {
         EmailTemplate user = getUser(email);
+
+        System.out.println(user.getTrainUpEmail());
+
         if (user == null) {
             return "Invalid email";
         }
 
+        String info = "Informations : \n\n\n";
+
+        if (user.getUserType() == UserType.USER) {
+
+            UserDTO userDTO = UserConvertor.convertToUserDTO(userService.findByName(user.getTrainUpEmail()));
+
+            List<CourseDTO> availableCourses = courseService.findFuture(userDTO);
+
+            for (int i = 0; i < availableCourses.size(); i++) {
+                CourseDTO courseDTO = availableCourses.get(i);
+                String format = "Course name : "
+                        + courseDTO.getCourseName()
+                        + "\n"
+                        + "Start date : "
+                        + courseDTO.getStartDate()
+                        + "\n"
+                        + "End date : "
+                        + courseDTO.getEndDate()
+                        + "\n"
+                        + "Duration : "
+                        + courseDTO.getTimeInterval()
+                        + "\n"
+                        + "Remained Capacity : "
+                        + courseDTO.getActualCapacity()
+                        + "\n"
+                        + "Project Manager : "
+                        + courseDTO.getProjectManager()
+                        + "\n\n\n";
+
+                info += format;
+            }
+            return info;
+        }
+
+        if (user.getUserType() == UserType.TM) {
+            List<UserDTO> usersWithWish = userService.findAll()
+                    .stream()
+                    .filter(u -> !u.getWishToEnroll().isEmpty())
+                    .filter(u -> u.getLeader().equals(user.getTrainUpEmail()))
+                    .collect(Collectors.toList());
+
+            for (int i = 0; i < usersWithWish.size(); i++) {
+                UserDTO userDTO = usersWithWish.get(i);
+                String format = "User name : "
+                        + userDTO.getFirstName() + " " + userDTO.getLastName()
+                        + "\n"
+                        + "Email : "
+                        + userDTO.getEmail()
+                        + "\n"
+                        + "Courses on the wish list : \n\n";
+                List<CourseDTO> wishCourses = userDTO.getWishToEnroll();
+
+                String wishCourse;
+                for (int j = 0; j < wishCourses.size(); j++) {
+                    CourseDTO courseDTO = wishCourses.get(j);
+                    wishCourse = "Course name : "
+                            + courseDTO.getCourseName()
+                            + "\n"
+                            + "Start date : "
+                            + courseDTO.getStartDate()
+                            + "\n"
+                            + "End date : "
+                            + courseDTO.getEndDate()
+                            + "\n"
+                            + "Duration : "
+                            + courseDTO.getTimeInterval()
+                            + "\n"
+                            + "Remained Capacity : "
+                            + courseDTO.getActualCapacity()
+                            + "\n"
+                            + "Project Manager : "
+                            + courseDTO.getProjectManager()
+                            + "\n\n";
+                    format += wishCourse;
+
+                }
+
+
+                info += format;
+            }
+
+            return info;
+
+        }
+
+        if (user.getUserType() == UserType.PMSOFT || user.getUserType() == UserType.PMTECH || user.getUserType() == UserType.PMPROC) {
+            List<CourseDTO> courses = courseService
+                    .findByPm(UserConvertor.convertToUserDTO(userService.findByName(user.getTrainUpEmail())));
+
+            List<UserDTO> usersWithWait = new ArrayList<>();
+            List<UserDTO> allUsers = userService.findAll();
+
+            for (int i = 0; i < allUsers.size(); i++) {
+                for (int j = 0; j < courses.size(); j++) {
+                    if (allUsers.get(i).getWaitToEnroll().contains(courses.get(j))) {
+                        usersWithWait.add(allUsers.get(i));
+                        break;
+                    }
+                }
+            }
+
+            for (int i = 0; i < usersWithWait.size(); i++) {
+                UserDTO userDTO = usersWithWait.get(i);
+                String format = "User name : "
+                        + userDTO.getFirstName() + " " + userDTO.getLastName()
+                        + "\n"
+                        + "Email : "
+                        + userDTO.getEmail()
+                        + "\n"
+                        + "Courses on the wait list : \n\n";
+                List<CourseDTO> waitCoursesUnfiltered = userDTO.getWaitToEnroll();
+                List<CourseDTO> waitCourses = waitCoursesUnfiltered.stream()
+                        .filter(c -> c.getProjectManager()
+                                .toLowerCase()
+                                .equals(user.getTrainUpEmail()
+                                        .toLowerCase()))
+                        .collect(Collectors.toList());
+                String waitCourse;
+                for (int j = 0; j < waitCourses.size(); j++) {
+                    CourseDTO courseDTO = waitCourses.get(j);
+                    waitCourse = "Course name : "
+                            + courseDTO.getCourseName()
+                            + "\n"
+                            + "Start date : "
+                            + courseDTO.getStartDate()
+                            + "\n"
+                            + "End date : "
+                            + courseDTO.getEndDate()
+                            + "\n"
+                            + "Duration : "
+                            + courseDTO.getTimeInterval()
+                            + "\n"
+                            + "Remained Capacity : "
+                            + courseDTO.getActualCapacity()
+                            + "\n"
+                            + "Project Manager : "
+                            + courseDTO.getProjectManager()
+                            + "\n\n";
+                    format += waitCourse;
+
+                }
+
+
+                info += format;
+            }
+
+            return info;
+
+        }
         return null;
     }
 
     @Override
-    public String wish(String email) {
+    public String wish(String email, String[] coursesName) {
         EmailTemplate user = getUser(email);
-        if (user == null) {
+        if (user == null || !user.getUserType().equals(UserType.USER)) {
             return "Invalid email";
         }
 
-        return null;
+        UserDTO userDTO = userService.findByNameDTO(user.getTrainUpEmail());
+
+        if (userDTO == null) {
+            return "Invalid Email";
+        }
+        List<CourseDTO> courses = new ArrayList<>();
+
+        final AtomicReference<String>[] ret = new AtomicReference[]{new AtomicReference<>("Courses: \n")};
+
+        Arrays.stream(coursesName)
+                .forEach(course -> {
+                    if (!course.equals("")) {
+                        String name = course.replaceAll("\r", "");
+                        CourseDTO courseDTO = courseService.findByNameDTO(name);
+                        if (courseDTO != null) {
+                            if (userService.checkExistWish(userDTO, courseDTO)) {
+                                ret[0].set(ret[0].get() + name + ": EXIST WISH!\n");
+                            } else {
+                                courses.add(courseDTO);
+                                ret[0].set(ret[0].get() + name + ": SUCCESS WISH!\n");
+                            }
+                        } else {
+                            ret[0].set(ret[0].get() + name + ": FAIL WISH!\n");
+                        }
+                    }
+                });
+
+        try {
+
+            courses.forEach(c -> {
+                userService.wishToEnroll(userDTO, c);
+            });
+        } catch (Exception c) {
+            c.printStackTrace();
+        }
+
+        return ret[0].get();
     }
 
     @Override
-    public String accept(String email) {
+    public String accept(String email, String[] body) {
         EmailTemplate user = getUser(email);
-        if (user == null) {
+        if (user == null ||
+                !(user.getUserType().equals(UserType.TM)
+                        || user.getUserType().equals(UserType.PMTECH)
+                        || user.getUserType().equals(UserType.PMSOFT)
+                        || user.getUserType().equals(UserType.PMPROC))) {
             return "Invalid email";
         }
 
-        return null;
+
+        final AtomicReference<String>[] ret = new AtomicReference[]{new AtomicReference<>("")};
+
+        Arrays.stream(body).forEach(line -> {
+            String newLine = line.replaceAll("\r", "");
+            String[] newBody = newLine.split(" ");
+
+            if (newBody.length != 2) {
+                ret[0].set(ret[0].get() + "Request: " + line + "\n");
+            } else {
+                UserDTO userDTO = userService.findByNameDTO(newBody[0]);
+                CourseDTO courseDTO = courseService.findByNameDTO(newBody[1]);
+                if (userDTO == null && courseDTO == null) {
+                    ret[0].set(ret[0].get() + "Invalid user: " + userDTO.getEmail()
+                            + " and course: " + courseDTO.getCourseName() + "\n");
+                } else if (userDTO == null) {
+                    ret[0].set(ret[0].get() + "Invalid user: " + userDTO.getEmail() + "\n");
+                } else if (courseDTO == null) {
+                    ret[0].set(ret[0].get() + "Invalid course: " + courseDTO.getCourseName() + "\n");
+                } else {
+                    if (user.getUserType().equals(UserType.TM)) {
+                        UserDTO finalUser = userService.waitToEnroll(userDTO, courseDTO);
+
+                        if (finalUser == null) {
+                            ret[0].set(ret[0].get() + "Fail enroll for: " + userDTO.getEmail() + "\n");
+                        } else {
+                            ret[0].set(ret[0].get() + "Success enroll for: " + userDTO.getEmail() + "\n");
+                        }
+
+                    } else if (user.getUserType().equals(UserType.PMPROC)
+                            || user.getUserType().equals(UserType.PMTECH)
+                            || user.getUserType().equals(UserType.PMSOFT)) {
+                        UserDTO finalUser = userService.acceptFromWait(userDTO, courseDTO);
+                        if (finalUser == null) {
+                            ret[0].set(ret[0].get() + "Fail enroll for: " + userDTO.getEmail() + "\n");
+                        } else {
+                            ret[0].set(ret[0].get() + "Success enroll for: " + userDTO.getEmail() + "\n");
+                        }
+                    }
+                }
+            }
+        });
+
+        return ret[0].get();
     }
 
     @Override
-    public String reject(String email) {
+    public String reject(String email, String[] body) {
         EmailTemplate user = getUser(email);
-        if (user == null) {
+        if (user == null ||
+                !(user.getUserType().equals(UserType.TM)
+                        || user.getUserType().equals(UserType.PMTECH)
+                        || user.getUserType().equals(UserType.PMSOFT)
+                        || user.getUserType().equals(UserType.PMPROC))) {
             return "Invalid email";
         }
 
-        return null;
+
+        final AtomicReference<String>[] ret = new AtomicReference[]{new AtomicReference<>("")};
+
+        Arrays.stream(body).forEach(line -> {
+            String newLine = line.replaceAll("\r", "");
+            String[] newBody = newLine.split(" ");
+
+            if (newBody.length != 2) {
+                ret[0].set(ret[0].get() + "Request: " + line + "\n");
+            } else {
+                UserDTO userDTO = userService.findByNameDTO(newBody[0]);
+                CourseDTO courseDTO = courseService.findByNameDTO(newBody[1]);
+                if (userDTO == null && courseDTO == null) {
+                    ret[0].set(ret[0].get() + "Invalid user: " + userDTO.getEmail()
+                            + " and course: " + courseDTO.getCourseName() + "\n");
+                } else if (userDTO == null) {
+                    ret[0].set(ret[0].get() + "Invalid user: " + userDTO.getEmail() + "\n");
+                } else if (courseDTO == null) {
+                    ret[0].set(ret[0].get() + "Invalid course: " + courseDTO.getCourseName() + "\n");
+                } else {
+                    if (user.getUserType().equals(UserType.TM)) {
+                        UserDTO finalUser = userService.removeFromWish(userDTO, courseDTO);
+
+                        if (finalUser == null) {
+                            ret[0].set(ret[0].get() + "Fail reject for: " + userDTO.getEmail() + "\n");
+                        } else {
+                            ret[0].set(ret[0].get() + "Success reject for: " + userDTO.getEmail() + "\n");
+                        }
+
+                    } else if (user.getUserType().equals(UserType.PMPROC)
+                            || user.getUserType().equals(UserType.PMTECH)
+                            || user.getUserType().equals(UserType.PMSOFT)) {
+                        UserDTO finalUser = userService.rejectFromWait(userDTO, courseDTO);
+                        if (finalUser == null) {
+                            ret[0].set(ret[0].get() + "Fail reject for: " + userDTO.getEmail() + "\n");
+                        } else {
+                            ret[0].set(ret[0].get() + "Success reject for: " + userDTO.getEmail() + "\n");
+                        }
+                    }
+                }
+            }
+        });
+
+        return ret[0].get();
     }
 
     @Override
     public String acceptAll(String email) {
         EmailTemplate user = getUser(email);
-        if (user == null) {
+        if (user == null ||
+                !(user.getUserType().equals(UserType.TM)
+                        || user.getUserType().equals(UserType.PMTECH)
+                        || user.getUserType().equals(UserType.PMSOFT)
+                        || user.getUserType().equals(UserType.PMPROC))) {
             return "Invalid email";
         }
 
-        return null;
+        List<UserDTO> users = new ArrayList<>();
+        users.addAll(userService.findAllWithLeader(user.getTrainUpEmail()));
+
+        final AtomicReference<String>[] ret = new AtomicReference[]{new AtomicReference<>("")};
+
+        if (users.size() == 0) {
+            return "Nothing to accept!";
+        }
+
+        if (user.getUserType().equals(UserType.TM)) {
+            users.forEach(u -> {
+                List<CourseDTO> courses = new ArrayList<>();
+                courses.addAll(u.getWishToEnroll());
+                    courses.forEach(c -> {
+                        UserDTO finalUser = userService.waitToEnroll(u, c);
+                        if (finalUser == null) {
+                            ret[0].set(ret[0].get() + "Fail enroll for: " + u.getEmail() + "\n");
+                        } else {
+                            ret[0].set(ret[0].get() + "Success enroll for: " + u.getEmail() + "\n");
+                        }
+                    });
+            });
+        }
+
+
+        if (user.getUserType().equals(UserType.PMSOFT)
+                || user.getUserType().equals(UserType.PMPROC)
+                || user.getUserType().equals(UserType.PMTECH)) {
+            userService.findAllWithLeader(users.get(0).getEmail()).stream().forEach(u -> {
+                List<CourseDTO> courses = new ArrayList<>();
+                courses.addAll(u.getWaitToEnroll());
+                courses.forEach(c -> {
+                    UserDTO finalUser = userService.acceptFromWait(u, c);
+                    if (finalUser == null) {
+                        ret[0].set(ret[0].get() + "Fail enroll for: " + u.getEmail() + "\n");
+                    } else {
+                        ret[0].set(ret[0].get() + "Success enroll for: " + u.getEmail() + "\n");
+                    }
+                });
+            });
+        }
+
+        return ret[0].get();
     }
 
     @Override
     public String rejectAll(String email) {
         EmailTemplate user = getUser(email);
-        if (user == null) {
+        if (user == null ||
+                !(user.getUserType().equals(UserType.TM)
+                        || user.getUserType().equals(UserType.PMTECH)
+                        || user.getUserType().equals(UserType.PMSOFT)
+                        || user.getUserType().equals(UserType.PMPROC))) {
             return "Invalid email";
         }
 
-        return null;
+        List<UserDTO> users = new ArrayList<>();
+        users.addAll(userService.findAllWithLeader(user.getTrainUpEmail()));
+
+        final AtomicReference<String>[] ret = new AtomicReference[]{new AtomicReference<>("")};
+
+        if (users.size() == 0) {
+            return "Nothing to accept!";
+        }
+
+        if (user.getUserType().equals(UserType.TM)) {
+            users.stream().forEach(u -> {
+                List<CourseDTO> courses = new ArrayList<>();
+                courses.addAll(u.getWishToEnroll());
+                    courses.forEach(c -> {
+                        UserDTO finalUser = userService.removeFromWish(u, c);
+                        if (finalUser == null) {
+                            ret[0].set(ret[0].get() + "Fail reject for: " + u.getEmail() + "\n");
+                        } else {
+                            ret[0].set(ret[0].get() + "Success reject for: " + u.getEmail() + "\n");
+                        }
+                    });
+            });
+        }
+
+        if (user.getUserType().equals(UserType.PMSOFT)
+                || user.getUserType().equals(UserType.PMPROC)
+                || user.getUserType().equals(UserType.PMTECH)) {
+            userService.findAllWithLeader(users.get(0).getEmail()).stream().forEach(u -> {
+                List<CourseDTO> courses = new ArrayList<>();
+                courses.addAll(u.getWaitToEnroll());
+                courses.forEach(c -> {
+                    UserDTO finalUser = userService.rejectFromWait(u, c);
+                    if (finalUser == null) {
+                        ret[0].set(ret[0].get() + "Fail reject for: " + u.getEmail() + "\n");
+                    } else {
+                        ret[0].set(ret[0].get() + "Success reject for: " + u.getEmail() + "\n");
+                    }
+                });
+            });
+        }
+
+        return ret[0].get();
     }
 
     @Override
@@ -91,7 +480,7 @@ public class SimpleEmailService implements EmailService {
         if (user == null) {
             return "Invalid email";
         }
-
+        //TODO: VLAD TERMINA ASTA
         return null;
     }
 }

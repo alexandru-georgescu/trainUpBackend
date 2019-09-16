@@ -11,6 +11,7 @@ public interface CourseService {
     List<Course> findAllDB();
     CourseDTO findById(long id);
     Course findByIdDB(long id);
+    CourseDTO findByNameDTO(String course);
     CourseDTO addCourse(CourseDTO course);
     void removeCourse(long id);
     List<CourseDTO> findCurrent(UserDTO userDTO);

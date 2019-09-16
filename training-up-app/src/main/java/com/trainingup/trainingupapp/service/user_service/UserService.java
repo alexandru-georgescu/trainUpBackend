@@ -8,10 +8,12 @@ import com.trainingup.trainingupapp.tables.User;
 import java.util.List;
 
 public interface UserService {
+    boolean checkExistWish(UserDTO user, CourseDTO course);
     List<UserDTO> findAll();
     UserDTO findById(long id);
     User findByIdDB(long id);
     User findByName(String name);
+    UserDTO findByNameDTO(String name);
     void updateAccepted(UserDTO user);
     void updateRejected(UserDTO user);
     UserDTO addUser(UserDTO user);
