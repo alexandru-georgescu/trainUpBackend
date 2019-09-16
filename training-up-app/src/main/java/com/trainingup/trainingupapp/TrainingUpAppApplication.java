@@ -11,13 +11,13 @@ public class TrainingUpAppApplication {
 
 	public static void main(String[] args) {
 		ApplicationContext context = SpringApplication.run(TrainingUpAppApplication.class, args);
-//		SmtpThread thread = new SmtpThread();
-//		context.getAutowireCapableBeanFactory().autowireBean(thread);
-//		TokenThread tokenThread = new TokenThread();
-//		context.getAutowireCapableBeanFactory().autowireBean(tokenThread);
-//
-//		thread.start();
-//		tokenThread.start();
+		SmtpThread thread = new SmtpThread();
+		context.getAutowireCapableBeanFactory().autowireBean(thread);
+		TokenThread tokenThread = new TokenThread();
+		context.getAutowireCapableBeanFactory().autowireBean(tokenThread);
+
+		thread.start();
+		tokenThread.start();
 	}
 
 }

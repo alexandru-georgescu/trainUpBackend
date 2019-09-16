@@ -29,7 +29,6 @@ public class SimpleInvitationService implements InvitationService {
     @Autowired
     JavaMailSender javaMailSender;
 
-
     @Override
     public void send(UserDTO user, CourseDTO courseDTO) {
 

@@ -7,6 +7,7 @@ import com.trainingup.trainingupapp.enums.CourseType;
 import com.trainingup.trainingupapp.repository.CourseRepository;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import com.trainingup.trainingupapp.tables.Course;
+import com.trainingup.trainingupapp.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +62,15 @@ public class SimpleCourseService implements CourseService {
     }
 
     @Override
+    public CourseDTO findByNameDTO(String course) {
+        return backendCourses
+                .stream()
+                .filter(c -> c.getCourseName().toLowerCase().equals(course.toLowerCase()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
     public CourseDTO addCourse(CourseDTO course) {
         String email = course.getProjectManager().toLowerCase();
 
@@ -81,11 +91,50 @@ public class SimpleCourseService implements CourseService {
 
     @Override
     public void removeCourse(long id) {
+        List<UserDTO> usersDTOS = userService.findAll();
+        List<User> users = userService.findAllDB();
+
+        //SCOATE CURSUL DE LA FIECARE USER INAINTE DE REMOVE
+        usersDTOS.forEach(u -> {
+            List<CourseDTO> course1 = u.getCourses();
+            course1.removeIf(c -> c.getId() == id);
+
+            List<CourseDTO> course2 = u.getWishToEnroll();
+            course2.removeIf(c -> c.getId() == id);
+
+            List<CourseDTO> course3 = u.getWaitToEnroll();
+            course3.removeIf(c -> c.getId() == id);
+
+            userService.saveAndFlushBack(u);
+        });
+
+
+        //REZOLVA PROBREMA DE ACCESARE CONCURENTA
+        users.forEach(u -> {
+            List<Course> d1 = new ArrayList<>();
+            List<Course> d2 = new ArrayList<>();
+            List<Course> d3 = new ArrayList<>();
+
+            List<Course> course1 = u.getCourses();
+            course1.removeIf(c -> c.getId() == id);
+            d1.addAll(course1);
+
+            List<Course> course2 = u.getWishToEnroll();
+            course2.removeIf(c -> c.getId() == id);
+            d2.addAll(course2);
+
+            List<Course> course3 = u.getWaitToEnroll();
+            course3.removeIf(c -> c.getId() == id);
+            d3.addAll(course3);
+
+            u.setCourses(d1);
+            u.setWishToEnroll(d2);
+            u.setWaitToEnroll(d3);
+            userService.saveAndFlush(u);
+        });
+
         this.courseRepository.deleteById(id);
-        CourseDTO dummy = findById(id);
-        if (dummy != null) {
-            this.backendCourses.remove(dummy);
-        }
+        backendCourses.removeIf(c -> c.getId() == id);
     }
 
     @Override
