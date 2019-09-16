@@ -5,6 +5,8 @@ import com.trainingup.trainingupapp.dto.MailDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.repository.EmailRepository;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
+import com.trainingup.trainingupapp.service.email_service.DnsRequest;
+import com.trainingup.trainingupapp.service.email_service.EmailService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,7 @@ public class SmtpThread extends Thread {
     private Session session;
     private Folder folder;
 
+
     @Autowired
     private UserService userService;
 
@@ -45,8 +48,7 @@ public class SmtpThread extends Thread {
     JavaMailSender javaMailSender;
 
     @Autowired
-    EmailRepository emailRepository;
-
+    EmailService emailService;
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -137,34 +139,37 @@ public class SmtpThread extends Thread {
                             pars[i] = pars[i].replace("\r", "");
                         }
 
-                        if (courseName.toLowerCase().equals("help")) {
+                        if (courseName.toLowerCase().equals(DnsRequest.HELP_REQ)) {
                                 //TODO: PRIMESTE LISTA DE COMENZI PE CARE O POATE DA.
-
-                            sendEmail(sendFrom, "Help", "HELP HELP HELP");
+                                //TODO: DAY 2 OR 1
+                            sendEmail(sendFrom, DnsRequest.HELP, emailService.help(sendFrom));
                             continue;
-                        } else if (courseName.toLowerCase().equals("info")) {
+                        } else if (courseName.toLowerCase().equals(DnsRequest.INFO_REQ)) {
                             //TODO: PRIMESTE INFORMATII DESPRE MINE SAU ALTE REQUESTURI.
-                            sendEmail(sendFrom, "Info", "INFO");
+                            //TODO: DAY 1
+                            //TODO: TIME 2H MAX (10:30 - 12:30)
+                            sendEmail(sendFrom, DnsRequest.INFO, emailService.info(sendFrom));
                             continue;
-                        } else if (courseName.toLowerCase().equals("acceptall")) {
+                        } else if (courseName.toLowerCase().equals(DnsRequest.ACCEPT_ALL_REQ)) {
                                 //TODO: ACCEPTA TOATE CERERIE PE CARE LE ARE.
-                            sendEmail(sendFrom, "ACCEPT ALL", "INFO");
+                            sendEmail(sendFrom, DnsRequest.ACCEPT_ALL, emailService.acceptAll(sendFrom));
                             continue;
-                        } else if (courseName.toLowerCase().equals("rejectall")) {
+                        } else if (courseName.toLowerCase().equals(DnsRequest.REJECT_ALL_REQ)) {
                                 //TODO: RESPINGE TOATE CERERILE PE CARE LE ARE
-                            sendEmail(sendFrom, "REJECT ALL", "INFO");
+                            sendEmail(sendFrom, DnsRequest.REJECT_ALL, emailService.rejectAll(sendFrom));
                             continue;
-                        } else if (courseName.toLowerCase().equals("accept")) {
+                        } else if (courseName.toLowerCase().equals(DnsRequest.ACCEPT_REQ)) {
                                 //TODO: ACCEPTA CERERILE DE LA USERI PE CARE II ARE IN BODY.
-                            sendEmail(sendFrom, "ACCEPT", "INFO");
+                                //TODO: DAY 1
+                            sendEmail(sendFrom, DnsRequest.ACCEPT, emailService.accept(sendFrom));
                             continue;
-                        } else if (courseName.toLowerCase().equals("reject")) {
+                        } else if (courseName.toLowerCase().equals(DnsRequest.REJECT_REQ)) {
                                 //TODO: RESPINGE CERERILE DE LA USERI PE CARE II ARE IN BODY.
-                            sendEmail(sendFrom, "REJECT", "INFO");
+                            sendEmail(sendFrom, DnsRequest.REJECT, emailService.reject(sendFrom));
                             continue;
-                        } else if (courseName.toLowerCase().equals("wish")) {
+                        } else if (courseName.toLowerCase().equals(DnsRequest.WISH_REQ)) {
                                 //TODO: FACE CERERE SA SE INSCRIE LA UN ANUMIT CURS, DACA ACESTA EXISTA.
-                            sendEmail(sendFrom, "WISH", "INFO");
+                            sendEmail(sendFrom, DnsRequest.WISH, emailService.wish(sendFrom));
                             continue;
                         } else if (subject.length == 4){
                             String info = subject[1];
@@ -175,6 +180,7 @@ public class SmtpThread extends Thread {
                         } else {
                             sendEmail(sendFrom, "COMANDA INVALIDA", "INFO");
                             //TODO: COMANDA INVALIDA
+                            //TODO DAY 1: TEXT + HELP REQUEST!
                         }
                     }
                 }
