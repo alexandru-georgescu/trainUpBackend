@@ -4,10 +4,13 @@ import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.service.smtp_service.SmtpService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import com.trainingup.trainingupapp.tables.User;
+import jdk.vm.ci.meta.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -48,9 +51,9 @@ public class SmtpController {
         if (check == null) {
             return "errorPage";
         }
+
         users.forEach(us -> {
             if (us.getToken().equals(token)) {
-
                 userDTOS.forEach(uss -> {
                     if (uss.getId() == us.getId()) {
                         uss.setEnable(true);

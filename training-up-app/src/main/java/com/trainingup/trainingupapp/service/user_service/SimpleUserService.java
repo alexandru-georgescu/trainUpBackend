@@ -314,7 +314,7 @@ public class SimpleUserService implements UserService {
         newUser.setDateOfRegistration(LocalDate.now());
         newUser.setCourses(new ArrayList<>());
         newUser.setWishToEnroll(new ArrayList<>());
-
+        newUser.setDateOfRegistration(LocalDate.now());
         newUser.setToken(generateToken());
 
         //TODO: CAND O SA AVEM ADRESE o sa trimitem catre adresa de la email
