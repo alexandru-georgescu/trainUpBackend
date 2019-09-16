@@ -3,6 +3,7 @@ package com.trainingup.trainingupapp.threads;
 import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.MailDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
+import com.trainingup.trainingupapp.repository.EmailRepository;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import org.jsoup.Jsoup;
@@ -42,6 +43,10 @@ public class SmtpThread extends Thread {
 
     @Autowired
     JavaMailSender javaMailSender;
+
+    @Autowired
+    EmailRepository emailRepository;
+
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -134,6 +139,7 @@ public class SmtpThread extends Thread {
 
                         if (courseName.toLowerCase().equals("help")) {
                                 //TODO: PRIMESTE LISTA DE COMENZI PE CARE O POATE DA.
+
                             sendEmail(sendFrom, "Help", "HELP HELP HELP");
                             continue;
                         } else if (courseName.toLowerCase().equals("info")) {
