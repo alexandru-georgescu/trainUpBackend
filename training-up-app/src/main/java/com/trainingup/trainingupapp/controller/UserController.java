@@ -5,9 +5,11 @@ import com.trainingup.trainingupapp.dto.*;
 import com.trainingup.trainingupapp.enums.CourseType;
 import com.trainingup.trainingupapp.enums.Domains;
 import com.trainingup.trainingupapp.enums.UserType;
+import com.trainingup.trainingupapp.repository.EmailRepository;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import com.trainingup.trainingupapp.tables.Course;
+import com.trainingup.trainingupapp.tables.EmailTemplate;
 import com.trainingup.trainingupapp.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +32,9 @@ public class UserController {
     @Autowired
     private CourseService courseService;
 
+    @Autowired
+    private EmailRepository emailRepository;
+
     int course = 1;
 
     @GetMapping("/user")
@@ -45,6 +50,28 @@ public class UserController {
 
     @PostConstruct
     public void createAdmin() {
+        EmailTemplate userr = new EmailTemplate();
+        userr.setEmail("a.alexandru.georgescu@gmail.com");
+        userr.setTrainUpEmail("u.s@trainup.com");
+        userr.setUserType(UserType.USER);
+
+
+        EmailTemplate userr1 = new EmailTemplate();
+        userr1.setEmail("a.alexandru.georgescu@gmail.com");
+        userr1.setTrainUpEmail("t.m@trainup.com");
+        userr1.setUserType(UserType.TM);
+
+
+        EmailTemplate userr2 = new EmailTemplate();
+        userr2.setEmail("a.alexandru.georgescu@gmail.com");
+        userr2.setTrainUpEmail("pm.tech@trainup.com");
+        userr2.setUserType(UserType.PMTECH);
+
+
+        emailRepository.saveAndFlush(userr);
+        emailRepository.saveAndFlush(userr1);
+        emailRepository.saveAndFlush(userr2);
+
         UserDTO admin = new UserDTO();
         admin.setType(UserType.ADMIN);
         admin.setLeader("ALEX");
@@ -89,7 +116,7 @@ public class UserController {
         tm.setFirstName("t");
         tm.setLastName("m");
         tm.setPassword("Tm123456");
-        tm.setLeader("p.m@trainup.com");
+        tm.setLeader("pm.tech@trainup.com");
         tm.setEnable(true);
 
         UserDTO user = new UserDTO();
@@ -132,6 +159,7 @@ public class UserController {
 
         in();
     }
+
     @GetMapping("/in")
     public List<CourseDTO> in() {
 
@@ -188,20 +216,20 @@ public class UserController {
 
         userService.findAll().stream().filter(u -> u.getType().equals(UserType.USER))
                 .forEach(uu -> {
-            List<CourseDTO> cc = uu.getWaitToEnroll();
-            cc.addAll(courseService.findAll());
+                    List<CourseDTO> cc = uu.getWaitToEnroll();
+                    cc.addAll(courseService.findAll());
                     uu.setWaitToEnroll(cc);
-            userService.saveAndFlushBack(uu);
-        });
+                    userService.saveAndFlushBack(uu);
+                });
 
         userService.findAllDB().stream().filter(u -> u.getType().equals(UserType.USER))
                 .forEach(u -> {
-            List<Course> cc = new ArrayList<>();
-            cc.addAll(u.getWaitToEnroll());
-            cc.addAll(courseService.findAllDB());
-            u.setWaitToEnroll(cc);
-            userService.saveAndFlush(u);
-        });
+                    List<Course> cc = new ArrayList<>();
+                    cc.addAll(u.getWaitToEnroll());
+                    cc.addAll(courseService.findAllDB());
+                    u.setWaitToEnroll(cc);
+                    userService.saveAndFlush(u);
+                });
 
         return courseService.findAll();
     }
@@ -268,37 +296,37 @@ public class UserController {
     @CrossOrigin(origins = "*")
     @PostMapping("user/refuseToEnroll")
     public UserDTO refuseToEnroll(@RequestBody CourseUserDTO array) {
-        return userService.removeFromWish(array.getUser(),array.getCourse());
+        return userService.removeFromWish(array.getUser(), array.getCourse());
     }
 
     @CrossOrigin(origins = "*")
     @PostMapping("user/rejectFromWait")
     public UserDTO rejectFromWait(@RequestBody CourseUserDTO array) {
-        return userService.rejectFromWait(array.getUser(),array.getCourse());
+        return userService.rejectFromWait(array.getUser(), array.getCourse());
     }
 
     @CrossOrigin(origins = "*")
     @PostMapping("user/acceptFromWait")
     public UserDTO acceptFromWait(@RequestBody CourseUserDTO array) {
-        return userService.acceptFromWait(array.getUser(),array.getCourse());
+        return userService.acceptFromWait(array.getUser(), array.getCourse());
     }
 
     @CrossOrigin(origins = "*")
     @PostMapping("user/acceptAll")
     public List<UserDTO> acceptAll(@RequestBody LUsersCourse array) {
-        return userService.acceptAllUsers(array.getUsers(),array.getCourse());
+        return userService.acceptAllUsers(array.getUsers(), array.getCourse());
     }
 
     @CrossOrigin(origins = "*")
     @PostMapping("user/moveToAccepted")
     public UserDTO moveToAccepted(@RequestBody CourseUserDTO array) {
-        return userService.swapRejectedAccepted(array.getUser(),array.getCourse());
+        return userService.swapRejectedAccepted(array.getUser(), array.getCourse());
     }
 
 
     @CrossOrigin(origins = "*")
     @PostMapping("user/moveToRejected")
     public UserDTO moveToRejected(@RequestBody CourseUserDTO array) {
-        return userService.swapAcceptedRejected(array.getUser(),array.getCourse());
+        return userService.swapAcceptedRejected(array.getUser(), array.getCourse());
     }
 }

@@ -61,7 +61,12 @@ public class SimpleUserStatisticsService implements UserStatisticsService {
         AtomicInteger days = new AtomicInteger(0);
 
         courses.forEach(c -> {
-            days.set(days.get() + (int) Duration.between(c.getStartDate(), LocalDate.now()).toDays());
+            long dd = (int) Duration.between(c.getStartDate().atStartOfDay(),
+                    LocalDate.now().atStartOfDay()).toDays();
+            if (dd < 0) {
+                dd = 0;
+            }
+            days.set(days.get() + (int) dd);
         });
 
         return days.get();
@@ -73,9 +78,18 @@ public class SimpleUserStatisticsService implements UserStatisticsService {
         AtomicInteger days = new AtomicInteger(0);
 
         courses.forEach(c -> {
-            days.set(days.get() + (int) Duration.between(LocalDate.now(), c.getEndDate()).toDays());
+            long dd = Duration.between(LocalDate.now().atStartOfDay(),
+                    c.getEndDate().atStartOfDay()).toDays();
+            long cc = Duration.between(c.getStartDate().atStartOfDay(),
+                    c.getEndDate().atStartOfDay()).toDays();
+            if (dd > cc) {
+                dd = cc;
+            }
+
+            days.set(days.get() + (int) dd);
         });
 
         return days.get();
     }
+
 }

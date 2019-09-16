@@ -3,6 +3,7 @@ package com.trainingup.trainingupapp.service.course_service;
 import com.trainingup.trainingupapp.convertor.CourseConvertor;
 import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
+import com.trainingup.trainingupapp.enums.CourseType;
 import com.trainingup.trainingupapp.repository.CourseRepository;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import com.trainingup.trainingupapp.tables.Course;
@@ -61,6 +62,16 @@ public class SimpleCourseService implements CourseService {
 
     @Override
     public CourseDTO addCourse(CourseDTO course) {
+        String email = course.getProjectManager().toLowerCase();
+
+        if (email.contains("tech")) {
+            course.setType(CourseType.TECH);
+        } else if (email.contains("soft")) {
+            course.setType(CourseType.SOFT);
+        } else {
+            course.setType(CourseType.PROCESS);
+        }
+
         Course newCourse = CourseConvertor.convertToCourse(course);
         this.courseRepository.saveAndFlush(newCourse);
         course.setId(newCourse.getId());
@@ -190,5 +201,26 @@ public class SimpleCourseService implements CourseService {
 
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean updateCourses(List<CourseDTO> courses) {
+        courses.forEach(c -> {
+            Course db = findByIdDB(c.getId());
+            CourseDTO dto = findById(c.getId());
+
+            db.setCourseName(c.getCourseName());
+            db.setProjectManager(c.getProjectManager());
+            db.setDomain(c.getDomain());
+
+            dto.setCourseName(c.getCourseName());
+            dto.setProjectManager(c.getProjectManager());
+            dto.setDomain(c.getDomain());
+
+            saveAndFlash(db);
+            saveAndFlashBack(dto);
+        });
+
+        return true;
     }
 }

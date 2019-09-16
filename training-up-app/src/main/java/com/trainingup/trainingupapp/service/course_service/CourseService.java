@@ -21,4 +21,5 @@ public interface CourseService {
     void saveAndFlashBack(CourseDTO courseDTO);
     List<UserDTO> findAcceptedByPm(CourseDTO course);
     List<UserDTO> findRejectedByPm(CourseDTO course);
+    boolean updateCourses(List<CourseDTO> courses);
 }

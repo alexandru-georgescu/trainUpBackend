@@ -3,6 +3,7 @@ package com.trainingup.trainingupapp.threads;
 import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.MailDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
+import com.trainingup.trainingupapp.repository.EmailRepository;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import org.jsoup.Jsoup;
@@ -44,6 +45,10 @@ public class SmtpThread extends Thread {
     JavaMailSender javaMailSender;
 
     @Autowired
+    EmailRepository emailRepository;
+
+
+    @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
@@ -58,10 +63,22 @@ public class SmtpThread extends Thread {
 
         message.setTo(to);
         message.setSubject("Message Received!");
-        message.setText("Hi, \n \n Your request has been received!s");
+        message.setText("Hi, \n \n Your request has been received!");
 
         javaMailSender.send(message);
     }
+
+    public void sendEmail(String to, String subject, String context) {
+        SimpleMailMessage message = new SimpleMailMessage();
+
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(context);
+
+        javaMailSender.send(message);
+    }
+
+
 
     public void initPop3() {
         if (properties == null) {
@@ -90,14 +107,13 @@ public class SmtpThread extends Thread {
                     List<MailDTO> emails = getEmail();
 
                     if (emails == null) {
-                        Thread.sleep(15000);
                         continue;
                     }
 
-                    System.out.println("AM PRIMIT MAIL URI BA!");
                     for (int i = 0; i < emails.size(); i++) {
-                        if (emails.get(i).getSubject().split("]").length != 4) {
-                            //Thread.sleep(15000);
+
+                        if (emails.get(i).getSubject().split("]").length < 1 ||
+                                emails.get(i).getFrom().toLowerCase().equals("trainupapply@gmail.com")) {
                             continue;
                         }
 
@@ -107,11 +123,13 @@ public class SmtpThread extends Thread {
                                 .replace("]", " ")
                                 .split(" ");
 
-                        String courseName = subject[0];
-                        String number = subject[1];
-                        String dayInterval = subject[2];
-                        String timeInterval = subject[3];
+                        String sendFrom = emails.get(i).getFrom().split(">")[0].split("<")[1];
 
+                        System.out.println(emails.get(i).getFrom());
+                        System.out.println(sendFrom);
+
+
+                        String courseName = subject[0];
                         String body = emails.get(i).getBody();
                         String[] pars = body.split("\n");
 
@@ -119,20 +137,45 @@ public class SmtpThread extends Thread {
                             pars[i] = pars[i].replace("\r", "");
                         }
 
-                        /**
-                         * TODO: REGEX PENTRU MAIL, VERIFICARE MAIL VALID
-                         * VLAD FA ASTA DACA NU AI CE FACE!
-                         * PS: ASTA SPER SA MEARGA
-                         * + = CEL PUTIN O DATA
-                         * * = DE 0 SAU MAI MULTE ORI
-                         * ESCAPEZI CU / ORICE CARACTER GALBEN DACA VREI CA EL SA FIE INTERPRETAT CA SI TEXT
-                         * NU DA PUSH PE MASTER
-                         * DAI PULL INAINTE SA TE APUCI DE LUCRU
-                         * DACA AVEM CONFLITE ITI RUP CAPU
-                         * HAVE FUN!
-                         */
-                        getUsersFromEmail(pars, courseName, dayInterval, timeInterval);
-                        sendEmail(emails.get(i).getFrom());
+                        if (courseName.toLowerCase().equals("help")) {
+                                //TODO: PRIMESTE LISTA DE COMENZI PE CARE O POATE DA.
+
+                            sendEmail(sendFrom, "Help", "HELP HELP HELP");
+                            continue;
+                        } else if (courseName.toLowerCase().equals("info")) {
+                            //TODO: PRIMESTE INFORMATII DESPRE MINE SAU ALTE REQUESTURI.
+                            sendEmail(sendFrom, "Info", "INFO");
+                            continue;
+                        } else if (courseName.toLowerCase().equals("acceptall")) {
+                                //TODO: ACCEPTA TOATE CERERIE PE CARE LE ARE.
+                            sendEmail(sendFrom, "ACCEPT ALL", "INFO");
+                            continue;
+                        } else if (courseName.toLowerCase().equals("rejectall")) {
+                                //TODO: RESPINGE TOATE CERERILE PE CARE LE ARE
+                            sendEmail(sendFrom, "REJECT ALL", "INFO");
+                            continue;
+                        } else if (courseName.toLowerCase().equals("accept")) {
+                                //TODO: ACCEPTA CERERILE DE LA USERI PE CARE II ARE IN BODY.
+                            sendEmail(sendFrom, "ACCEPT", "INFO");
+                            continue;
+                        } else if (courseName.toLowerCase().equals("reject")) {
+                                //TODO: RESPINGE CERERILE DE LA USERI PE CARE II ARE IN BODY.
+                            sendEmail(sendFrom, "REJECT", "INFO");
+                            continue;
+                        } else if (courseName.toLowerCase().equals("wish")) {
+                                //TODO: FACE CERERE SA SE INSCRIE LA UN ANUMIT CURS, DACA ACESTA EXISTA.
+                            sendEmail(sendFrom, "WISH", "INFO");
+                            continue;
+                        } else if (subject.length == 4){
+                            String info = subject[1];
+                            String dayInterval = subject[2];
+                            String timeInterval = subject[3];
+
+                            getUsersFromEmail(pars, courseName, dayInterval, timeInterval, sendFrom);
+                        } else {
+                            sendEmail(sendFrom, "COMANDA INVALIDA", "INFO");
+                            //TODO: COMANDA INVALIDA
+                        }
                     }
                 }
 
@@ -203,7 +246,11 @@ public class SmtpThread extends Thread {
         return null;
     }
 
-    public void getUsersFromEmail(String[] body, String courseName, String dayInterval, String timeInterval) {
+    public void getUsersFromEmail(String[] body, String courseName,
+                                  String dayInterval, String timeInterval, String to) {
+
+        try {
+
 
         List<UserDTO> serviceUsers = userService.findAll();
 
@@ -223,15 +270,15 @@ public class SmtpThread extends Thread {
         LocalDate startTime = LocalDate.parse(interval[0], dateTimeFormatter);
         LocalDate endTime = LocalDate.parse(interval[1], dateTimeFormatter);
 
-        if (!course.getStartDate().isEqual(startTime) || !course.getEndDate().isEqual(endTime))
-        {
-            System.out.println("Datile nu sunt bune!");
+        if (!course.getStartDate().isEqual(startTime) || !course.getEndDate().isEqual(endTime)) {
+            sendEmail(to, "Error!", "Your request was not submited!" +
+                    "\n Please check your course date! \n TEAM TRAINUP");
             return;
         }
 
-        if (!course.getTimeInterval().equals(timeInterval))
-        {
-            System.out.println("intervalul de timp nu e bun!");
+        if (!course.getTimeInterval().equals(timeInterval)) {
+            sendEmail(to, "Error!", "Your request was not submited!" +
+                    "\n Please check your course time! \n TEAM TRAINUP");
             return ;
         }
 
@@ -247,9 +294,12 @@ public class SmtpThread extends Thread {
                 userService.waitToEnroll(user1, course);
             }
         });
-
-        System.out.println("Done!");
-
+            sendEmail(to);
+        } catch (Exception e) {
+            e.printStackTrace();
+            sendEmail(to, "Error!", "Your request was not submited!" +
+                    "\n Please check your request! \n TEAM TRAINUP");
+        }
     }
 
 }

@@ -73,4 +73,8 @@ public class CourseController {
         return courseService.findRejectedByPm(course);
     }
 
+    @PostMapping("/course/update_courses")
+    public boolean updateCourse(@RequestBody List<CourseDTO> courses) {
+        return courseService.updateCourses(courses);
+    }
 }

@@ -5,11 +5,13 @@ import com.trainingup.trainingupapp.convertor.UserConvertor;
 import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.enums.UserType;
+import com.trainingup.trainingupapp.repository.EmailRepository;
 import com.trainingup.trainingupapp.repository.UserRepository;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.outlook_service.InvitationService;
 import com.trainingup.trainingupapp.service.smtp_service.SmtpService;
 import com.trainingup.trainingupapp.tables.Course;
+import com.trainingup.trainingupapp.tables.EmailTemplate;
 import com.trainingup.trainingupapp.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,10 @@ public class SimpleUserService implements UserService {
 
     @Autowired
     SmtpService smtpService;
+
+    @Autowired
+    EmailRepository emailRepository;
+
 
     List<UserDTO> userBackend = new ArrayList<>();
 
