@@ -1,8 +1,9 @@
 package com.trainingup.trainingupapp.service.email_service;
 
-import com.trainingup.trainingupapp.dto.UserDTO;
+import com.trainingup.trainingupapp.tables.EmailTemplate;
 
 public interface EmailService {
+    EmailTemplate getUser(String email);
 
     //TODO: DAY 1
     String info(String email);
