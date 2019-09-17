@@ -63,7 +63,7 @@ public class UserController {
 
 
         EmailTemplate userr2 = new EmailTemplate();
-        userr2.setEmail("wblueme@gmail.com");
+        userr2.setEmail("alexandrugeorge98@gmail.com");
         userr2.setTrainUpEmail("pm.tech@trainup.com");
         userr2.setUserType(UserType.PMTECH);
 
@@ -214,22 +214,22 @@ public class UserController {
             courseService.addCourse(courseDTO4);
         }
 
-//        userService.findAll().stream().filter(u -> u.getType().equals(UserType.USER))
-//                .forEach(uu -> {
-//                    List<CourseDTO> cc = uu.getWaitToEnroll();
-//                    cc.addAll(courseService.findAll());
-//                    uu.setWaitToEnroll(cc);
-//                    userService.saveAndFlushBack(uu);
-//                });
-//
-//        userService.findAllDB().stream().filter(u -> u.getType().equals(UserType.USER))
-//                .forEach(u -> {
-//                    List<Course> cc = new ArrayList<>();
-//                    cc.addAll(u.getWaitToEnroll());
-//                    cc.addAll(courseService.findAllDB());
-//                    u.setWaitToEnroll(cc);
-//                    userService.saveAndFlush(u);
-//                });
+        userService.findAll().stream().filter(u -> u.getType().equals(UserType.USER))
+                .forEach(uu -> {
+                    List<CourseDTO> cc = uu.getWaitToEnroll();
+                    cc.addAll(courseService.findAll());
+                    uu.setWaitToEnroll(cc);
+                    userService.saveAndFlushBack(uu);
+                });
+
+        userService.findAllDB().stream().filter(u -> u.getType().equals(UserType.USER))
+                .forEach(u -> {
+                    List<Course> cc = new ArrayList<>();
+                    cc.addAll(u.getWaitToEnroll());
+                    cc.addAll(courseService.findAllDB());
+                    u.setWaitToEnroll(cc);
+                    userService.saveAndFlush(u);
+                });
 
         return courseService.findAll();
     }
