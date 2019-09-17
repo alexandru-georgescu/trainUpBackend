@@ -73,7 +73,6 @@ public class SimpleCourseService implements CourseService {
     @Override
     public CourseDTO addCourse(CourseDTO course) {
         String email = course.getProjectManager().toLowerCase();
-
         Course newCourse = CourseConvertor.convertToCourse(course);
         this.courseRepository.saveAndFlush(newCourse);
         course.setId(newCourse.getId());
