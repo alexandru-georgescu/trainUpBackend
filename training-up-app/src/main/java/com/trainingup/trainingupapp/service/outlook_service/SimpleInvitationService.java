@@ -107,15 +107,22 @@ public class SimpleInvitationService implements InvitationService {
 
     @Override
     public void reject(UserDTO user, CourseDTO courseDTO) {
-        SimpleMailMessage message = new SimpleMailMessage();
+        new Thread(() -> {
+            synchronized (this) {
+                try {
+                    SimpleMailMessage message = new SimpleMailMessage();
 
-        message.setTo("trainupapply@gmail.com");
-        message.setSubject("Rejected!");
-        message.setText("Hi " + user.getFirstName() + " " + user.getLastName() + ","
-                + "\n \n You are eliminated from " + courseDTO.getCourseName() + "!\n");
+                    message.setTo("trainupapply@gmail.com");
+                    message.setSubject("Rejected!");
+                    message.setText("Hi " + user.getFirstName() + " " + user.getLastName() + ","
+                            + "\n \n You are eliminated from " + courseDTO.getCourseName() + "!\n");
 
-        javaMailSender.send(message);
+                    javaMailSender.send(message);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
-
 
 }
