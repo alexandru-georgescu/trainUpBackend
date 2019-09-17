@@ -50,21 +50,26 @@ public class UserController {
 
     @PostConstruct
     public void createAdmin() {
+        String PM_SOFT = "petrin.sorin@trainup.com";
+        String PM_TECH = "pitica.tractomir@trainup.com";
+        String PM_PROC = "petre.petrisor@trainup.com";
+        String TM = "tivian.mirel@trainup.com";
+
         EmailTemplate userr = new EmailTemplate();
         userr.setEmail("a.alexandru.georgescu@gmail.com");
-        userr.setTrainUpEmail("u.s@trainup.com");
+        userr.setTrainUpEmail("udreanu.stoica@trainup.com");
         userr.setUserType(UserType.USER);
 
 
         EmailTemplate userr1 = new EmailTemplate();
         userr1.setEmail("alexgeorgescu98@gmail.com");
-        userr1.setTrainUpEmail("t.m@trainup.com");
+        userr1.setTrainUpEmail(TM);
         userr1.setUserType(UserType.TM);
 
 
         EmailTemplate userr2 = new EmailTemplate();
         userr2.setEmail("wblueme@gmail.com");
-        userr2.setTrainUpEmail("pm.tech@trainup.com");
+        userr2.setTrainUpEmail(PM_TECH);
         userr2.setUserType(UserType.PMTECH);
 
 
@@ -83,9 +88,9 @@ public class UserController {
 
         UserDTO pm = new UserDTO();
         pm.setType(UserType.PMTECH);
-        pm.setEmail("pitica.tractomir@trainup.com");
-        pm.setFirstName("pm");
-        pm.setLastName("tech");
+        pm.setEmail(PM_TECH);
+        pm.setFirstName("pitica");
+        pm.setLastName("tractomir");
         pm.setPassword("Pm123456");
         pm.setLeader("admin.admin@trainup.com");
         pm.setEnable(true);
@@ -93,9 +98,9 @@ public class UserController {
 
         UserDTO pm2 = new UserDTO();
         pm2.setType(UserType.PMSOFT);
-        pm2.setEmail("petrin.sorin@trainup.com");
-        pm2.setFirstName("pm");
-        pm2.setLastName("soft");
+        pm2.setEmail(PM_SOFT);
+        pm2.setFirstName("petrin");
+        pm2.setLastName("sorin");
         pm2.setPassword("Pm123456");
         pm2.setLeader("admin.admin@trainup.com");
         pm2.setEnable(true);
@@ -103,20 +108,20 @@ public class UserController {
 
         UserDTO pm1 = new UserDTO();
         pm1.setType(UserType.PMPROC);
-        pm1.setEmail("petre.petrisor@trainup.com");
+        pm1.setEmail(PM_PROC);
         pm1.setFirstName("petre");
-        pm1.setLastName("marius");
+        pm1.setLastName("petrisor");
         pm1.setPassword("Pm123456");
         pm1.setLeader("admin.admin@trainup.com");
         pm1.setEnable(true);
 
         UserDTO tm = new UserDTO();
         tm.setType(UserType.TM);
-        tm.setEmail("tivian.mirel@trainup.com");
+        tm.setEmail(TM);
         tm.setFirstName("tivian");
         tm.setLastName("mirel");
         tm.setPassword("Tm123456");
-        tm.setLeader("pitica.tractomir@trainup.com");
+        tm.setLeader(PM_TECH);
         tm.setEnable(true);
 
         UserDTO user = new UserDTO();
@@ -125,7 +130,7 @@ public class UserController {
         user.setFirstName("udreanu");
         user.setLastName("stoica");
         user.setPassword("User123456");
-        user.setLeader("tivian.mirel@trainup.com");
+        user.setLeader(TM);
         user.setEnable(true);
 
         UserDTO user1 = new UserDTO();
@@ -134,7 +139,7 @@ public class UserController {
         user1.setFirstName("alex");
         user1.setLastName("gerogescu");
         user1.setPassword("User123456");
-        user1.setLeader("tivian.mirel@trainup.com");
+        user1.setLeader(TM);
         user1.setEnable(true);
 
 
@@ -144,7 +149,7 @@ public class UserController {
         user2.setFirstName("eda");
         user2.setLastName("ibram");
         user2.setPassword("User123456");
-        user2.setLeader("tivian.mirel@trainup.com");
+        user2.setLeader(TM);
         user2.setEnable(true);
 
 
@@ -154,7 +159,7 @@ public class UserController {
         user3.setFirstName("alex");
         user3.setLastName("bonteanu");
         user3.setPassword("User123456");
-        user3.setLeader("tivian.mirel@trainup.com");
+        user3.setLeader(TM);
         user3.setEnable(true);
 
         UserDTO user4 = new UserDTO();
@@ -163,7 +168,7 @@ public class UserController {
         user4.setFirstName("mihai");
         user4.setLastName("iamandei");
         user4.setPassword("User123456");
-        user4.setLeader("tivian.mirel@trainup.com");
+        user4.setLeader(TM);
         user4.setEnable(true);
 
         UserDTO user5 = new UserDTO();
@@ -172,7 +177,7 @@ public class UserController {
         user5.setFirstName("vlad");
         user5.setLastName("manea");
         user5.setPassword("User123456");
-        user5.setLeader("tivian.mirel@trainup.com");
+        user5.setLeader(TM);
         user5.setEnable(true);
 
 
@@ -197,9 +202,9 @@ public class UserController {
         courseDTO02.setCourseName("Welcome to DBTS");
         courseDTO02.setStartDate(LocalDate.now().plusDays(3));
         courseDTO02.setEndDate(LocalDate.now().plusMonths(2));
-        courseDTO02.setProjectManager("pm.proc@trainup.com");
+        courseDTO02.setProjectManager(PM_PROC);
         courseDTO02.setDomain(Domains.RCA);
-        courseDTO02.setType(CourseType.SOFT);
+        courseDTO02.setType(CourseType.PROCESS);
         courseDTO02.setTimeInterval("10:00-16:00");
 
         CourseDTO courseDTO01 = new CourseDTO();
@@ -208,9 +213,9 @@ public class UserController {
         courseDTO01.setCourseName("System architecture");
         courseDTO01.setStartDate(LocalDate.now().plusDays(1));
         courseDTO01.setEndDate(LocalDate.now().minusWeeks(4));
-        courseDTO01.setProjectManager("pm.proc@trainup.com");
+        courseDTO01.setProjectManager(PM_SOFT);
         courseDTO01.setDomain(Domains.PWCC);
-        courseDTO01.setType(CourseType.TECH);
+        courseDTO01.setType(CourseType.SOFT);
         courseDTO01.setTimeInterval("11:00-17:00");
 
         CourseDTO courseDTO0 = new CourseDTO();
@@ -219,7 +224,7 @@ public class UserController {
         courseDTO0.setCourseName("Introduction to agile project management");
         courseDTO0.setStartDate(LocalDate.now().minusMonths(2));
         courseDTO0.setEndDate(LocalDate.now().minusWeeks(1));
-        courseDTO0.setProjectManager("pm.proc@trainup.com");
+        courseDTO0.setProjectManager(PM_SOFT);
         courseDTO0.setDomain(Domains.RCA);
         courseDTO0.setType(CourseType.SOFT);
         courseDTO0.setTimeInterval("19:00-24:00");
@@ -230,7 +235,7 @@ public class UserController {
         courseDTO1.setCourseName("Oriented object programming");
         courseDTO1.setStartDate(LocalDate.now().plusDays(1));
         courseDTO1.setEndDate(LocalDate.now().plusMonths(1));
-        courseDTO1.setProjectManager("pm.proc@trainup.com");
+        courseDTO1.setProjectManager(PM_TECH);
         courseDTO1.setDomain(Domains.PWCC);
         courseDTO1.setType(CourseType.TECH);
         courseDTO1.setTimeInterval("19:00-24:00");
@@ -241,7 +246,7 @@ public class UserController {
         courseDTO2.setCourseName("Introduction to java");
         courseDTO2.setStartDate(LocalDate.now().minusWeeks(5));
         courseDTO2.setEndDate(LocalDate.now().minusWeeks(2));
-        courseDTO2.setProjectManager("pm.tech@trainup.com");
+        courseDTO2.setProjectManager(PM_TECH);
         courseDTO2.setDomain(Domains.GTB);
         courseDTO2.setType(CourseType.TECH);
         courseDTO2.setTimeInterval("11:00-14:00");
@@ -252,9 +257,9 @@ public class UserController {
         courseDTO3.setCourseName("Java Advanced");
         courseDTO3.setStartDate(LocalDate.now().plusDays(10));
         courseDTO3.setEndDate(LocalDate.now().plusMonths(2));
-        courseDTO3.setProjectManager("pm.soft@trainup.com");
+        courseDTO3.setProjectManager(PM_SOFT);
         courseDTO3.setDomain(Domains.RCA);
-        courseDTO3.setType(CourseType.TECH);
+        courseDTO3.setType(CourseType.SOFT);
         courseDTO3.setTimeInterval("11:00-15:00");
 
         CourseDTO courseDTO4 = new CourseDTO();
@@ -263,7 +268,7 @@ public class UserController {
         courseDTO4.setCourseName("Linux and unix system administration ");
         courseDTO4.setStartDate(LocalDate.now().plusDays(2));
         courseDTO4.setEndDate(LocalDate.now().plusMonths(3));
-        courseDTO4.setProjectManager("pm.tech@trainup.com");
+        courseDTO4.setProjectManager(PM_TECH);
         courseDTO4.setDomain(Domains.NFR);
         courseDTO4.setType(CourseType.TECH);
         courseDTO4.setTimeInterval("12:00-16:00");
@@ -275,7 +280,7 @@ public class UserController {
         courseDTO5.setCourseName("C# and .net");
         courseDTO5.setStartDate(LocalDate.now().plusDays(15));
         courseDTO5.setEndDate(LocalDate.now().plusMonths(3));
-        courseDTO5.setProjectManager("pm.tech@trainup.com");
+        courseDTO5.setProjectManager(PM_TECH);
         courseDTO5.setDomain(Domains.PWCC);
         courseDTO5.setType(CourseType.TECH);
         courseDTO5.setTimeInterval("12:00-16:00");

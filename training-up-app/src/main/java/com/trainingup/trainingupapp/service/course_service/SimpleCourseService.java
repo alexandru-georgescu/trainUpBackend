@@ -74,14 +74,6 @@ public class SimpleCourseService implements CourseService {
     public CourseDTO addCourse(CourseDTO course) {
         String email = course.getProjectManager().toLowerCase();
 
-        if (email.contains("tech")) {
-            course.setType(CourseType.TECH);
-        } else if (email.contains("soft")) {
-            course.setType(CourseType.SOFT);
-        } else {
-            course.setType(CourseType.PROCESS);
-        }
-
         Course newCourse = CourseConvertor.convertToCourse(course);
         this.courseRepository.saveAndFlush(newCourse);
         course.setId(newCourse.getId());
