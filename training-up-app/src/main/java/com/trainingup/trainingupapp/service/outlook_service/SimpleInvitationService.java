@@ -58,14 +58,14 @@ public class SimpleInvitationService implements InvitationService {
                         "BEGIN:VEVENT\n" +
                         "ATTENDEE;ROLE=REQ-PARTICIPANT;RSVP=TRUE:MAILTO:trainUpApply@gmail.com\n" +
                         "ORGANIZER:MAILTO:trainUpApply@gmail.com\n" +
-                        "DTSTART:" + courseDTO.getStartDate().toString() + "T053000Z\n" +
-                        "DTEND:" + courseDTO.getEndDate().toString() + "T060000Z\n" +
+                        "DTSTART:" + courseDTO.getStartDate() + "T053000Z\n" +
+                        "DTEND:" + courseDTO.getEndDate() + "T060000Z\n" +
                         "LOCATION:TrainUp.srl\n" +
                         "TRANSP:OPAQUE\n" +
                         "SEQUENCE:0\n" +
                         "UID:040000008200E00074C5B7101A82E00800000000002FF466CE3AC5010000000000000000100\n" +
                         " 000004377FE5C37984842BF9440448399EB02\n" +
-                        "DTSTAMP:" + courseDTO.getStartDate().toString() + "T120102Z\n" +
+                        "DTSTAMP:" + courseDTO.getStartDate() + "T120102Z\n" +
                         "CATEGORIES:Meeting\n" +
                         "DESCRIPTION: TrainUp Course Meeting for " + courseDTO.getCourseName() + ".\n\n" +
                         "SUMMARY:TrainUp Meeting for " + user.getFirstName() + "\n" +
@@ -92,7 +92,6 @@ public class SimpleInvitationService implements InvitationService {
                     // Add part one
                     multipart.addBodyPart(messageBodyPart);
 
-
                     // Put parts in message
                     message.setContent(multipart);
 
@@ -105,4 +104,18 @@ public class SimpleInvitationService implements InvitationService {
             }
         }).start();
     }
+
+    @Override
+    public void reject(UserDTO user, CourseDTO courseDTO) {
+        SimpleMailMessage message = new SimpleMailMessage();
+
+        message.setTo("trainupapply@gmail.com");
+        message.setSubject("Rejected!");
+        message.setText("Hi " + user.getFirstName() + " " + user.getLastName() + ","
+                + "\n \n You are eliminated from " + courseDTO.getCourseName() + "!\n");
+
+        javaMailSender.send(message);
+    }
+
+
 }

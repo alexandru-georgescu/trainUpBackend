@@ -74,7 +74,7 @@ public class UserController {
 
         UserDTO admin = new UserDTO();
         admin.setType(UserType.ADMIN);
-        admin.setLeader("ALEX");
+        admin.setLeader("ALEX_G_SEFU");
         admin.setEmail("admin.admin@trainup.com");
         admin.setFirstName("admin");
         admin.setLastName("admin");
@@ -83,7 +83,7 @@ public class UserController {
 
         UserDTO pm = new UserDTO();
         pm.setType(UserType.PMTECH);
-        pm.setEmail("pm.tech@trainup.com");
+        pm.setEmail("pitica.tractomir@trainup.com");
         pm.setFirstName("pm");
         pm.setLastName("tech");
         pm.setPassword("Pm123456");
@@ -93,7 +93,7 @@ public class UserController {
 
         UserDTO pm2 = new UserDTO();
         pm2.setType(UserType.PMSOFT);
-        pm2.setEmail("pm.soft@trainup.com");
+        pm2.setEmail("petrin.sorin@trainup.com");
         pm2.setFirstName("pm");
         pm2.setLastName("soft");
         pm2.setPassword("Pm123456");
@@ -103,48 +103,78 @@ public class UserController {
 
         UserDTO pm1 = new UserDTO();
         pm1.setType(UserType.PMPROC);
-        pm1.setEmail("pm.proc@trainup.com");
-        pm1.setFirstName("pm");
-        pm1.setLastName("proc");
+        pm1.setEmail("petre.petrisor@trainup.com");
+        pm1.setFirstName("petre");
+        pm1.setLastName("marius");
         pm1.setPassword("Pm123456");
         pm1.setLeader("admin.admin@trainup.com");
         pm1.setEnable(true);
 
         UserDTO tm = new UserDTO();
         tm.setType(UserType.TM);
-        tm.setEmail("t.m@trainup.com");
-        tm.setFirstName("t");
-        tm.setLastName("m");
+        tm.setEmail("tivian.mirel@trainup.com");
+        tm.setFirstName("tivian");
+        tm.setLastName("mirel");
         tm.setPassword("Tm123456");
-        tm.setLeader("pm.tech@trainup.com");
+        tm.setLeader("pitica.tractomir@trainup.com");
         tm.setEnable(true);
 
         UserDTO user = new UserDTO();
         user.setType(UserType.USER);
-        user.setEmail("u.s@trainup.com");
-        user.setFirstName("u");
-        user.setLastName("s");
+        user.setEmail("udreanu.stoica@trainup.com");
+        user.setFirstName("udreanu");
+        user.setLastName("stoica");
         user.setPassword("User123456");
-        user.setLeader("t.m@trainup.com");
+        user.setLeader("tivian.mirel@trainup.com");
         user.setEnable(true);
+
+        UserDTO user1 = new UserDTO();
+        user1.setType(UserType.USER);
+        user1.setEmail("alex.georgescu@trainup.com");
+        user1.setFirstName("alex");
+        user1.setLastName("gerogescu");
+        user1.setPassword("User123456");
+        user1.setLeader("tivian.mirel@trainup.com");
+        user1.setEnable(true);
+
 
         UserDTO user2 = new UserDTO();
         user2.setType(UserType.USER);
         user2.setEmail("eda.ibram@trainup.com");
         user2.setFirstName("eda");
         user2.setLastName("ibram");
-        user2.setPassword("Eda123456");
-        user2.setLeader("t.m@trainup.com");
+        user2.setPassword("User123456");
+        user2.setLeader("tivian.mirel@trainup.com");
         user2.setEnable(true);
+
 
         UserDTO user3 = new UserDTO();
         user3.setType(UserType.USER);
-        user3.setEmail("liviu.ibram@trainup.com");
-        user3.setFirstName("liviu");
-        user3.setLastName("ibram");
-        user3.setPassword("Eda123456");
-        user3.setLeader("t.m@trainup.com");
+        user3.setEmail("alex.bonteanu@trainup.com");
+        user3.setFirstName("alex");
+        user3.setLastName("bonteanu");
+        user3.setPassword("User123456");
+        user3.setLeader("tivian.mirel@trainup.com");
         user3.setEnable(true);
+
+        UserDTO user4 = new UserDTO();
+        user4.setType(UserType.USER);
+        user4.setEmail("mihai.iamandei@trainup.com");
+        user4.setFirstName("mihai");
+        user4.setLastName("iamandei");
+        user4.setPassword("User123456");
+        user4.setLeader("tivian.mirel@trainup.com");
+        user4.setEnable(true);
+
+        UserDTO user5 = new UserDTO();
+        user5.setType(UserType.USER);
+        user5.setEmail("vlad.manea@trainup.com");
+        user5.setFirstName("vlad");
+        user5.setLastName("manea");
+        user5.setPassword("User123456");
+        user5.setLeader("tivian.mirel@trainup.com");
+        user5.setEnable(true);
+
 
         synchronized (userService) {
             userService.addUser(admin);
@@ -153,85 +183,114 @@ public class UserController {
             userService.addUser(pm2);
             userService.addUser(tm);
             userService.addUser(user);
+            userService.addUser(user1);
             userService.addUser(user2);
             userService.addUser(user3);
+            userService.addUser(user4);
+            userService.addUser(user5);
         }
 
-        in();
-    }
 
-    @GetMapping("/in")
-    public List<CourseDTO> in() {
+        CourseDTO courseDTO02 = new CourseDTO();
+        courseDTO02.setActualCapacity(1);
+        courseDTO02.setCapacity(15);
+        courseDTO02.setCourseName("Welcome to DBTS");
+        courseDTO02.setStartDate(LocalDate.now().plusDays(3));
+        courseDTO02.setEndDate(LocalDate.now().plusMonths(2));
+        courseDTO02.setProjectManager("pm.proc@trainup.com");
+        courseDTO02.setDomain(Domains.RCA);
+        courseDTO02.setType(CourseType.SOFT);
+        courseDTO02.setTimeInterval("10:00-16:00");
+
+        CourseDTO courseDTO01 = new CourseDTO();
+        courseDTO01.setActualCapacity(1);
+        courseDTO01.setCapacity(15);
+        courseDTO01.setCourseName("System architecture");
+        courseDTO01.setStartDate(LocalDate.now().plusDays(1));
+        courseDTO01.setEndDate(LocalDate.now().minusWeeks(4));
+        courseDTO01.setProjectManager("pm.proc@trainup.com");
+        courseDTO01.setDomain(Domains.PWCC);
+        courseDTO01.setType(CourseType.TECH);
+        courseDTO01.setTimeInterval("11:00-17:00");
+
+        CourseDTO courseDTO0 = new CourseDTO();
+        courseDTO0.setActualCapacity(10);
+        courseDTO0.setCapacity(10);
+        courseDTO0.setCourseName("Introduction to agile project management");
+        courseDTO0.setStartDate(LocalDate.now().minusMonths(2));
+        courseDTO0.setEndDate(LocalDate.now().minusWeeks(1));
+        courseDTO0.setProjectManager("pm.proc@trainup.com");
+        courseDTO0.setDomain(Domains.RCA);
+        courseDTO0.setType(CourseType.SOFT);
+        courseDTO0.setTimeInterval("19:00-24:00");
 
         CourseDTO courseDTO1 = new CourseDTO();
         courseDTO1.setActualCapacity(10);
         courseDTO1.setCapacity(10);
-        courseDTO1.setCourseName("Curs" + course++);
-        courseDTO1.setStartDate(LocalDate.now());
+        courseDTO1.setCourseName("Oriented object programming");
+        courseDTO1.setStartDate(LocalDate.now().plusDays(1));
         courseDTO1.setEndDate(LocalDate.now().plusMonths(1));
         courseDTO1.setProjectManager("pm.proc@trainup.com");
-        courseDTO1.setDomain(Domains.RCA);
-        courseDTO1.setType(CourseType.PROCESS);
+        courseDTO1.setDomain(Domains.PWCC);
+        courseDTO1.setType(CourseType.TECH);
         courseDTO1.setTimeInterval("19:00-24:00");
 
         CourseDTO courseDTO2 = new CourseDTO();
-        courseDTO2.setActualCapacity(10);
-        courseDTO2.setCapacity(10);
-        courseDTO2.setCourseName("Curs" + course++);
-        courseDTO2.setStartDate(LocalDate.now().plusMonths(5));
-        courseDTO2.setEndDate(LocalDate.now().plusMonths(10));
+        courseDTO2.setActualCapacity(20);
+        courseDTO2.setCapacity(20);
+        courseDTO2.setCourseName("Introduction to java");
+        courseDTO2.setStartDate(LocalDate.now().minusWeeks(5));
+        courseDTO2.setEndDate(LocalDate.now().minusWeeks(2));
         courseDTO2.setProjectManager("pm.tech@trainup.com");
         courseDTO2.setDomain(Domains.GTB);
-        courseDTO2.setType(CourseType.PROCESS);
-        courseDTO2.setTimeInterval("10:00-14:00");
+        courseDTO2.setType(CourseType.TECH);
+        courseDTO2.setTimeInterval("11:00-14:00");
 
         CourseDTO courseDTO3 = new CourseDTO();
-        courseDTO3.setActualCapacity(10);
-        courseDTO3.setCapacity(10);
-        courseDTO3.setCourseName("Curs" + course++);
-        courseDTO3.setStartDate(LocalDate.now().minusWeeks(10));
-        courseDTO3.setEndDate(LocalDate.now().minusWeeks(5));
+        courseDTO3.setActualCapacity(30);
+        courseDTO3.setCapacity(30);
+        courseDTO3.setCourseName("Java Advanced");
+        courseDTO3.setStartDate(LocalDate.now().plusDays(10));
+        courseDTO3.setEndDate(LocalDate.now().plusMonths(2));
         courseDTO3.setProjectManager("pm.soft@trainup.com");
         courseDTO3.setDomain(Domains.RCA);
-        courseDTO3.setType(CourseType.SOFT);
+        courseDTO3.setType(CourseType.TECH);
         courseDTO3.setTimeInterval("11:00-15:00");
 
         CourseDTO courseDTO4 = new CourseDTO();
         courseDTO4.setActualCapacity(10);
         courseDTO4.setCapacity(10);
-        courseDTO4.setCourseName("Curs" + course++);
-        courseDTO4.setStartDate(LocalDate.now().minusWeeks(10));
-        courseDTO4.setEndDate(LocalDate.now().minusWeeks(5));
+        courseDTO4.setCourseName("Linux and unix system administration ");
+        courseDTO4.setStartDate(LocalDate.now().plusDays(2));
+        courseDTO4.setEndDate(LocalDate.now().plusMonths(3));
         courseDTO4.setProjectManager("pm.tech@trainup.com");
         courseDTO4.setDomain(Domains.NFR);
         courseDTO4.setType(CourseType.TECH);
         courseDTO4.setTimeInterval("12:00-16:00");
+
+
+        CourseDTO courseDTO5 = new CourseDTO();
+        courseDTO5.setActualCapacity(10);
+        courseDTO5.setCapacity(10);
+        courseDTO5.setCourseName("C# and .net");
+        courseDTO5.setStartDate(LocalDate.now().plusDays(15));
+        courseDTO5.setEndDate(LocalDate.now().plusMonths(3));
+        courseDTO5.setProjectManager("pm.tech@trainup.com");
+        courseDTO5.setDomain(Domains.PWCC);
+        courseDTO5.setType(CourseType.TECH);
+        courseDTO5.setTimeInterval("12:00-16:00");
 
         synchronized (courseService) {
             courseService.addCourse(courseDTO1);
             courseService.addCourse(courseDTO2);
             courseService.addCourse(courseDTO3);
             courseService.addCourse(courseDTO4);
+            courseService.addCourse(courseDTO5);
+            courseService.addCourse(courseDTO0);
+            courseService.addCourse(courseDTO01);
+            courseService.addCourse(courseDTO02);
         }
 
-//        userService.findAll().stream().filter(u -> u.getType().equals(UserType.USER))
-//                .forEach(uu -> {
-//                    List<CourseDTO> cc = uu.getWaitToEnroll();
-//                    cc.addAll(courseService.findAll());
-//                    uu.setWaitToEnroll(cc);
-//                    userService.saveAndFlushBack(uu);
-//                });
-//
-//        userService.findAllDB().stream().filter(u -> u.getType().equals(UserType.USER))
-//                .forEach(u -> {
-//                    List<Course> cc = new ArrayList<>();
-//                    cc.addAll(u.getWaitToEnroll());
-//                    cc.addAll(courseService.findAllDB());
-//                    u.setWaitToEnroll(cc);
-//                    userService.saveAndFlush(u);
-//                });
-
-        return courseService.findAll();
     }
 
     @CrossOrigin(origins = "*")

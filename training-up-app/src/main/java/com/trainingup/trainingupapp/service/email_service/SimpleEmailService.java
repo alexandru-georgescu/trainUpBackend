@@ -6,6 +6,7 @@ import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.enums.UserType;
 import com.trainingup.trainingupapp.repository.EmailRepository;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
+import com.trainingup.trainingupapp.service.outlook_service.InvitationService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import com.trainingup.trainingupapp.tables.EmailTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class SimpleEmailService implements EmailService {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    InvitationService invitationService;
 
     @Override
     public EmailTemplate getUser(String email) {
@@ -284,9 +288,9 @@ public class SimpleEmailService implements EmailService {
                         UserDTO finalUser = userService.waitToEnroll(userDTO, courseDTO);
 
                         if (finalUser == null) {
-                            ret[0].set(ret[0].get() + "Fail enroll for: " + userDTO.getEmail() + "\n");
+                            ret[0].set(ret[0].get() + "Fail enroll for: " + userDTO.getEmail() + " at " + courseDTO.getCourseName() + "\n");
                         } else {
-                            ret[0].set(ret[0].get() + "Success enroll for: " + userDTO.getEmail() + "\n");
+                            ret[0].set(ret[0].get() + "Success enroll for: " + userDTO.getEmail() + " at " + courseDTO.getCourseName() + "\n");
                         }
 
                     } else if (user.getUserType().equals(UserType.PMPROC)
@@ -294,9 +298,9 @@ public class SimpleEmailService implements EmailService {
                             || user.getUserType().equals(UserType.PMSOFT)) {
                         UserDTO finalUser = userService.acceptFromWait(userDTO, courseDTO);
                         if (finalUser == null) {
-                            ret[0].set(ret[0].get() + "Fail enroll for: " + userDTO.getEmail() + "\n");
+                            ret[0].set(ret[0].get() + "Fail enroll for: " + userDTO.getEmail() + " at " + courseDTO.getCourseName() + "\n");
                         } else {
-                            ret[0].set(ret[0].get() + "Success enroll for: " + userDTO.getEmail() + "\n");
+                            ret[0].set(ret[0].get() + "Success enroll for: " + userDTO.getEmail() + " at " + courseDTO.getCourseName() + "\n");
                         }
                     }
                 }
@@ -341,9 +345,9 @@ public class SimpleEmailService implements EmailService {
                         UserDTO finalUser = userService.removeFromWish(userDTO, courseDTO);
 
                         if (finalUser == null) {
-                            ret[0].set(ret[0].get() + "Fail reject for: " + userDTO.getEmail() + "\n");
+                            ret[0].set(ret[0].get() + "Fail reject for: " + userDTO.getEmail() + " at " + courseDTO.getCourseName() + "\n");
                         } else {
-                            ret[0].set(ret[0].get() + "Success reject for: " + userDTO.getEmail() + "\n");
+                            ret[0].set(ret[0].get() + "Success reject for: " + userDTO.getEmail() + " at " + courseDTO.getCourseName() + "\n");
                         }
 
                     } else if (user.getUserType().equals(UserType.PMPROC)
@@ -351,9 +355,9 @@ public class SimpleEmailService implements EmailService {
                             || user.getUserType().equals(UserType.PMSOFT)) {
                         UserDTO finalUser = userService.rejectFromWait(userDTO, courseDTO);
                         if (finalUser == null) {
-                            ret[0].set(ret[0].get() + "Fail reject for: " + userDTO.getEmail() + "\n");
+                            ret[0].set(ret[0].get() + "Fail reject for: " + userDTO.getEmail() + " at " + courseDTO.getCourseName() + "\n");
                         } else {
-                            ret[0].set(ret[0].get() + "Success reject for: " + userDTO.getEmail() + "\n");
+                            ret[0].set(ret[0].get() + "Success reject for: " + userDTO.getEmail() + " at " + courseDTO.getCourseName() + "\n");
                         }
                     }
                 }
@@ -387,14 +391,14 @@ public class SimpleEmailService implements EmailService {
             users.forEach(u -> {
                 List<CourseDTO> courses = new ArrayList<>();
                 courses.addAll(u.getWishToEnroll());
-                    courses.forEach(c -> {
-                        UserDTO finalUser = userService.waitToEnroll(u, c);
-                        if (finalUser == null) {
-                            ret[0].set(ret[0].get() + "Fail enroll for: " + u.getEmail() + "\n");
-                        } else {
-                            ret[0].set(ret[0].get() + "Success enroll for: " + u.getEmail() + "\n");
-                        }
-                    });
+                courses.forEach(c -> {
+                    UserDTO finalUser = userService.waitToEnroll(u, c);
+                    if (finalUser == null) {
+                        ret[0].set(ret[0].get() + "Fail enroll for: " + u.getEmail() +" at " + c.getCourseName() +"\n");
+                    } else {
+                        ret[0].set(ret[0].get() + "Success enroll for: " + u.getEmail() + " at " + c.getCourseName() + "\n");
+                    }
+                });
             });
         }
 
@@ -404,13 +408,16 @@ public class SimpleEmailService implements EmailService {
                 || user.getUserType().equals(UserType.PMTECH)) {
             userService.findAllWithLeader(users.get(0).getEmail()).stream().forEach(u -> {
                 List<CourseDTO> courses = new ArrayList<>();
-                courses.addAll(u.getWaitToEnroll());
+                courses.addAll(u.getWaitToEnroll()
+                        .stream()
+                        .filter(c -> c.getProjectManager().equals(user.getTrainUpEmail()))
+                        .collect(Collectors.toList()));
                 courses.forEach(c -> {
                     UserDTO finalUser = userService.acceptFromWait(u, c);
                     if (finalUser == null) {
-                        ret[0].set(ret[0].get() + "Fail enroll for: " + u.getEmail() + "\n");
+                        ret[0].set(ret[0].get() + "Fail enroll for: " + u.getEmail() + " at " + c.getCourseName() + "\n");
                     } else {
-                        ret[0].set(ret[0].get() + "Success enroll for: " + u.getEmail() + "\n");
+                        ret[0].set(ret[0].get() + "Success enroll for: " + u.getEmail() + " at " + c.getCourseName() + "\n");
                     }
                 });
             });
@@ -443,14 +450,14 @@ public class SimpleEmailService implements EmailService {
             users.stream().forEach(u -> {
                 List<CourseDTO> courses = new ArrayList<>();
                 courses.addAll(u.getWishToEnroll());
-                    courses.forEach(c -> {
-                        UserDTO finalUser = userService.removeFromWish(u, c);
-                        if (finalUser == null) {
-                            ret[0].set(ret[0].get() + "Fail reject for: " + u.getEmail() + "\n");
-                        } else {
-                            ret[0].set(ret[0].get() + "Success reject for: " + u.getEmail() + "\n");
-                        }
-                    });
+                courses.forEach(c -> {
+                    UserDTO finalUser = userService.removeFromWish(u, c);
+                    if (finalUser == null) {
+                        ret[0].set(ret[0].get() + "Fail reject for: " + u.getEmail() + " at " + c.getCourseName() + "\n");
+                    } else {
+                        ret[0].set(ret[0].get() + "Success reject for: " + u.getEmail() + " at " + c.getCourseName() + "\n");
+                    }
+                });
             });
         }
 
@@ -459,13 +466,16 @@ public class SimpleEmailService implements EmailService {
                 || user.getUserType().equals(UserType.PMTECH)) {
             userService.findAllWithLeader(users.get(0).getEmail()).stream().forEach(u -> {
                 List<CourseDTO> courses = new ArrayList<>();
-                courses.addAll(u.getWaitToEnroll());
+                courses.addAll(u.getWaitToEnroll()
+                        .stream()
+                        .filter(c -> c.getProjectManager().equals(user.getTrainUpEmail()))
+                        .collect(Collectors.toList()));
                 courses.forEach(c -> {
                     UserDTO finalUser = userService.rejectFromWait(u, c);
                     if (finalUser == null) {
-                        ret[0].set(ret[0].get() + "Fail reject for: " + u.getEmail() + "\n");
+                        ret[0].set(ret[0].get() + "Fail reject for: " + u.getEmail() + " at " + c.getCourseName() + "\n");
                     } else {
-                        ret[0].set(ret[0].get() + "Success reject for: " + u.getEmail() + "\n");
+                        ret[0].set(ret[0].get() + "Success reject for: " + u.getEmail() + " at " + c.getCourseName() + "\n");
                     }
                 });
             });
@@ -480,7 +490,47 @@ public class SimpleEmailService implements EmailService {
         if (user == null) {
             return "Invalid email";
         }
-        //TODO: VLAD TERMINA ASTA
+        String help = "As a ";
+
+        if (user.getUserType() == UserType.USER) {
+
+            help += "user you have the next possible requests: \n\n"
+                    + "Ask for possible courses that you can attend to\n"
+                    + "To do so, in the subject of the email please write : info\n\n"
+                    + "For wishing to enroll to certain courses please write in the subject : wish\n"
+                    + "In the body please write on new lines each course name that you wish to attend too";
+
+            return help;
+        }
+        if (user.getUserType() == UserType.TM) {
+
+            help += "TM you have the next possible requests: \n\n"
+                    + "Ask for a list of your team members and the courses they wish to attend too\n"
+                    + "To do so, in the subject of the email please write : info\n\n"
+                    + "To accept certain users to enroll to a certain course please write in the subject : accept\n"
+                    + "Also, in the body of the email write on the first line the name of the course and after that on each new line the emails of the users you wish to enroll\n\n"
+                    + "To reject certain users to enroll to a certain course please write in the subject : reject\n"
+                    + "Also, in the body of the email write on the first line the name of the course and after that on each new line the emails of the users you wish to reject\n\n"
+                    + "For accepting all users of your team at all the courses they wish to attend too write in the subject : acceptall\n\n"
+                    + "For rejecting all users of your team at all the courses they wish to attend too write in the subject : rejectall\n";
+
+            return help;
+        }
+
+        if (user.getUserType() == UserType.PMPROC || user.getUserType() == UserType.PMTECH || user.getUserType() == UserType.PMPROC) {
+
+            help += "PM you have the next possible requests: \n\n"
+                    + "Ask for a list of users that are in waiting to be accepted or rejected to your courses\n"
+                    + "To do so, in the subject of the email please write : info\n\n"
+                    + "To accept certain users to a certain course please write in the subject : accept\n"
+                    + "Also, in the body of the email write on the first line the name of the course and after that on each new line the emails of the users you wish to enroll\n\n"
+                    + "To reject certain users to a certain course please write in the subject : reject\n"
+                    + "Also, in the body of the email write on the first line the name of the course and after that on each new line the emails of the users you wish to reject\n\n"
+                    + "For accepting all users to all the courses that you are having write in the subject : acceptall\n\n"
+                    + "For rejecting all users to all the courses that you are having write in the subject : rejectall\n";
+
+            return help;
+        }
         return null;
     }
 }

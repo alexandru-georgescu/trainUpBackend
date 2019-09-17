@@ -111,6 +111,7 @@ public class SimpleUserService implements UserService {
         saveAndFlushBack(userDTO);
 
         updateRejected(user);
+        invitationService.reject(user, course);
         return userDTO;
     }
 
@@ -236,6 +237,7 @@ public class SimpleUserService implements UserService {
         saveAndFlush(userDB);
         saveAndFlushBack(userDTO);
         updateRejected(user);
+        invitationService.reject(user, course);
 
         return userDTO;
     }
@@ -559,6 +561,9 @@ public class SimpleUserService implements UserService {
         saveAndFlushBack(userDummyDTO);
         saveAndFlush(userDummy);
 
+
+        invitationService.reject(userDummyDTO, courseDummyDTO);
+
         return userDummyDTO;
     }
 
@@ -602,6 +607,7 @@ public class SimpleUserService implements UserService {
 
         saveAndFlushBack(userDummyDTO);
         saveAndFlush(userDummy);
+        invitationService.send(userDummyDTO, courseDummyDTO);
 
         return userDummyDTO;
     }
