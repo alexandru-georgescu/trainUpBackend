@@ -1,6 +1,5 @@
 package com.trainingup.trainingupapp.service.user_service;
 
-import com.trainingup.trainingupapp.convertor.CourseConvertor;
 import com.trainingup.trainingupapp.convertor.UserConvertor;
 import com.trainingup.trainingupapp.dto.CourseDTO;
 import com.trainingup.trainingupapp.dto.UserDTO;
@@ -11,7 +10,6 @@ import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.outlook_service.InvitationService;
 import com.trainingup.trainingupapp.service.smtp_service.SmtpService;
 import com.trainingup.trainingupapp.tables.Course;
-import com.trainingup.trainingupapp.tables.EmailTemplate;
 import com.trainingup.trainingupapp.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,6 +47,20 @@ public class SimpleUserService implements UserService {
 
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Override
+    public boolean checkExistWish(UserDTO user, CourseDTO course) {
+        List<CourseDTO> courses = user.getWishToEnroll();
+        AtomicBoolean ret = new AtomicBoolean(false);
+
+        courses.forEach(c -> {
+            if (c.getCourseName().toLowerCase().equals(course.getCourseName().toLowerCase())) {
+                ret.set(true);
+            }
+        });
+
+        return ret.get();
     }
 
     @Override
@@ -268,6 +281,15 @@ public class SimpleUserService implements UserService {
     public User findByName(String name) {
         return userRepository
                 .findAll()
+                .stream()
+                .filter(u -> u.getEmail().toLowerCase().equals(name.toLowerCase()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public UserDTO findByNameDTO(String name) {
+        return userBackend
                 .stream()
                 .filter(u -> u.getEmail().toLowerCase().equals(name.toLowerCase()))
                 .findFirst()
