@@ -6,6 +6,7 @@ import com.trainingup.trainingupapp.dto.UserDTO;
 import com.trainingup.trainingupapp.enums.UserType;
 import com.trainingup.trainingupapp.repository.EmailRepository;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
+import com.trainingup.trainingupapp.service.outlook_service.InvitationService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
 import com.trainingup.trainingupapp.tables.EmailTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class SimpleEmailService implements EmailService {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    InvitationService invitationService;
 
     @Override
     public EmailTemplate getUser(String email) {
@@ -387,14 +391,14 @@ public class SimpleEmailService implements EmailService {
             users.forEach(u -> {
                 List<CourseDTO> courses = new ArrayList<>();
                 courses.addAll(u.getWishToEnroll());
-                    courses.forEach(c -> {
-                        UserDTO finalUser = userService.waitToEnroll(u, c);
-                        if (finalUser == null) {
-                            ret[0].set(ret[0].get() + "Fail enroll for: " + u.getEmail() +" at " + c.getCourseName() +"\n");
-                        } else {
-                            ret[0].set(ret[0].get() + "Success enroll for: " + u.getEmail() + " at " + c.getCourseName() + "\n");
-                        }
-                    });
+                courses.forEach(c -> {
+                    UserDTO finalUser = userService.waitToEnroll(u, c);
+                    if (finalUser == null) {
+                        ret[0].set(ret[0].get() + "Fail enroll for: " + u.getEmail() +" at " + c.getCourseName() +"\n");
+                    } else {
+                        ret[0].set(ret[0].get() + "Success enroll for: " + u.getEmail() + " at " + c.getCourseName() + "\n");
+                    }
+                });
             });
         }
 
@@ -446,14 +450,14 @@ public class SimpleEmailService implements EmailService {
             users.stream().forEach(u -> {
                 List<CourseDTO> courses = new ArrayList<>();
                 courses.addAll(u.getWishToEnroll());
-                    courses.forEach(c -> {
-                        UserDTO finalUser = userService.removeFromWish(u, c);
-                        if (finalUser == null) {
-                            ret[0].set(ret[0].get() + "Fail reject for: " + u.getEmail() + " at " + c.getCourseName() + "\n");
-                        } else {
-                            ret[0].set(ret[0].get() + "Success reject for: " + u.getEmail() + " at " + c.getCourseName() + "\n");
-                        }
-                    });
+                courses.forEach(c -> {
+                    UserDTO finalUser = userService.removeFromWish(u, c);
+                    if (finalUser == null) {
+                        ret[0].set(ret[0].get() + "Fail reject for: " + u.getEmail() + " at " + c.getCourseName() + "\n");
+                    } else {
+                        ret[0].set(ret[0].get() + "Success reject for: " + u.getEmail() + " at " + c.getCourseName() + "\n");
+                    }
+                });
             });
         }
 

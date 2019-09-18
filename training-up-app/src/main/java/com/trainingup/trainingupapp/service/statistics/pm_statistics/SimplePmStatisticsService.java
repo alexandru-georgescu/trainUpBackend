@@ -40,27 +40,32 @@ public class SimplePmStatisticsService implements PmStatisticsService {
         AtomicInteger RCA = new AtomicInteger(0);
         AtomicInteger NFR = new AtomicInteger(0);
         AtomicInteger GTB = new AtomicInteger(0);
+        AtomicInteger PWCC = new AtomicInteger(0);
+
 
         courseDTOS.forEach(c -> {
             switch (c.getDomain()) {
                 case RCA: RCA.set(RCA.get() + 1); break;
                 case GTB: GTB.set(GTB.get() + 1); break;
-                case NFR: NFR.set(NFR.get() + 1); break; //AICI
+                case NFR: NFR.set(NFR.get() + 1); break;
+                case PWCC: PWCC.set(PWCC.get() + 1); break;
             }
         });
 
-        int sum = RCA.get() + NFR.get() + GTB.get();
+        int sum = RCA.get() + NFR.get() + GTB.get() + PWCC.get();
 
         List<String> domains = new ArrayList<>();
         if (sum == 0) {
             domains.add(String.valueOf(0));
             domains.add(String.valueOf(0));
             domains.add(String.valueOf(0));
+            domains.add(String.valueOf(0));
             return domains;
         }
         domains.add(String.valueOf((1F * RCA.get()/sum) * 100));
-        domains.add(String.valueOf((1F *NFR.get()/sum) * 100));
-        domains.add(String.valueOf((1F *GTB.get()/sum) * 100));
+        domains.add(String.valueOf((1F * NFR.get()/sum) * 100));
+        domains.add(String.valueOf((1F * GTB.get()/sum) * 100));
+        domains.add(String.valueOf((1F * PWCC.get()/sum) * 100));
         return domains;
     }
 }
