@@ -8,6 +8,7 @@ import com.trainingup.trainingupapp.enums.UserType;
 import com.trainingup.trainingupapp.repository.EmailRepository;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
+import com.trainingup.trainingupapp.tables.Course;
 import com.trainingup.trainingupapp.tables.EmailTemplate;
 import com.trainingup.trainingupapp.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -194,7 +195,6 @@ public class UserController {
             userService.addUser(user4);
             userService.addUser(user5);
         }
-
 
         CourseDTO courseDTO02 = new CourseDTO();
         courseDTO02.setActualCapacity(1);
@@ -384,9 +384,28 @@ public class UserController {
         dummyCourses.add(courseDTO6);
         dummyCourses.add(courseDTO7);
         dummyCourses.add(courseDTO8);
-        dummyCourses.add(courseDTO9);
         dummyCourses.add(courseDTO91);
         dummyCourses.add(courseDTO92);
+
+        userService.findAll().stream().filter(p -> p.getType().equals(UserType.USER)).forEach(u -> {
+            List<CourseDTO> courses = new ArrayList<>();
+            courses.add(courseDTO9);
+            u.setWaitToEnroll(courses);
+            userService.saveAndFlushBack(u);
+        });
+
+        Course cc = courseService.findAllDB().stream()
+                .filter(c -> c.getCourseName().equals("HTML and CSS"))
+                .findFirst()
+                .orElse(null);
+
+        userService.findAllDB().stream().filter(p -> p.getType().equals(UserType.USER)).forEach(u -> {
+            List<Course> courses = new ArrayList<>();
+            courses.add(cc);
+            u.setWaitToEnroll(courses);
+            userService.saveAndFlush(u);
+        });
+
 
         userService.findById(9).setCourses(dummyCourses);
 
