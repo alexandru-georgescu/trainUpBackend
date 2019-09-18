@@ -312,7 +312,7 @@ public class UserController {
         courseDTO8.setCapacity(10);
         courseDTO8.setCourseName("Waterfall vs Agile");
         courseDTO8.setStartDate(LocalDate.now().minusDays(6));
-        courseDTO8.setEndDate(LocalDate.now().minusDays(5));
+        courseDTO8.setEndDate(LocalDate.now().minusDays(15));
         courseDTO8.setProjectManager(PM_PROC);
         courseDTO8.setDomain(Domains.NFR);
         courseDTO8.setType(CourseType.PROCESS);
@@ -323,7 +323,7 @@ public class UserController {
         courseDTO9.setCapacity(10);
         courseDTO9.setCourseName("HTML and CSS");
         courseDTO9.setStartDate(LocalDate.now().minusDays(1));
-        courseDTO9.setEndDate(LocalDate.now().plusDays(1));
+        courseDTO9.setEndDate(LocalDate.now().plusDays(10));
         courseDTO9.setProjectManager(PM_TECH);
         courseDTO9.setDomain(Domains.NFR);
         courseDTO9.setType(CourseType.TECH);
@@ -334,7 +334,7 @@ public class UserController {
         courseDTO91.setCapacity(10);
         courseDTO91.setCourseName("Angular");
         courseDTO91.setStartDate(LocalDate.now().plusDays(2));
-        courseDTO91.setEndDate(LocalDate.now().plusDays(3));
+        courseDTO91.setEndDate(LocalDate.now().plusDays(15));
         courseDTO91.setProjectManager(PM_TECH);
         courseDTO91.setDomain(Domains.GTB);
         courseDTO91.setType(CourseType.TECH);
@@ -406,6 +406,46 @@ public class UserController {
             userService.saveAndFlush(u);
         });
 
+        List<CourseDTO> arr = new ArrayList<>();
+        arr.add(courseDTO5);
+
+        UserDTO userrr = new UserDTO();
+        userrr.setType(UserType.USER);
+        userrr.setEmail("alex.mihai@trainup.com");
+        userrr.setFirstName("Alex");
+        userrr.setLastName("Mihai");
+        userrr.setPassword("User123456");
+        userrr.setLeader(TM);
+        userrr.setEnable(true);
+        userrr.setWishToEnroll(arr);
+
+        UserDTO userrr1 = new UserDTO();
+        userrr1.setType(UserType.USER);
+        userrr1.setEmail("dorin.mihai@trainup.com");
+        userrr1.setFirstName("Dorin");
+        userrr1.setLastName("Mihai");
+        userrr1.setPassword("User123456");
+        userrr1.setLeader(TM);
+        userrr1.setEnable(true);
+        userrr1.setWishToEnroll(arr);
+
+
+        UserDTO userrr2 = new UserDTO();
+        userrr2.setType(UserType.USER);
+        userrr2.setEmail("cosmin.mihai@trainup.com");
+        userrr2.setFirstName("Cosmin");
+        userrr2.setLastName("Mihai");
+        userrr2.setPassword("User123456");
+        userrr2.setLeader(TM);
+        userrr2.setEnable(true);
+        userrr2.setWishToEnroll(arr);
+
+
+        synchronized (userService) {
+            userService.addUser(userrr);
+            userService.addUser(userrr1);
+            userService.addUser(userrr2);
+        }
 
         userService.findById(9).setCourses(dummyCourses);
 
