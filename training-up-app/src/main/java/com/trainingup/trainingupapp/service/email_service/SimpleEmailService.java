@@ -156,50 +156,47 @@ public class SimpleEmailService implements EmailService {
                 }
             }
 
-            for (int i = 0; i < usersWithWait.size(); i++) {
-                UserDTO userDTO = usersWithWait.get(i);
-                String format = "User name : "
-                        + userDTO.getFirstName() + " " + userDTO.getLastName()
+            String waitCourse;
+            for (int j = 0; j < courses.size(); j++) {
+                String format = "";
+                CourseDTO courseDTO = courses.get(j);
+                waitCourse = "Course name : "
+                        + courseDTO.getCourseName()
                         + "\n"
-                        + "Email : "
-                        + userDTO.getEmail()
+                        + "Start date : "
+                        + courseDTO.getStartDate()
                         + "\n"
-                        + "Courses on the wait list : \n\n";
-                List<CourseDTO> waitCoursesUnfiltered = userDTO.getWaitToEnroll();
-                List<CourseDTO> waitCourses = waitCoursesUnfiltered.stream()
-                        .filter(c -> c.getProjectManager()
-                                .toLowerCase()
-                                .equals(user.getTrainUpEmail()
-                                        .toLowerCase()))
-                        .collect(Collectors.toList());
-                String waitCourse;
-                for (int j = 0; j < waitCourses.size(); j++) {
-                    CourseDTO courseDTO = waitCourses.get(j);
-                    waitCourse = "Course name : "
-                            + courseDTO.getCourseName()
+                        + "End date : "
+                        + courseDTO.getEndDate()
+                        + "\n"
+                        + "Duration : "
+                        + courseDTO.getTimeInterval()
+                        + "\n"
+                        + "Remained Capacity : "
+                        + courseDTO.getActualCapacity()
+                        + "\n"
+                        + "Project Manager : "
+                        + courseDTO.getProjectManager()
+                        + "\n\n";
+                format += waitCourse;
+
+                format += "Users : \n";
+                for (int i = 0; i < usersWithWait.size(); i++) {
+                    UserDTO userDTO = usersWithWait.get(i);
+                    format+= userDTO.getFirstName() + " " + userDTO.getLastName()
                             + "\n"
-                            + "Start date : "
-                            + courseDTO.getStartDate()
-                            + "\n"
-                            + "End date : "
-                            + courseDTO.getEndDate()
-                            + "\n"
-                            + "Duration : "
-                            + courseDTO.getTimeInterval()
-                            + "\n"
-                            + "Remained Capacity : "
-                            + courseDTO.getActualCapacity()
-                            + "\n"
-                            + "Project Manager : "
-                            + courseDTO.getProjectManager()
+                            + "Email : "
+                            + userDTO.getEmail()
                             + "\n\n";
-                    format += waitCourse;
+
 
                 }
-
-
                 info += format;
+
+
             }
+
+
 
             return info;
 

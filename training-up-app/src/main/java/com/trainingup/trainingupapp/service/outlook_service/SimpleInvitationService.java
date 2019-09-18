@@ -115,7 +115,7 @@ public class SimpleInvitationService implements InvitationService {
                     message.setTo("trainupapply@gmail.com");
                     message.setSubject("Rejected!");
                     message.setText("Hi " + user.getFirstName() + " " + user.getLastName() + ","
-                            + "\n \n You are eliminated from " + courseDTO.getCourseName() + "!\n");
+                            + "\n \n You have been unenrolled from " + courseDTO.getCourseName() + "!\n");
 
                     javaMailSender.send(message);
                 } catch (Exception e) {
