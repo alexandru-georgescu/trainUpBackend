@@ -28,11 +28,15 @@ public class SmtpController {
                 .stream()
                 .filter(user1 -> user1.getId() == userDTO.getId())
                 .findFirst().orElse(null);
-        System.out.println(user);
+
         if (user == null) {
             return;
         }
-        String content = "http://localhost:8080/trainup/reset?id="+ user.getToken();
+
+        String content ="Hi " + userDTO.getFirstName() + " " + userDTO.getLastName() + ",\n"
+                 + "You recently requested to resest your password for your account.\n" +
+                "Use the link below to reset it.\n"
+                 + "http://localhost:8080/trainup/reset?id="+ user.getToken();
         smtpService.sendEmailTo("trainupapply@gmail.com", "Reset password", content);
     }
 

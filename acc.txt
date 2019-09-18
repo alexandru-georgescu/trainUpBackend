@@ -1,52 +1,20 @@
-Ce timpuri de cursuri fac oamenii mei
-Perioada cu activitatea cea mai mare
+## Prezentare
+
+# Intro
+- Despre timp, de ce propun aceasta solutie.
+
+# Securitate
+## 1) Securizare server backend - frontend.
+
+## 2) Mapare DNS
+- Mapare adrese fictive - adrese reale.
+- Rolul maparii.
+
+# Service
+
+## 2) Service Email
+- Comunicarea server - user (via email).
+- Exemplu Template: slide/slide uri.
+- Mic DEMO: cativa pasi: User -> Tm -> Pm -> (Accept).
 
 
-TECH C: 3
-SOFT C: 3
-PROCESS C: 3
-
-USER: un curs pe zi
-
-
-MAIL: ZIUA IN CARE MERGE LA CURS, INTERVAL
-
-
-pm TECH, SOFT, PROCESS
-
-Alex G:
-MAIL: MODIFICARE CURS NR INTERVAL ZILE, INTERVAL ORE
-
-Alex:
-USER + CURS: sa-l iau din accepted si sa-l bag in rejected
-USER + CURS: face fix invers
-
-Mihai:
-
-
-Eda:
-
-USER:
-		cate din fiecare am (type) din trecut
-total 	cate zile de curs am facut
-	    cate zile de curs mi au ramas
-USER BIFAT
-
-
-TM 
-	cat oameni au facut un curs de tech etc
-	care luna din an are mai multi oameni inscrisi TODO
-
-PM pe tip de curs (TECH, SOFT, PROCESS):
-	enrollment/type of training
-	courses with less than 50% enrollment
-
-	UPDATE /IN 
-	+1 -1 la accept sau reject
-
-
-PM:
-1) VREA SA ISI VADA CURSURILE CU ENROLLMENT MAI MIC DE 50%
-   user -> list de nume
-
-2) Care din domenii are un enrollment mai are (List domenii)

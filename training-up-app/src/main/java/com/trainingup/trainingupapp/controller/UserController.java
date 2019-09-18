@@ -8,7 +8,6 @@ import com.trainingup.trainingupapp.enums.UserType;
 import com.trainingup.trainingupapp.repository.EmailRepository;
 import com.trainingup.trainingupapp.service.course_service.CourseService;
 import com.trainingup.trainingupapp.service.user_service.UserService;
-import com.trainingup.trainingupapp.tables.Course;
 import com.trainingup.trainingupapp.tables.EmailTemplate;
 import com.trainingup.trainingupapp.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,12 +47,13 @@ public class UserController {
     }
 
 
+
     @PostConstruct
     public void createAdmin() {
-        String PM_SOFT = "petrin.sorin@trainup.com";
-        String PM_TECH = "pitica.tractomir@trainup.com";
-        String PM_PROC = "petre.petrisor@trainup.com";
-        String TM = "tivian.mirel@trainup.com";
+        String PM_SOFT = "paul.sava@trainup.com";
+        String PM_TECH = "paul.tiberiu@trainup.com";
+        String PM_PROC = "paul.popescu@trainup.com";
+        String TM = "tudor.mihai@trainup.com";
 
         EmailTemplate userr = new EmailTemplate();
         userr.setEmail("a.alexandru.georgescu@gmail.com");
@@ -68,7 +68,7 @@ public class UserController {
 
 
         EmailTemplate userr2 = new EmailTemplate();
-        userr2.setEmail("wblueme@gmail.com");
+        userr2.setEmail("vladaron123@gmail.com");
         userr2.setTrainUpEmail(PM_TECH);
         userr2.setUserType(UserType.PMTECH);
 
@@ -89,8 +89,8 @@ public class UserController {
         UserDTO pm = new UserDTO();
         pm.setType(UserType.PMTECH);
         pm.setEmail(PM_TECH);
-        pm.setFirstName("Pitica");
-        pm.setLastName("Tractomir");
+        pm.setFirstName("Paul");
+        pm.setLastName("Tiberiu");
         pm.setPassword("Pm123456");
         pm.setLeader("admin.admin@trainup.com");
         pm.setEnable(true);
@@ -99,8 +99,8 @@ public class UserController {
         UserDTO pm2 = new UserDTO();
         pm2.setType(UserType.PMSOFT);
         pm2.setEmail(PM_SOFT);
-        pm2.setFirstName("Petrin");
-        pm2.setLastName("Sorin");
+        pm2.setFirstName("Paul");
+        pm2.setLastName("Sava");
         pm2.setPassword("Pm123456");
         pm2.setLeader("admin.admin@trainup.com");
         pm2.setEnable(true);
@@ -109,8 +109,8 @@ public class UserController {
         UserDTO pm1 = new UserDTO();
         pm1.setType(UserType.PMPROC);
         pm1.setEmail(PM_PROC);
-        pm1.setFirstName("Petre");
-        pm1.setLastName("Petrisor");
+        pm1.setFirstName("Paul");
+        pm1.setLastName("Popescu");
         pm1.setPassword("Pm123456");
         pm1.setLeader("admin.admin@trainup.com");
         pm1.setEnable(true);
@@ -118,8 +118,8 @@ public class UserController {
         UserDTO tm = new UserDTO();
         tm.setType(UserType.TM);
         tm.setEmail(TM);
-        tm.setFirstName("Tivian");
-        tm.setLastName("Mirel");
+        tm.setFirstName("tudor");
+        tm.setLastName("mihai");
         tm.setPassword("Tm123456");
         tm.setLeader(PM_TECH);
         tm.setEnable(true);
@@ -127,8 +127,8 @@ public class UserController {
         UserDTO user = new UserDTO();
         user.setType(UserType.USER);
         user.setEmail("udreanu.stoica@trainup.com");
-        user.setFirstName("Udreanu");
-        user.setLastName("Stoica");
+        user.setFirstName("udreanu");
+        user.setLastName("stoica");
         user.setPassword("User123456");
         user.setLeader(TM);
         user.setEnable(true);
@@ -136,8 +136,8 @@ public class UserController {
         UserDTO user1 = new UserDTO();
         user1.setType(UserType.USER);
         user1.setEmail("alex.georgescu@trainup.com");
-        user1.setFirstName("Alex");
-        user1.setLastName("Gerogescu");
+        user1.setFirstName("alex");
+        user1.setLastName("gerogescu");
         user1.setPassword("User123456");
         user1.setLeader(TM);
         user1.setEnable(true);
@@ -146,8 +146,8 @@ public class UserController {
         UserDTO user2 = new UserDTO();
         user2.setType(UserType.USER);
         user2.setEmail("eda.ibram@trainup.com");
-        user2.setFirstName("Eda");
-        user2.setLastName("Ibram");
+        user2.setFirstName("eda");
+        user2.setLastName("ibram");
         user2.setPassword("User123456");
         user2.setLeader(TM);
         user2.setEnable(true);
@@ -156,8 +156,8 @@ public class UserController {
         UserDTO user3 = new UserDTO();
         user3.setType(UserType.USER);
         user3.setEmail("alex.bonteanu@trainup.com");
-        user3.setFirstName("Alex");
-        user3.setLastName("Bonteanu");
+        user3.setFirstName("alex");
+        user3.setLastName("bonteanu");
         user3.setPassword("User123456");
         user3.setLeader(TM);
         user3.setEnable(true);
@@ -165,8 +165,8 @@ public class UserController {
         UserDTO user4 = new UserDTO();
         user4.setType(UserType.USER);
         user4.setEmail("mihai.iamandei@trainup.com");
-        user4.setFirstName("Mihai");
-        user4.setLastName("Iamandei");
+        user4.setFirstName("mihai");
+        user4.setLastName("iamandei");
         user4.setPassword("User123456");
         user4.setLeader(TM);
         user4.setEnable(true);
@@ -174,8 +174,8 @@ public class UserController {
         UserDTO user5 = new UserDTO();
         user5.setType(UserType.USER);
         user5.setEmail("vlad.manea@trainup.com");
-        user5.setFirstName("Vlad");
-        user5.setLastName("Manea");
+        user5.setFirstName("vlad");
+        user5.setLastName("manea");
         user5.setPassword("User123456");
         user5.setLeader(TM);
         user5.setEnable(true);
@@ -285,6 +285,83 @@ public class UserController {
         courseDTO5.setType(CourseType.TECH);
         courseDTO5.setTimeInterval("12:00-16:00");
 
+        CourseDTO courseDTO6 = new CourseDTO();
+        courseDTO6.setActualCapacity(10);
+        courseDTO6.setCapacity(10);
+        courseDTO6.setCourseName("Basics of C++");
+        courseDTO6.setStartDate(LocalDate.now().minusDays(10));
+        courseDTO6.setEndDate(LocalDate.now().minusDays(9));
+        courseDTO6.setProjectManager(PM_TECH);
+        courseDTO6.setDomain(Domains.GTB);
+        courseDTO6.setType(CourseType.TECH);
+        courseDTO6.setTimeInterval("10:00-16:00");
+
+        CourseDTO courseDTO7 = new CourseDTO();
+        courseDTO7.setActualCapacity(10);
+        courseDTO7.setCapacity(10);
+        courseDTO7.setCourseName("How to show a presentation");
+        courseDTO7.setStartDate(LocalDate.now().minusDays(4));
+        courseDTO7.setEndDate(LocalDate.now().minusDays(3));
+        courseDTO7.setProjectManager(PM_SOFT);
+        courseDTO7.setDomain(Domains.PWCC);
+        courseDTO7.setType(CourseType.SOFT);
+        courseDTO7.setTimeInterval("10:00-13:00");
+
+        CourseDTO courseDTO8 = new CourseDTO();
+        courseDTO8.setActualCapacity(10);
+        courseDTO8.setCapacity(10);
+        courseDTO8.setCourseName("Waterfall vs Agile");
+        courseDTO8.setStartDate(LocalDate.now().minusDays(6));
+        courseDTO8.setEndDate(LocalDate.now().minusDays(5));
+        courseDTO8.setProjectManager(PM_PROC);
+        courseDTO8.setDomain(Domains.NFR);
+        courseDTO8.setType(CourseType.PROCESS);
+        courseDTO8.setTimeInterval("13:00-17:00");
+
+        CourseDTO courseDTO9 = new CourseDTO();
+        courseDTO9.setActualCapacity(10);
+        courseDTO9.setCapacity(10);
+        courseDTO9.setCourseName("HTML and CSS");
+        courseDTO9.setStartDate(LocalDate.now().minusDays(1));
+        courseDTO9.setEndDate(LocalDate.now().plusDays(1));
+        courseDTO9.setProjectManager(PM_TECH);
+        courseDTO9.setDomain(Domains.NFR);
+        courseDTO9.setType(CourseType.TECH);
+        courseDTO9.setTimeInterval("9:00-16:00");
+
+        CourseDTO courseDTO91 = new CourseDTO();
+        courseDTO91.setActualCapacity(10);
+        courseDTO91.setCapacity(10);
+        courseDTO91.setCourseName("Angular");
+        courseDTO91.setStartDate(LocalDate.now().plusDays(2));
+        courseDTO91.setEndDate(LocalDate.now().plusDays(3));
+        courseDTO91.setProjectManager(PM_TECH);
+        courseDTO91.setDomain(Domains.GTB);
+        courseDTO91.setType(CourseType.TECH);
+        courseDTO91.setTimeInterval("9:00-16:00");
+
+        CourseDTO courseDTO92 = new CourseDTO();
+        courseDTO92.setActualCapacity(10);
+        courseDTO92.setCapacity(10);
+        courseDTO92.setCourseName("Algorithms and Data Structure");
+        courseDTO92.setStartDate(LocalDate.now().plusDays(4));
+        courseDTO92.setEndDate(LocalDate.now().plusDays(5));
+        courseDTO92.setProjectManager(PM_TECH);
+        courseDTO92.setDomain(Domains.PWCC);
+        courseDTO92.setType(CourseType.TECH);
+        courseDTO92.setTimeInterval("9:00-16:00");
+
+        CourseDTO courseDTO93 = new CourseDTO();
+        courseDTO93.setActualCapacity(10);
+        courseDTO93.setCapacity(10);
+        courseDTO93.setCourseName("German");
+        courseDTO93.setStartDate(LocalDate.now().plusDays(4));
+        courseDTO93.setEndDate(LocalDate.now().plusDays(15));
+        courseDTO93.setProjectManager(PM_SOFT);
+        courseDTO93.setDomain(Domains.PWCC);
+        courseDTO93.setType(CourseType.SOFT);
+        courseDTO93.setTimeInterval("9:00-12:00");
+
         synchronized (courseService) {
             courseService.addCourse(courseDTO1);
             courseService.addCourse(courseDTO2);
@@ -294,7 +371,24 @@ public class UserController {
             courseService.addCourse(courseDTO0);
             courseService.addCourse(courseDTO01);
             courseService.addCourse(courseDTO02);
+            courseService.addCourse(courseDTO6);
+            courseService.addCourse(courseDTO7);
+            courseService.addCourse(courseDTO8);
+            courseService.addCourse(courseDTO9);
+            courseService.addCourse(courseDTO91);
+            courseService.addCourse(courseDTO92);
+            courseService.addCourse(courseDTO93);
         }
+
+        List<CourseDTO> dummyCourses = new ArrayList<>();
+        dummyCourses.add(courseDTO6);
+        dummyCourses.add(courseDTO7);
+        dummyCourses.add(courseDTO8);
+        dummyCourses.add(courseDTO9);
+        dummyCourses.add(courseDTO91);
+        dummyCourses.add(courseDTO92);
+
+        userService.findById(9).setCourses(dummyCourses);
 
     }
 
