@@ -232,7 +232,7 @@ public class UserController {
         CourseDTO courseDTO1 = new CourseDTO();
         courseDTO1.setActualCapacity(10);
         courseDTO1.setCapacity(10);
-        courseDTO1.setCourseName("Oriented object programming");
+        courseDTO1.setCourseName("Object oriented programming");
         courseDTO1.setStartDate(LocalDate.now().plusDays(1));
         courseDTO1.setEndDate(LocalDate.now().plusMonths(1));
         courseDTO1.setProjectManager(PM_TECH);
