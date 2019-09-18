@@ -122,14 +122,10 @@ public class SmtpThread extends Thread {
                         String[] subject = emails.get(i)
                                 .getSubject()
                                 .replace("[", "")
-                                .replace("]", " ")
-                                .split(" ");
+                                .replace("]", "_")
+                                .split("_");
 
                         String sendFrom = emails.get(i).getFrom().split(">")[0].split("<")[1];
-
-                        System.out.println(emails.get(i).getFrom());
-                        System.out.println(sendFrom);
-
 
                         String courseName = subject[0];
                         String body = emails.get(i).getBody();
@@ -179,7 +175,7 @@ public class SmtpThread extends Thread {
 
                             getUsersFromEmail(pars, courseName, dayInterval, timeInterval, sendFrom);
                         } else {
-                            sendEmail(sendFrom, "COMANDA INVALIDA", "INFO");
+                            sendEmail(sendFrom, "Invalid request!", "INFO");
                             //TODO: COMANDA INVALIDA
                             //TODO DAY 1: TEXT + HELP REQUEST!
                         }
