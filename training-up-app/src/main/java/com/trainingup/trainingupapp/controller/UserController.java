@@ -57,7 +57,7 @@ public class UserController {
 
         EmailTemplate userr = new EmailTemplate();
         userr.setEmail("a.alexandru.georgescu@gmail.com");
-        userr.setTrainUpEmail("udreanu.stoica@trainup.com");
+        userr.setTrainUpEmail("alex.georgescu@trainup.com");
         userr.setUserType(UserType.USER);
 
 
@@ -68,7 +68,7 @@ public class UserController {
 
 
         EmailTemplate userr2 = new EmailTemplate();
-        userr2.setEmail("vladaron123@gmail.com");
+        userr2.setEmail("wblueme@gmail.com");
         userr2.setTrainUpEmail(PM_TECH);
         userr2.setUserType(UserType.PMTECH);
 
@@ -118,8 +118,8 @@ public class UserController {
         UserDTO tm = new UserDTO();
         tm.setType(UserType.TM);
         tm.setEmail(TM);
-        tm.setFirstName("tudor");
-        tm.setLastName("mihai");
+        tm.setFirstName("Tudor");
+        tm.setLastName("Mihai");
         tm.setPassword("Tm123456");
         tm.setLeader(PM_TECH);
         tm.setEnable(true);
@@ -127,8 +127,8 @@ public class UserController {
         UserDTO user = new UserDTO();
         user.setType(UserType.USER);
         user.setEmail("udreanu.stoica@trainup.com");
-        user.setFirstName("udreanu");
-        user.setLastName("stoica");
+        user.setFirstName("Udreanu");
+        user.setLastName("Stoica");
         user.setPassword("User123456");
         user.setLeader(TM);
         user.setEnable(true);
@@ -136,8 +136,8 @@ public class UserController {
         UserDTO user1 = new UserDTO();
         user1.setType(UserType.USER);
         user1.setEmail("alex.georgescu@trainup.com");
-        user1.setFirstName("alex");
-        user1.setLastName("gerogescu");
+        user1.setFirstName("Alex");
+        user1.setLastName("Gerogescu");
         user1.setPassword("User123456");
         user1.setLeader(TM);
         user1.setEnable(true);
@@ -146,8 +146,8 @@ public class UserController {
         UserDTO user2 = new UserDTO();
         user2.setType(UserType.USER);
         user2.setEmail("eda.ibram@trainup.com");
-        user2.setFirstName("eda");
-        user2.setLastName("ibram");
+        user2.setFirstName("Eda");
+        user2.setLastName("Ibram");
         user2.setPassword("User123456");
         user2.setLeader(TM);
         user2.setEnable(true);
@@ -156,8 +156,8 @@ public class UserController {
         UserDTO user3 = new UserDTO();
         user3.setType(UserType.USER);
         user3.setEmail("alex.bonteanu@trainup.com");
-        user3.setFirstName("alex");
-        user3.setLastName("bonteanu");
+        user3.setFirstName("Alex");
+        user3.setLastName("Bonteanu");
         user3.setPassword("User123456");
         user3.setLeader(TM);
         user3.setEnable(true);
@@ -165,8 +165,8 @@ public class UserController {
         UserDTO user4 = new UserDTO();
         user4.setType(UserType.USER);
         user4.setEmail("mihai.iamandei@trainup.com");
-        user4.setFirstName("mihai");
-        user4.setLastName("iamandei");
+        user4.setFirstName("Mihai");
+        user4.setLastName("Iamandei");
         user4.setPassword("User123456");
         user4.setLeader(TM);
         user4.setEnable(true);
@@ -174,8 +174,8 @@ public class UserController {
         UserDTO user5 = new UserDTO();
         user5.setType(UserType.USER);
         user5.setEmail("vlad.manea@trainup.com");
-        user5.setFirstName("vlad");
-        user5.setLastName("manea");
+        user5.setFirstName("Vlad");
+        user5.setLastName("Manea");
         user5.setPassword("User123456");
         user5.setLeader(TM);
         user5.setEnable(true);

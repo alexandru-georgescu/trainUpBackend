@@ -345,7 +345,7 @@ public class SimpleUserService implements UserService {
         //IN LOC DE TRAINUP.COM, O sa avem GMAIL.COM
         if (!user.isEnable()) {
             smtpService.sendValidateEmail("trainupapply@gmail.com",
-                    newUser.getToken(), user.getFirstName() + " " + user.getLastName());
+                    newUser.getToken(), user.getFirstName() + " " + user.getLastName(), user.getEmail());
         }
 
         userRepository.saveAndFlush(newUser);
