@@ -182,7 +182,7 @@ public class SmtpThread extends Thread {
                     }
                 }
 
-                Thread.sleep(5000);
+                Thread.sleep(5);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
