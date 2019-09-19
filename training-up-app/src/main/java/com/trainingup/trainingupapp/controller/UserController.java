@@ -333,7 +333,7 @@ public class UserController {
         courseDTO91.setActualCapacity(10);
         courseDTO91.setCapacity(10);
         courseDTO91.setCourseName("Angular");
-        courseDTO91.setStartDate(LocalDate.now().minusDays(5);
+        courseDTO91.setStartDate(LocalDate.now().minusDays(5));
         courseDTO91.setEndDate(LocalDate.now().plusDays(15));
         courseDTO91.setProjectManager(PM_TECH);
         courseDTO91.setDomain(Domains.GTB);
@@ -344,7 +344,7 @@ public class UserController {
         courseDTO92.setActualCapacity(10);
         courseDTO92.setCapacity(10);
         courseDTO92.setCourseName("Algorithms and Data Structure");
-        courseDTO92.setStartDate(LocalDate.now().minusDays(7);
+        courseDTO92.setStartDate(LocalDate.now().minusDays(7));
         courseDTO92.setEndDate(LocalDate.now().plusDays(5));
         courseDTO92.setProjectManager(PM_TECH);
         courseDTO92.setDomain(Domains.PWCC);
