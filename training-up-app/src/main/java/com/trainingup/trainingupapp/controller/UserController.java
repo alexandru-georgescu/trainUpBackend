@@ -63,7 +63,7 @@ public class UserController {
 
 
         EmailTemplate userr1 = new EmailTemplate();
-        userr1.setEmail("alexgeorgescu98@gmail.com");
+        userr1.setEmail("cr1st17115@gmail.com");
         userr1.setTrainUpEmail(TM);
         userr1.setUserType(UserType.TM);
 
@@ -233,8 +233,8 @@ public class UserController {
         courseDTO1.setActualCapacity(10);
         courseDTO1.setCapacity(10);
         courseDTO1.setCourseName("Object oriented programming");
-        courseDTO1.setStartDate(LocalDate.now().plusDays(1));
-        courseDTO1.setEndDate(LocalDate.now().plusMonths(1));
+        courseDTO1.setStartDate(LocalDate.now().plusMonths(8));
+        courseDTO1.setEndDate(LocalDate.now().plusMonths(12));
         courseDTO1.setProjectManager(PM_TECH);
         courseDTO1.setDomain(Domains.PWCC);
         courseDTO1.setType(CourseType.TECH);
@@ -266,8 +266,8 @@ public class UserController {
         courseDTO4.setActualCapacity(10);
         courseDTO4.setCapacity(10);
         courseDTO4.setCourseName("Linux and unix system administration ");
-        courseDTO4.setStartDate(LocalDate.now().plusDays(2));
-        courseDTO4.setEndDate(LocalDate.now().plusMonths(3));
+        courseDTO4.setStartDate(LocalDate.now().plusYears(4));
+        courseDTO4.setEndDate(LocalDate.now().plusYears(5));
         courseDTO4.setProjectManager(PM_TECH);
         courseDTO4.setDomain(Domains.NFR);
         courseDTO4.setType(CourseType.TECH);
@@ -355,8 +355,8 @@ public class UserController {
         courseDTO93.setActualCapacity(10);
         courseDTO93.setCapacity(10);
         courseDTO93.setCourseName("German");
-        courseDTO93.setStartDate(LocalDate.now().plusDays(4));
-        courseDTO93.setEndDate(LocalDate.now().plusDays(15));
+        courseDTO93.setStartDate(LocalDate.now().plusYears(2));
+        courseDTO93.setEndDate(LocalDate.now().plusYears(3));
         courseDTO93.setProjectManager(PM_SOFT);
         courseDTO93.setDomain(Domains.PWCC);
         courseDTO93.setType(CourseType.SOFT);
