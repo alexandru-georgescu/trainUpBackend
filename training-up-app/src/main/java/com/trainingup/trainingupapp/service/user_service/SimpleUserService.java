@@ -111,6 +111,7 @@ public class SimpleUserService implements UserService {
         saveAndFlushBack(userDTO);
 
         updateRejected(user);
+        invitationService.reject(user, course);
         return userDTO;
     }
 
@@ -236,6 +237,7 @@ public class SimpleUserService implements UserService {
         saveAndFlush(userDB);
         saveAndFlushBack(userDTO);
         updateRejected(user);
+        invitationService.reject(user, course);
 
         return userDTO;
     }
@@ -342,7 +344,8 @@ public class SimpleUserService implements UserService {
         //TODO: CAND O SA AVEM ADRESE o sa trimitem catre adresa de la email
         //IN LOC DE TRAINUP.COM, O sa avem GMAIL.COM
         if (!user.isEnable()) {
-            smtpService.sendValidateEmail("trainupapply@gmail.com", newUser.getToken());
+            smtpService.sendValidateEmail("trainupapply@gmail.com",
+                    newUser.getToken(), user.getFirstName() + " " + user.getLastName(), user.getEmail());
         }
 
         userRepository.saveAndFlush(newUser);
@@ -559,6 +562,9 @@ public class SimpleUserService implements UserService {
         saveAndFlushBack(userDummyDTO);
         saveAndFlush(userDummy);
 
+
+        invitationService.reject(userDummyDTO, courseDummyDTO);
+
         return userDummyDTO;
     }
 
@@ -602,6 +608,7 @@ public class SimpleUserService implements UserService {
 
         saveAndFlushBack(userDummyDTO);
         saveAndFlush(userDummy);
+        invitationService.send(userDummyDTO, courseDummyDTO);
 
         return userDummyDTO;
     }

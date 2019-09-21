@@ -19,12 +19,11 @@ public class SimpleSmtpService implements SmtpService {
                message.setSubject(subject);
                message.setText(content);
                sender.send(message);
-               System.out.println("done");
            }
        }).start();
    }
 
-   public void sendValidateEmail (String to, String token) {
+   public void sendValidateEmail (String to, String token, String name, String email) {
 
        new Thread(() -> {
            synchronized (this) {
@@ -33,9 +32,23 @@ public class SimpleSmtpService implements SmtpService {
                message.setSubject("Account Confirmation");
 
                message.setText("Hello \n \n"
-                       + "Thank you for registring on our site.\n"
+                       + "Dear " + name + ",\n" +
+                       "\n" +
+                       "Thank you for registering to TrainUp platform !\n"
+
                        + "To activate your account please click the link below: \n \n"
-                       + "http://127.0.0.1:8080/trainup/validate?id=" + token);
+                       + "http://127.0.0.1:8080/trainup/validate?id=" + token
+                       + "\n\n\n"
+                       + "You registered with this email: "+ email + ".\n" +
+                       "\n" +
+                       "If you forgot your password, simply press \"Forgot password\" and you'll be prompted to reset it.\n" +
+                       "\n" +
+                       "If you have any questions leading up to the event, feel free to reply to this email.\n\n\n"
+                       + "Kind Regards,\n" +
+                       "TrainUp Staff\n" +
+                       "trainUpApply@gmail.com");
+
+
                sender.send(message);
            }
        }).start();

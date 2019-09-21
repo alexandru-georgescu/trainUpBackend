@@ -73,15 +73,6 @@ public class SimpleCourseService implements CourseService {
     @Override
     public CourseDTO addCourse(CourseDTO course) {
         String email = course.getProjectManager().toLowerCase();
-
-        if (email.contains("tech")) {
-            course.setType(CourseType.TECH);
-        } else if (email.contains("soft")) {
-            course.setType(CourseType.SOFT);
-        } else {
-            course.setType(CourseType.PROCESS);
-        }
-
         Course newCourse = CourseConvertor.convertToCourse(course);
         this.courseRepository.saveAndFlush(newCourse);
         course.setId(newCourse.getId());
@@ -105,6 +96,9 @@ public class SimpleCourseService implements CourseService {
             List<CourseDTO> course3 = u.getWaitToEnroll();
             course3.removeIf(c -> c.getId() == id);
 
+            List<CourseDTO> course4 = u.getRejectedList();
+            course4.removeIf(c -> c.getId() == id);
+
             userService.saveAndFlushBack(u);
         });
 
@@ -114,6 +108,7 @@ public class SimpleCourseService implements CourseService {
             List<Course> d1 = new ArrayList<>();
             List<Course> d2 = new ArrayList<>();
             List<Course> d3 = new ArrayList<>();
+            List<Course> d4 = new ArrayList<>();
 
             List<Course> course1 = u.getCourses();
             course1.removeIf(c -> c.getId() == id);
@@ -127,9 +122,15 @@ public class SimpleCourseService implements CourseService {
             course3.removeIf(c -> c.getId() == id);
             d3.addAll(course3);
 
+
+            List<Course> course4 = u.getRejectedList();
+            course4.removeIf(c -> c.getId() == id);
+            d4.addAll(course4);
+
             u.setCourses(d1);
             u.setWishToEnroll(d2);
             u.setWaitToEnroll(d3);
+            u.setRejectedList(d4);
             userService.saveAndFlush(u);
         });
 
